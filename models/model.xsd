@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:model="http://www.example.org/model" 
+	targetNamespace="http://www.example.org/model"  
+	elementFormDefault="qualified">
+	
+    <xs:element name="model" type="model:Model" />
+    
+    <xs:complexType name="Model">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="0" />
+			<xs:element name="fields">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="field" type="model:Field" minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+
+		<xs:element name="explicitRelations" minOccurs="0" maxOccurs="1">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="model" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+		</xs:sequence>		
+		<xs:attribute name="name" type="xs:string" />
+		<xs:attribute name="database" type="xs:string" />
+		<xs:attribute name="label" type="xs:string" />
+		<xs:attribute name="showInMenu" type="xs:boolean" />
+    </xs:complexType>
+    
+    <xs:complexType name="Field">
+    	<xs:sequence>
+    		<xs:element name="description" type="xs:string"
+    			minOccurs="0" maxOccurs="1" />
+    		<xs:element name="validator" type="model:Validator"
+    			minOccurs="0" maxOccurs="unbounded" />
+    		<xs:element name="options" minOccurs="0" maxOccurs="1">
+    			<xs:complexType>
+    				<xs:sequence>
+    					<xs:element name="option" minOccurs="1"
+    						maxOccurs="unbounded">
+    						<xs:complexType>
+    							<xs:simpleContent>
+    								<xs:extension base="xs:string">
+    									<xs:attribute name="value"
+    										type="xs:string" />
+    								</xs:extension>
+    							</xs:simpleContent>
+    						</xs:complexType>
+    					</xs:element>
+    				</xs:sequence>
+    			</xs:complexType>
+    		</xs:element>
+    	</xs:sequence>
+    	<xs:attribute name="name" type="xs:string" />
+    	<xs:attribute name="type" type="xs:string" />
+    	<xs:attribute name="label" type="xs:string" />
+    	<xs:attribute name="reference" type="xs:string" />
+    	<xs:attribute name="referenceValue" type="xs:string" />
+        <xs:attribute name="value" type="xs:string" />
+        <xs:attribute name="renderer" type="xs:string" />
+    	<xs:attribute name="key" default="primary">
+    		<xs:simpleType>
+    			<xs:restriction base="xs:string">
+    				<xs:enumeration value="primary" />
+    				<xs:enumeration value="secondary" />
+                    <xs:enumeration value="tertiary" />
+    			</xs:restriction>
+    		</xs:simpleType>
+    	</xs:attribute>
+    	
+    </xs:complexType>
+
+    <xs:complexType name="Validator">
+	    <xs:simpleContent>
+    	  	<xs:extension base="xs:string">
+        		<xs:attribute name="type" type="xs:string" />
+      		</xs:extension>
+    	</xs:simpleContent>	
+	</xs:complexType>
+</xs:schema>

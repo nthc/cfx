@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/app" xmlns:app="http://www.example.org/app" elementFormDefault="qualified">
+
+<xs:element name="app">
+	<xs:complexType>
+		<xs:sequence>
+			<xs:element name="list" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+					<xs:element name="field" minOccurs="0" maxOccurs="unbounded" >
+            <xs:complexType>
+                <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                        <xs:attribute name="label" type="xs:string" />
+                    </xs:extension>
+                </xs:simpleContent>
+            </xs:complexType>
+            </xs:element>			
+					</xs:sequence>
+					<xs:attribute name="renderer" type="xs:string" />
+					<xs:attribute name="label" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			
+			<xs:element name="form" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+					<xs:element name="field" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+					</xs:sequence>
+					<xs:attribute name="renderer" type="xs:string" />
+					<xs:attribute name="label" type="xs:string" />
+				</xs:complexType>
+			</xs:element>
+			
+		</xs:sequence>
+	</xs:complexType>
+</xs:element>
+
+</xs:schema>
