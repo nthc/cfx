@@ -29,7 +29,7 @@ class Db
     public static function query($query, $instance = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
-        pg_query(Db::$instances[$instance], $query);
+        pg_query(Db::get($instance), $query);
     }
     
     public static function reset($db = 'main')
@@ -44,6 +44,31 @@ class Db
         }
     }
     
+    public static function getParameters($db = 'main')
+    {
+        require "app/config.php";
+        if($db == 'main')
+        {
+            return array(
+                'host' => $db_host,
+                'port' => $db_port,
+                'name' => $db_name,
+                'user' => $db_user,
+                'password' => $db_password
+            );
+        }
+        else
+        {
+            return array (
+                'host' => $database[$db]['host'],
+                'port' => $database[$db]['port'],
+                'name' => $database[$db]['name'],
+                'user' => $database[$db]['user'],
+                'password' => $database[$db]['password']
+            );
+        }
+    }
+    
     /**
      * Returns an instance of a named database. All the database configurations
      * are stored in the <tt>app/config.php</tt>.
@@ -54,7 +79,7 @@ class Db
     {
         if($db == null)
         {
-        	require "app/config.php";
+            require "app/config.php";
             $db = 'main';
             Db::$instances['main'] = pg_connect("host=$db_host port=$db_port dbname=$db_name user=$db_user password=$db_password");            
             if(!Db::$instances['main']) 
@@ -62,7 +87,7 @@ class Db
                 throw new Exception("Could not connect to $db database");
             }            
         }
-        else if(@!is_resource (Db::$instances[$db] == null)) 
+        else if(@!is_resource (Db::$instances[$db])) 
         {
         	require "app/config.php";
             $db_host = $database[$db]["host"];
