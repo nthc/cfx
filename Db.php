@@ -29,7 +29,8 @@ class Db
     public static function query($query, $instance = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
-        pg_query(Db::get($instance), $query);
+        $result = pg_query(Db::get($instance), $query);
+        return pg_fetch_all($result);
     }
     
     public static function reset($db = 'main')
