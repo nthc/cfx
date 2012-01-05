@@ -71,7 +71,6 @@ class XmlDefinedReportController extends ReportController
         {
             $this->referencedFields[] = $field["referencing_field"];
         }
-        SQLDBDataStore::$debugQueries = true;
     }
 
     /**
@@ -109,81 +108,26 @@ class XmlDefinedReportController extends ReportController
                     break;
 
                 case "rapi:text";
-                    //if($_POST[""])
-                    if($_POST["letter_temp_id"] == "")
+                    
+                    $text = new TextContent();
+                    $reader->moveToAttribute("style");
+                    switch($reader->value)
                     {
-                        $text = new TextContent();
-                        $reader->moveToAttribute("style");
-                        switch($reader->value)
-                        {
-                            case "heading":
-                                $text->style["size"] = 16;
-                                $text->style["font"] = "Helvetica";
-                                $text->style["bold"] = true;
-                                $report->label = $text;
-                                break;
+                        case "heading":
+                            $text->style["size"] = 16;
+                            $text->style["font"] = "Helvetica";
+                            $text->style["bold"] = true;
+                            $report->label = $text;
+                            break;
 
-                            default:
-                                $text->style["size"] = $reader->moveToAttribute("size")?$reader->value:12;
-                                $text->style["font"] = $reader->value?$reader->moveToAttribute("font"):"Helvetica";
-                                break;
-                        }
-                        $reader->read();
-                        $text->setText($reader->value);
-                        $report->add($text);
+                        default:
+                            $text->style["size"] = $reader->moveToAttribute("size")?$reader->value:12;
+                            $text->style["font"] = $reader->value?$reader->moveToAttribute("font"):"Helvetica";
+                            break;
                     }
-                    else
-                    {
-                        $date = new TextContent(date("jS F, Y"),array("align"=>"R", "size"=>"12"));
-                        $letterModel = Model::load("{$this->basePackage}.setup.letter_templates");
-                        $letter = $letterModel[$_POST["letter_temp_id"]];
-
-                        if($letter[0]["letter_type"] == "Letter")
-                        {
-                            $reference = new TextContent("Our Ref : " . $letter[0]["ref_number"] . $_POST["ref_number_prefix"], array("size"=>"12", "bottom_margin"=>5));
-
-                            $report->add($date);
-                            $report->add($reference);
-
-                            foreach(explode("\n",$letter[0]["address_to"]) as $address_line)
-                            {
-                                $report->add(new TextContent($address_line));
-                            }
-
-                            $report->add(new TextContent($letter[0]["salutation"], array("size"=>12, "top_margin"=>10, "bottom_margin"=>5)));
-
-                            $report->add(new TextContent($letter[0]["subject"], array("size"=>12, "bold"=>true, "underline"=>true, "bottom_margin"=>5)));
-                        }
-                        else if($letter[0]["letter_type"] == "Memo")
-                        {
-                            $report->add(new TextContent("Memo", array("size"=>24, "bold"=>true)));
-                            $report->add(
-                                new AttributeBox(
-                                    array(
-                                        array("To",  $letter[0]["to_dept"]),
-                                        array("From",  $letter[0]["from_dept"]),
-                                        array("Date", date("jS F, Y")),
-                                        array("Subject", $letter[0]["subject"]),
-                                    )
-                                )
-                            );
-                            $report->add(new TextContent("", array("size"=>12, "bold"=>true, "bottom_margin"=>5)));
-                        }
-
-                        $variables = explode(";", $letter[0]["variables"]);
-                        $needles = array();
-                        $replacements = array();
-
-                        foreach($variables as $variable)
-                        {
-                            $needles[] = "%%$variable%%";
-                            $replacements[] = $_POST["letter_variable_" . str_replace(" ", "_", $variable)];
-                        }
-
-                        $body = str_replace($needles, $replacements, $letter[0]["body"]);
-
-                        $report->add(new TextContent($body, array("size"=>12, "flow"=>true, "bottom_margin"=>5)));
-                    }
+                    $reader->read();
+                    $text->setText($reader->value);
+                    $report->add($text);
                     break;
 
                 case "rapi:table":
@@ -479,7 +423,7 @@ class XmlDefinedReportController extends ReportController
                     $this->updateFilterSummaries($filterSummaries);
 
                     // Generate the various tables taking into consideration grouping
-                    if(count($filterSummaries)>0 && !isset($letter[0]))
+                    if(count($filterSummaries)>0)
                     {
                         $report->filterSummary = new TextContent(str_replace("\\n"," ",/*strtolower(*/implode("\n",$filterSummaries))/*)*/,array("size"=>8,"bottom_margin"=>3));
                         $report->filterSummary->style["flow"] = true;
@@ -626,20 +570,6 @@ class XmlDefinedReportController extends ReportController
                         }
                     }
                     
-                    if(isset($letter[0]["foot_note"]))
-                    {
-                        $report->add(new TextContent($letter[0]["foot_note"], array("size"=>12, "flow"=>true, "top_margin"=>5)));
-                    }
-                    if(isset($letter[0]["signaturies"]))
-                    {
-                        $signaturies = explode(";", $letter[0]["signaturies"]);
-                        foreach($signaturies as $signature)
-                        {
-                            $report->add(new TextContent("___________________________________", array("size"=>12, "top_margin"=>15)));
-                            $report->add(new TextContent($signature, array("size"=>12)));
-                        }
-                    }
-
                     break;
             }
         }
@@ -657,74 +587,6 @@ class XmlDefinedReportController extends ReportController
     {
         $this->initializeForm();
         
-        // Formalities
-        $canViewLetters = User::getPermission(substr(str_replace("/", "_", $this->path),1)."_can_view_as_letter");
-        $canAuthourize = User::getPermission(substr(str_replace("/", "_", $this->path),1)."_can_authourize");
-
-        if($canViewLetters || $canAuthourize)
-        {
-            $formalities = new FieldSet("Letters and Memos");
-            $formalities->setRenderer("default");
-            $this->form->add($formalities);
-        }
-
-        if($canViewLetters)
-        {
-            $lettersModel = Model::load("{$this->basePackage}.setup.letter_templates");
-            $letters = $lettersModel->get();
-            $lettersList = new SelectionList("Subject", "letter_temp_id");
-
-            foreach($letters as $letter)
-            {
-                $lettersList->addOption("{$letter["subject"]} ({$letter["letter_type"]})", $letter["letter_temp_id"]);
-            }
-
-            $lettersList->addAttribute("onchange", "updateVariables(this.value)");
-            $referenceNumber = new TextField("Reference Number Postfix", "ref_number_postfix");
-            $referenceNumber->addAttribute("style", "width:40%");
-            $hideLogos = new Checkbox("Hide Logos", "hide_logo", "Use this when printing with letter heads.", 1);
-            $formalities->add($lettersList, $referenceNumber, $hideLogos);
-            $formalities->add(Element::create("BoxContainer")->setId("letter_variables")->setRenderer("default"));
-
-            $lettersModel = Model::load("{$this->basePackage}.setup.letter_templates");
-            $letters = $lettersModel->get(array("fields"=>array("letter_temp_id", "variables")));
-
-            $this->script = "var letters = " . json_encode($letters) . ";";
-            $this->script .=
-               "function updateVariables(id)
-                {
-                    var variablesBox = document.getElementById('letter_variables');
-
-                                variablesBox.innerHTML = '';
-                    for(var i = 0; i < letters.length; i ++)
-                    {
-                        if(letters[i].letter_temp_id == id)
-                        {
-//                            if(letters[i].variables === null)
-//                            {
-//                                variablesBox.innerHTML = '';
-//                            }
-//                            else
-//                            {
-                                var variables = letters[i].variables.split(';');
-
-                                for(var j = 0; j < variables.length; j++)
-                                {
-                                    var postName = variables[j].split(' ').join('_');
-                                    variablesBox.innerHTML +=
-                                    \"<div class='fapi-element-div'><div class='fapi-label'>\"+
-                                    variables[j] +
-                                    \"</div><input name='letter_variable_\" +
-                                    postName +
-                                    \"' style='width:30%' type='text' class='fapi-textfield' /></div>\";
-                                }
-//                            }
-                        }
-
-                    }
-                }";
-        }
-
         $filters = array();
         $fieldInfos = array();
         $tables = $this->xml->xpath("/rapi:report/rapi:table");

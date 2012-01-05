@@ -738,7 +738,6 @@ class ModelController extends Controller
 
     public function audit($params)
     {
-        SQLDBDataStore::$debugQueries = true;
         $table = new MultiModelTable(null);
         if(count($this->historyModels) > 0)
         {

@@ -22,7 +22,6 @@ define('CACHE_PREFIX', "../../");
 define('CACHE_MODELS', $cache_models);
 
 $object = unserialize(base64_decode($_REQUEST["object"]));
-SQLDBDataStore::$debugQueries = true;
 
 //Application::$packagesPath = "../../";
 
