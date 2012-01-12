@@ -519,7 +519,7 @@ class ModelController extends Controller
      * @return boolean
      */
     public static function callback($data,&$form,$c,$redirect=true,&$id=null)
-    {
+    {   
         switch($c["action"])
         {
         case "add":

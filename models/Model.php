@@ -206,10 +206,13 @@ abstract class Model implements ArrayAccess
         $primary_key_field = $primary_key_field == "" ? $this->getKeyField() : $primary_key_field;
         $primary_key_value = $primary_key_value == "" ? $data[$primary_key_field] : $primary_key_value;
 
-        if($primary_key_field!="" && $primary_key_value !="") {
+        if($primary_key_field!="" && $primary_key_value !="") 
+        {
             $this->datastore->tempData = $this->getWithField($primary_key_field,$primary_key_value);
             $this->assumedTransactionMode = Model::TRANSACTION_MODE_EDIT;
-        } else {
+        } 
+        else 
+        {
             $this->assumedTransactionMode = Model::TRANSACTION_MODE_ADD;
         }
         
