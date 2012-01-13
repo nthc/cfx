@@ -569,6 +569,8 @@ class ModelController extends Controller
             else
             {
                 $fields = array_keys($return["errors"]);
+                var_dump($return);
+                die();
                 foreach($fields as $field)
                 {
                     foreach($return["errors"][$field] as $error)

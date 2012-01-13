@@ -61,7 +61,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            
+            return SQLDatabaseModel::getDatastoreInstance();
         }
     }
 
@@ -125,8 +125,8 @@ abstract class Model implements ArrayAccess
             $instance->postInitHook();
         }
         else
-       {
-        	$modelPathArray = explode(".", $model);
+        {
+            $modelPathArray = explode(".", $model);
             $baseModelPath = SOFTWARE_HOME . ($path==null?Application::$packagesPath:$path)."app/modules/"; 
             foreach($modelPathArray as $index => $path)
             {
