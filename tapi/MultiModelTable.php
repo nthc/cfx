@@ -2,7 +2,7 @@
 class MultiModelTable extends Table
 {
     private $fields = array();
-    private $itemsPerPage = 10;
+    private $itemsPerPage = 15;
     public $useAjax = false;
     protected $params;
     protected $tableData;
@@ -31,8 +31,8 @@ class MultiModelTable extends Table
         $table = "<table class='tapi-table' id='$this->name'>";
 
         //Render Headers
-        $table .= "<thead><tr><td>";
-        $table .= "<input type='checkbox' onchange=\"ntentan.tapi.checkToggle('$this->name',this)\"></td>";
+        $table .= "<thead><tr>";
+        //$table .= "<td><input type='checkbox' onchange=\"ntentan.tapi.checkToggle('$this->name',this)\"></td>";
 
         foreach($this->headers as $i => $header)
         {
@@ -40,11 +40,15 @@ class MultiModelTable extends Table
             $header
             </td>";
         }
-        $table .= "<td>Operations</td></tr>";
-
+        
+        if($this->useInlineOperations)
+        {
+            $table .= "<td>Operations</td>";
+        }
+        $table .= "</tr>";
 
         //Render search fields
-        $table .= "<tr id='tapi-$this->name-search' class='tapi-search-row' ><td></td>";
+        $table .= "<tr id='tapi-$this->name-search' class='tapi-search-row' >";
 
         foreach($this->headers as $i => $header)
         {
@@ -127,7 +131,11 @@ class MultiModelTable extends Table
             }*/
             $table .="</td>";
         }
-        $table .= "<td><input class='fapi-button' type='button' value='Search' onclick='$searchFunction'/></td></tr></thead>";
+        
+        if($this->useInlineOperations)
+        {
+            $table .= "<td><input class='fapi-button' type='button' value='Search' onclick='$searchFunction'/></td></tr></thead>";
+        }
 
         //Render Data
         $table .= "<tbody id='tbody'>";
@@ -155,8 +163,7 @@ class MultiModelTable extends Table
         {
             $table .= "<tr>
                 <td align='center' colspan='".count($this->headers)."'>
-                    <span style='color:#909090;font-weight:bold;font-size:24px'>Loading ...</span><br/>
-                    <img src='".Application::$prefix."/images/loading-image-big.gif' />
+                    <img style='margin:80px' src='".Application::$prefix."/images/loading-image-big.gif' />
                 </td></tr>";
         }
         else
@@ -170,7 +177,8 @@ class MultiModelTable extends Table
         if($this->useAjax)
         {
             $table .=
-            "<script type='text/javascript'>
+            "<div id='{$this->name}-operations'></div>
+            <script type='text/javascript'>
                 ntentan.tapi.addTable('$this->name',(".json_encode($this->params)."));
                 var externalConditions = [];
                 function {$this->name}Search()

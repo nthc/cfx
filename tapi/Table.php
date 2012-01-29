@@ -8,6 +8,8 @@ class Table
     protected $prefix;
     public $name = "defaultTable";
     public $headerParams;
+    public $useInlineOperations = false;
+    protected $renderedOperations;
     
     public function __construct($prefix,$headers=null, $data=null, $operations=null,$headerParams=null)
     {
@@ -34,15 +36,24 @@ class Table
         );
     }
     
+    public function getOperations()
+    {
+        return $this->renderedOperations;
+    }
+    
     protected function renderHeader()
     {
         $table = "<table class='tapi-table'>";
          
         //Render Headers
-        $table .= "<thead><tr><td>";
-        $table .= "<input type='checkbox' onchange=\"ntentan.tapi.notify('$this->name','0',this)\"></td><td>";
+        $table .= "<thead><tr>";
+        //$table .= "<td><input type='checkbox' onchange=\"ntentan.tapi.notify('$this->name','0',this)\"></td><td>";
         $table .= implode("</td><td>",$this->headers);
-        $table .= "</td><td align='right'>Operations</td></tr></thead>";
+        
+        if($this->useInlineOperations)
+        {
+            $table .= "</td><td align='right'>Operations</td></tr></thead>";
+        }
          
         //Render Data
         $table .= "<tbody id='tbody'>";
@@ -60,11 +71,11 @@ class Table
     {
         if($renderHeaders) $table = $this->renderHeader();
         
-        foreach($this->data as $row)
+        foreach($this->data as $i => $row)
         {
             $key = array_shift($row);
-            $table .= "<tr>";
-            $table .= "<td><input type='checkbox' class='$this->name-checkbox' value='$key' ></td>";
+            $table .= "<tr id='{$this->name}-operations-row-$i' onmouseover='ntentan.tapi.showOperations(\"{$this->name}\", $i)' >";
+            //$table .= "<td><input type='checkbox' class='$this->name-checkbox' value='$key' ></td>";
             
             foreach($row as $name=>$value)
             {
@@ -76,23 +87,39 @@ class Table
                 $table .= "<td $params >$value</td>";
             }
             
-            $table .= "<td align='right'>";
             if($this->operations!=null)
             {
+                $rowOperations = '';
                 foreach($this->operations as $operation)
                 {
-                    $table .=
+                    $rowOperations .=
                         sprintf(
                             '<a class="tapi-icon tapi-iaction tapi-i'.$operation['link'].' tapi-operation tapi-operation-%s" href="%s">%s</a>',
                             $operation["link"],
                             str_replace(array("%key%","%path%"),array($key,$this->prefix.$operation["link"]),$operation["action"]),
-                            $operation["label"]);
+                            $operation["label"]
+                        );
                 }
             }
-            $table .= "</td></tr>";
+            
+            if($this->useInlineOperations)
+            {
+                $table .= "<td id='{$this->name}-operations-cell-$i' align='right' >$rowOperations</td>";
+            }
+            else
+            {
+                $this->renderedOperations .= "<div class='operations-box' id='{$this->name}-operations-box-$i'>$rowOperations</div>";
+            }
+            
+            $table .= "</tr>";
         }
         
         if($renderHeaders) $table .= $this->renderFooter();
+        
+        if(!$this->useInlineOperations)
+        {
+            $table .= $operations;
+        }
         
         return $table;
     }

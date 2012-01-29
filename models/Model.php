@@ -432,10 +432,35 @@ abstract class Model implements ArrayAccess
     public function update($field,$value)
     {
         $this->datastore->beginTransaction();
+        
+        $this->queryResolve = false;
+        $this->queryExplicitRelations = true;
+        $before = $this->getWithField2($field, $value);
+        
         $this->preUpdateHook($field, $value);
         $this->datastore->setData($this->datastore->data, $this->fields);
         $this->updateImplementation($field, $value);
         $this->postUpdateHook();
+        
+        $data = $this->escape(
+            json_encode(
+                array(
+                    "after"=>$this->datastore->data ,
+                    "before"=>$before
+                )
+            )
+        );
+        
+        SystemAuditTrailModel::log(
+            array(
+                'item_id' => $this->datastore->tempData[0][$this->getKeyField()],
+                'item_type' => $this->package,
+                'description' => 'Updated item',
+                'type' => SystemAuditTrailModel::AUDIT_TYPE_UPDATED_DATA,
+                'data' => json_encode($data)
+            )
+        );
+        
         $this->datastore->endTransaction();
     }
     
@@ -447,9 +472,35 @@ abstract class Model implements ArrayAccess
     public function delete($key_field,$key_value=null)
     {
         $this->datastore->beginTransaction();
+        
+        if($key_value === null)
+        {
+            $data = reset($this->get(array('conditions' => $key_field)));
+        }
+        else
+        {
+            $data = reset($this->getWithField2($key_field, $key_value));
+        }
+        
         $this->preDeleteHook($key_field, $key_value);
         $this->deleteImplementation($key_field, $key_value);
         $this->postDeleteHook();
+        
+        $this->queryResolve = false;
+        $this->queryExplicitRelations = true;
+        
+        var_dump($data);
+        
+        SystemAuditTrailModel::log(
+            array(
+                'item_id' => $data[$this->getKeyField()],
+                'item_type' => $this->package,
+                'description' => 'Deleted item',
+                'type' => SystemAuditTrailModel::AUDIT_TYPE_DELETED_DATA,
+                'data' => json_encode($data)
+            )
+        );        
+        
         $this->datastore->endTransaction();
     }
     

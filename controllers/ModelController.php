@@ -246,7 +246,7 @@ class ModelController extends Controller
             if(User::getPermission($this->permissionPrefix."_can_delete"))
             {
                 $this->table->addOperation("delete","Delete","javascript:ntentan.confirmRedirect('Are you sure you want to delete','{$this->urlPath}/%path%/%key%')");
-                $this->toolbar->addLinkButton("Delete","javascript:ntentan.tapi.remove(\"{$this->table->name}\")");
+                //$this->toolbar->addLinkButton("Delete","javascript:ntentan.tapi.remove(\"{$this->table->name}\")");
             }
         }
 
