@@ -14,15 +14,15 @@ class User
     {
         $db = Db::get();
         $data = Db::escape(json_encode($data));
-        Db::query("INSERT INTO common.audit_trail
-                        (user_id, item_id, item_type, description, audit_date,type,data)
-                      VALUES(
-                        {$_SESSION['user_id']},
-                        '0',
-                        'system_activity',
-                        '$activity',
-                        CURRENT_TIMESTAMP,3,'$data'
-                       )");        
+        
+        SystemAuditTrailModel::log(
+            array(
+                'item_id' => 0,
+                'item_type' => 'system_activity',
+                'description' => $activity,
+                'type' => SystemAuditTrailModel::AUDIT_TYPE_SYSTEM
+            )
+        );
     }
 
     /**

@@ -367,7 +367,6 @@ abstract class Model implements ArrayAccess
     public function save()
     {
         $this->datastore->beginTransaction();
-        
         $this->preAddHook();
         
         if(array_search("entry_date", array_keys($this->fields)) && $this->datastore->data["entry_date"] == "")
@@ -376,10 +375,24 @@ abstract class Model implements ArrayAccess
         }
                         
         $this->datastore->setData($this->datastore->data, $this->fields);
-        $ret = $this->saveImplementation();
-        $this->postAddHook($ret, $this->getData());
+        $id = $this->saveImplementation();
+        $this->postAddHook($id, $this->getData());
+        
+        if($this->package != 'system.audit_trail' && $this->package != 'system.audit_trail_data')
+        {
+            SystemAuditTrailModel::log(
+                array(
+                    'item_id' => $id,
+                    'item_type' => $this->package,
+                    'description' => 'Added item',
+                    'type' => SystemAuditTrailModel::AUDIT_TYPE_ADDED_DATA,
+                    'data' => json_encode($this->datastore->data)
+                )
+            );
+        }
+        
         $this->datastore->endTransaction();
-        $this->postCommitHook($ret, $this->getData());
+        $this->postCommitHook($id, $this->getData());
         
         return $ret;
     }

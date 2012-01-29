@@ -194,24 +194,9 @@ class MultiModelTable extends Table
     {
         $table = parent::renderFooter();
         $params = $this->params;
-        $params["count"] = true;
-        unset($params["moreInfo"]);
-        unset($params["limit"]);
-        unset($params["offset"]);
-        $data = SQLDBDataStore::getMulti($params);
-        $numPages = ceil($data[0]["count"] / $this->itemsPerPage);
-
-        $lastPage = $numPages - 1;
-        for($i = 1; $i < /*$numPages*/ 10; $i++)
-        {
-            $position =  round(log($i, 10) * $numPages);
-            $options.="<option value='".$position."' ".($params["page"]==$position?"selected='selected'":"")." >".($position+1)."</option>";
-        }
-
+        
         $table .= "<div id='{$this->name}Footer'>
-            <ul class='table-pages'>".
-                ($params["page"]>0?
-                    "<li>
+            <ul class='table-pages'><li>
                         <a onclick=\"ntentan.tapi.switchPage('$this->name',0)\">
                             &lt;&lt; First
                         </a>
@@ -220,13 +205,10 @@ class MultiModelTable extends Table
                         <a onclick=\"ntentan.tapi.switchPage('$this->name',".($params["page"]-1>=0?$params["page"]-1:"").")\">
                             &lt; Prev
                         </a>
-                    </li>":"") .
-                ($params["page"]<$lastPage?"<li><a onclick=\"ntentan.tapi.switchPage('$this->name',".($params["page"]+1<=$lastPage?$params["page"]+1:"").")\">Next &gt;</a></li><li><a onclick=\"ntentan.tapi.switchPage('$this->name',$lastPage)\">Last &gt;&gt;</a></li>":"").
+                    </li>".
+                    "<li><a onclick=\"ntentan.tapi.switchPage('$this->name',".($params["page"]+1).")\">Next &gt;</a></li>" .
                 "<li> | </li>
-                <li> Page <input style='font-size:small' value = '".($params["page"]+1)."' onchange=\"ntentan.tapi.switchPage('$this->name',(this.value > 0 && this.value < $numPages)?this.value-1:0)\" size='".strlen($numPages)."' type='text' /> of $numPages </li>
-                <li> | </li>
-                <li>Jump To <select onchange=\"ntentan.tapi.switchPage('$this->name',this.value)\">$options</select></li>
-
+                <li> Page <input style='font-size:small; width:50px' value = '".($params["page"]+1)."' onchange=\"ntentan.tapi.switchPage('$this->name',(this.value > 0 )?this.value-1:0)\" type='text' /></li>
             </ul>
         </div>";
         return $table;

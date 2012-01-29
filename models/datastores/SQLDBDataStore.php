@@ -119,7 +119,7 @@ abstract class SQLDBDataStore extends DataStore
             $keyValue = $lastval[0]["last"];
         }
 
-        if($keyValue != '' && $this->modelName != 'system.logs')
+        /*if($keyValue != '' && $this->modelName != 'system.audit_trail' && $this->modelName != 'system.audit_trail_data')
         {
             $description = "Added item";
             $data = $this->escape(json_encode($this->data));
@@ -132,7 +132,8 @@ abstract class SQLDBDataStore extends DataStore
                             '$description',
                             CURRENT_TIMESTAMP,0,'$data'
                            )");
-        }
+        }*/
+        
         if(count($relatedData)>0)
         {
             // Save related data
@@ -186,6 +187,7 @@ abstract class SQLDBDataStore extends DataStore
                 $changes[$key] = null;
             }
         }
+        
         $data = $this->escape(json_encode(array("after"=>$changes ,"before"=>$before[0])));
         $this->query("INSERT INTO common.audit_trail
                         (user_id, item_id, item_type, description, audit_date,type,data)

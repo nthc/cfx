@@ -14,7 +14,7 @@ class PgFileStore extends postgresql
     
 	public static function addFile($path) 
 	{
-        return PgFileStore::addData(file_get_contents($path));
+	return PgFileStore::addData(file_get_contents($path));
 	}
 	
 	public static function addData($data)
@@ -31,8 +31,8 @@ class PgFileStore extends postgresql
 
     public static function getData($oid)
     {
-		$model = PgFileStore::getModel();
-		$data = $model->getWithField("object_id", $oid);
+	$model = PgFileStore::getModel();
+	$data = $model->getWithField("object_id", $oid);
         return pg_unescape_bytea($data[0]["data"]);
     }
 	
