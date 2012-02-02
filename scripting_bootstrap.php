@@ -22,3 +22,7 @@ SQLDBDataStore::$activeDriver = $db_driver;
 define('CACHE_PREFIX', "../../");
 define('CACHE_MODELS', $cache_models);
 
+if($enable_audit_trails)
+{
+    require_once "app/modules/system/audit_trail/SystemAuditTrailModel.php";
+}

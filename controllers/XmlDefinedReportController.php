@@ -791,23 +791,4 @@ class XmlDefinedReportController extends ReportController
     {
         
     }
-
-    /**
-     * (non-PHPdoc)
-     * @see lib/controllers/ReportController::getPermissions()
-     */
-    public function getPermissions()
-    {
-        $permissions = parent::getPermissions();
-        $permissions[] = array(
-            "label" => "Can view as a Letter or Memo",
-            "name" => substr(str_replace("/", "_", $this->path),1)."_can_view_as_letter"
-        );
-        $permissions[] = array(
-            "label" => "Can authourize reports",
-            "name" => substr(str_replace("/", "_", $this->path),1)."_can_authourize"
-        );
-        
-        return $permissions;
-    }
 }

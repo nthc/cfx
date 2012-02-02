@@ -5,7 +5,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . "../../");
 
 date_default_timezone_set("Africa/Accra");
 
-require "coreutils.php";
+require "lib/coreutils.php";
 require "../../app/config.php";
 require "../../app/includes.php";
 

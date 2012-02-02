@@ -433,9 +433,13 @@ abstract class Model implements ArrayAccess
     {
         $this->datastore->beginTransaction();
         
+        $resolve = $this->queryResolve;
+        $explicitRelations = $this->queryExplicitRelations;
         $this->queryResolve = false;
         $this->queryExplicitRelations = true;
         $before = $this->getWithField2($field, $value);
+        $this->queryResolve = $resolve;
+        $this->queryExplicitRelations = $explicitRelations;
         
         $this->preUpdateHook($field, $value);
         $this->datastore->setData($this->datastore->data, $this->fields);
@@ -472,7 +476,10 @@ abstract class Model implements ArrayAccess
     public function delete($key_field,$key_value=null)
     {
         $this->datastore->beginTransaction();
-        
+        $resolve = $this->queryResolve;
+        $explicitRelations = $this->queryExplicitRelations;
+        $this->queryResolve = false;
+        $this->queryExplicitRelations = true;
         if($key_value === null)
         {
             $data = reset($this->get(array('conditions' => $key_field)));
@@ -482,24 +489,31 @@ abstract class Model implements ArrayAccess
             $data = reset($this->getWithField2($key_field, $key_value));
         }
         
+        if($data === false)
+        {
+            trigger_error("Trying to delete an item which does not exist from [{$this->package}] ", E_USER_WARNING);
+        }
+        else
+        {
+            SystemAuditTrailModel::log(
+                array(
+                    'item_id' => $data[$this->getKeyField()],
+                    'item_type' => $this->package,
+                    'description' => 'Deleted item',
+                    'type' => SystemAuditTrailModel::AUDIT_TYPE_DELETED_DATA,
+                    'data' => json_encode($data)
+                )
+            );                    
+        }
+        $this->queryResolve = $resolve;
+        $this->queryExplicitRelations = $explicitRelations;
+        
         $this->preDeleteHook($key_field, $key_value);
         $this->deleteImplementation($key_field, $key_value);
         $this->postDeleteHook();
         
         $this->queryResolve = false;
         $this->queryExplicitRelations = true;
-        
-        var_dump($data);
-        
-        SystemAuditTrailModel::log(
-            array(
-                'item_id' => $data[$this->getKeyField()],
-                'item_type' => $this->package,
-                'description' => 'Deleted item',
-                'type' => SystemAuditTrailModel::AUDIT_TYPE_DELETED_DATA,
-                'data' => json_encode($data)
-            )
-        );        
         
         $this->datastore->endTransaction();
     }
