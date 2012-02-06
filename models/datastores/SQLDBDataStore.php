@@ -118,21 +118,6 @@ abstract class SQLDBDataStore extends DataStore
             $lastval = $this->query("SELECT LASTVAL() as last");
             $keyValue = $lastval[0]["last"];
         }
-
-        /*if($keyValue != '' && $this->modelName != 'system.audit_trail' && $this->modelName != 'system.audit_trail_data')
-        {
-            $description = "Added item";
-            $data = $this->escape(json_encode($this->data));
-            $this->query("INSERT INTO common.audit_trail
-                            (user_id, item_id, item_type, description, audit_date,type,data)
-                          VALUES(
-                            {$_SESSION['user_id']},
-                            $keyValue,
-                            '{$this->modelName}',
-                            '$description',
-                            CURRENT_TIMESTAMP,0,'$data'
-                           )");
-        }*/
         
         if(count($relatedData)>0)
         {
@@ -187,17 +172,6 @@ abstract class SQLDBDataStore extends DataStore
                 $changes[$key] = null;
             }
         }
-        
-        /*$data = $this->escape(json_encode(array("after"=>$changes ,"before"=>$before[0])));
-        $this->query("INSERT INTO common.audit_trail
-                        (user_id, item_id, item_type, description, audit_date,type,data)
-                      VALUES(
-                            {$_SESSION['user_id']},
-                            $key_value,
-                            '{$this->modelName}',
-                            '$description',
-                            CURRENT_TIMESTAMP, 1, '$data'
-                       )");*/
 
         $query = "UPDATE {$this->database} SET ".implode(",",$assignments)." WHERE $key_field='$key_value'";
         $this->query($query);
@@ -220,30 +194,10 @@ abstract class SQLDBDataStore extends DataStore
         $description = 'Deleted Item';
         if($key_value == null)
         {
-            /*$data = json_encode($this->query("SELECT * FROM {$this->database} WHERE $key_field"));
-            $this->query("INSERT INTO common.audit_trail
-                            (user_id, item_id, item_type, description, audit_date,type,data)
-                          VALUES(
-                                {$_SESSION['user_id']},
-                                0,
-                                '{$this->modelName}',
-                                '$description',
-                                CURRENT_TIMESTAMP, 2, '$data'
-                           )");*/
             $query = "DELETE FROM {$this->database} WHERE $key_field";
         }
         else
         {
-            /*$data = json_encode($this->query("SELECT * FROM {$this->database} WHERE $key_field='$key_value'"));
-            $this->query("INSERT INTO common.audit_trail
-                            (user_id, item_id, item_type, description, audit_date,type,data)
-                          VALUES(
-                                {$_SESSION['user_id']},
-                                ".(is_numeric($key_value) ? $key_value : 0).",
-                                '{$this->modelName}',
-                                '$description',
-                                CURRENT_TIMESTAMP, 2, '$data'
-                           )");*/
             $query = "DELETE FROM {$this->database} WHERE $key_field='$key_value'";
         }
         $this->query($query);
