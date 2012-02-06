@@ -373,13 +373,17 @@ abstract class Model implements ArrayAccess
         {
             $this->datastore->data["entry_date"] = time();
         }
-                        
+        
         $this->datastore->setData($this->datastore->data, $this->fields);
         $id = $this->saveImplementation();
         $this->postAddHook($id, $this->getData());
         
         if($this->package != 'system.audit_trail' && $this->package != 'system.audit_trail_data')
         {
+            if($id === null)
+            {
+                $id = $this->datastore->data[$this->getKeyField()];
+            }
             if(ENABLE_AUDIT_TRAILS === true)
             {
                 SystemAuditTrailModel::log(
@@ -497,7 +501,7 @@ abstract class Model implements ArrayAccess
         
         if($data === false)
         {
-            trigger_error("Trying to delete an item which does not exist from [{$this->package}] ", E_USER_WARNING);
+            //trigger_error("Trying to delete an item which does not exist from [{$this->package}] ", E_USER_NOTICE);
         }
         else
         {
