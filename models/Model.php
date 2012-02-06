@@ -464,9 +464,19 @@ abstract class Model implements ArrayAccess
         
         if(ENABLE_AUDIT_TRAILS === true)
         {
+            if($this->datastore->tempData[0][$this->getKeyField()] == null)
+            {
+                var_dump($before);
+                $id = $before[0][$this->getKeyField()];
+            }
+            else
+            {
+                $id = $this->datastore->tempData[0][$this->getKeyField()];
+            }
+            
             SystemAuditTrailModel::log(
                 array(
-                    'item_id' => $this->datastore->tempData[0][$this->getKeyField()],
+                    'item_id' => $id,
                     'item_type' => $this->package,
                     'description' => 'Updated item',
                     'type' => SystemAuditTrailModel::AUDIT_TYPE_UPDATED_DATA,
