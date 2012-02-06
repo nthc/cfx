@@ -63,8 +63,9 @@ SQLDBDataStore::$activeDriver = $db_driver;
 Cache::init($cache_method);
 define('CACHE_MODELS', $cache_models);
 define('CACHE_PREFIX', "");
+define('ENABLE_AUDIT_TRAILS', $enable_audit_trails);
 
-if($enable_audit_trails)
+if(ENABLE_AUDIT_TRAILS === true)
 {
     require_once "app/modules/system/audit_trail/SystemAuditTrailModel.php";
 }
@@ -141,7 +142,7 @@ if(defined("STDIN"))
 }
 else
 {
-    if($_SESSION['logged_in'] == true && ($_GET['q']!='api/table') && $enable_audit_trails)
+    if($_SESSION['logged_in'] == true && ($_GET['q']!='api/table') && ENABLE_AUDIT_TRAILS === true)
     {
         $data = json_encode(
             array(
@@ -161,22 +162,6 @@ else
                 'data' => $data
             )
         );
-        
-        
-        /*Db::query(
-            "INSERT INTO common.audit_trail
-            (
-                user_id, item_id, item_type, description, audit_date,type
-            )
-            VALUES(
-                {$_SESSION['user_id']},
-                '0',
-                'routing_activity',
-                'Accessed [{$_GET['q']}]',
-                CURRENT_TIMESTAMP,4
-            )"
-        );
-        Db::query("INSERT INTO common.audit_trail_data(audit_trail_id, data) VALUES(LASTVAL(), )")*/
-}    
+    }    
     Application::render();
 }

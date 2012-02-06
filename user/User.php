@@ -15,14 +15,17 @@ class User
         $db = Db::get();
         $data = Db::escape(json_encode($data));
         
-        SystemAuditTrailModel::log(
-            array(
-                'item_id' => 0,
-                'item_type' => 'system_activity',
-                'description' => $activity,
-                'type' => SystemAuditTrailModel::AUDIT_TYPE_SYSTEM
-            )
-        );
+        if(ENABLE_AUDIT_TRAILS === false)
+        {
+            SystemAuditTrailModel::log(
+                array(
+                    'item_id' => 0,
+                    'item_type' => 'system_activity',
+                    'description' => $activity,
+                    'type' => SystemAuditTrailModel::AUDIT_TYPE_SYSTEM
+                )
+            );
+        }
     }
 
     /**

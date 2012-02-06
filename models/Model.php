@@ -380,15 +380,18 @@ abstract class Model implements ArrayAccess
         
         if($this->package != 'system.audit_trail' && $this->package != 'system.audit_trail_data')
         {
-            SystemAuditTrailModel::log(
-                array(
-                    'item_id' => $id,
-                    'item_type' => $this->package,
-                    'description' => 'Added item',
-                    'type' => SystemAuditTrailModel::AUDIT_TYPE_ADDED_DATA,
-                    'data' => json_encode($this->datastore->data)
-                )
-            );
+            if(ENABLE_AUDIT_TRAILS === true)
+            {
+                SystemAuditTrailModel::log(
+                    array(
+                        'item_id' => $id,
+                        'item_type' => $this->package,
+                        'description' => 'Added item',
+                        'type' => SystemAuditTrailModel::AUDIT_TYPE_ADDED_DATA,
+                        'data' => json_encode($this->datastore->data)
+                    )
+                );
+            }
         }
         
         $this->datastore->endTransaction();
@@ -455,15 +458,18 @@ abstract class Model implements ArrayAccess
             )
         );
         
-        SystemAuditTrailModel::log(
-            array(
-                'item_id' => $this->datastore->tempData[0][$this->getKeyField()],
-                'item_type' => $this->package,
-                'description' => 'Updated item',
-                'type' => SystemAuditTrailModel::AUDIT_TYPE_UPDATED_DATA,
-                'data' => json_encode($data)
-            )
-        );
+        if(ENABLE_AUDIT_TRAILS === true)
+        {
+            SystemAuditTrailModel::log(
+                array(
+                    'item_id' => $this->datastore->tempData[0][$this->getKeyField()],
+                    'item_type' => $this->package,
+                    'description' => 'Updated item',
+                    'type' => SystemAuditTrailModel::AUDIT_TYPE_UPDATED_DATA,
+                    'data' => json_encode($data)
+                )
+            );
+        }
         
         $this->datastore->endTransaction();
     }
@@ -495,15 +501,18 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            SystemAuditTrailModel::log(
-                array(
-                    'item_id' => $data[$this->getKeyField()],
-                    'item_type' => $this->package,
-                    'description' => 'Deleted item',
-                    'type' => SystemAuditTrailModel::AUDIT_TYPE_DELETED_DATA,
-                    'data' => json_encode($data)
-                )
-            );                    
+            if(ENABLE_AUDIT_TRAILS === false)
+            {
+                SystemAuditTrailModel::log(
+                    array(
+                        'item_id' => $data[$this->getKeyField()],
+                        'item_type' => $this->package,
+                        'description' => 'Deleted item',
+                        'type' => SystemAuditTrailModel::AUDIT_TYPE_DELETED_DATA,
+                        'data' => json_encode($data)
+                    )
+                );
+            }
         }
         $this->queryResolve = $resolve;
         $this->queryExplicitRelations = $explicitRelations;
