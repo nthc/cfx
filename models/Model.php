@@ -397,7 +397,7 @@ abstract class Model implements ArrayAccess
         $this->datastore->endTransaction();
         $this->postCommitHook($id, $this->getData());
         
-        return $ret;
+        return $id;
     }
     
     protected function saveImplementation()
