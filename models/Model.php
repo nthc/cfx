@@ -439,7 +439,7 @@ abstract class Model implements ArrayAccess
         $resolve = $this->queryResolve;
         $explicitRelations = $this->queryExplicitRelations;
         $this->queryResolve = false;
-        $this->queryExplicitRelations = true;
+        $this->queryExplicitRelations = false;
         $before = $this->getWithField2($field, $value);
         $this->queryResolve = $resolve;
         $this->queryExplicitRelations = $explicitRelations;
