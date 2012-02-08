@@ -10,6 +10,7 @@ class postgresql extends SQLDBDataStore
 {
     protected static $_conn = null;
     private static $namesSeen = array();
+    private static $nesting = 0;
 
     public function __construct()
     {
@@ -29,12 +30,20 @@ class postgresql extends SQLDBDataStore
 
     public function beginTransaction($external = true)
     {
-        $this->query("BEGIN");
+        if(postgresql::$nesting == 0)
+        {
+            $this->query("BEGIN");
+        }
+        postgresql::$nesting++;
     }
 
     public function endTransaction($external = true)
     {
-        $this->query("COMMIT");
+        postgresql::$nesting--;
+        if(postgresql::$nesting == 0)
+        {
+            $this->query("COMMIT");
+        }
     }
 
     public function get($params=null,$mode=model::MODE_ASSOC, $explicit_relations=false,$resolve=true)
