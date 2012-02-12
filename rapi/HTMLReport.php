@@ -26,28 +26,14 @@ class HTMLReport extends Report
         {
 
             if(!is_object($content)) continue;
-            if($tableOpen === true and $content->getType() != 'table')
+            if($tableOpen === true && $content->getType() != 'table')
             {
+                $tableOpen = false;
                 print "</tbody></table>";
             }
             switch($content->getType())
             {
             case "logo":
-                /*$this->pdf->image($content->image,null,null,8,8);
-                //print $this->pdf->getY();
-                $this->pdf->sety($this->pdf->getY() - 8);
-                $this->pdf->SetFont("Times","B","18");
-                $this->pdf->cell(9);$this->pdf->cell(0,8,$content->title);
-
-                $this->pdf->SetFont("Arial",null,7);
-                //print $this->pdf->getY();
-                //$this->pdf->sety(10);
-                foreach($content->address as $address)
-                {
-                    $this->pdf->setx(($this->pdf->GetStringWidth($address)+10) * -1);
-                    $this->pdf->cell(0,3,$address);
-                    $this->pdf->Ln();
-                }*/
                 print "<table style='width:100%;margin-bottom:20px'>
                     <tr>
                         <td>" 
@@ -98,15 +84,11 @@ class HTMLReport extends Report
                 }
                 else
                 {
-                    //if(!$this->widthsSet && isset($content->data_params["widths"]))
-                    //{
-                        $totalWidths = array_sum($content->data_params["widths"]);
-                        foreach($content->data_params["widths"] as $i=>$width)
-                        {
-                            $this->widths[$i] = round($width / $totalWidths * 100);
-                        }
-                    //    $this->widthsSet = true;
-                    //}
+                    $totalWidths = array_sum($content->data_params["widths"]);
+                    foreach($content->data_params["widths"] as $i=>$width)
+                    {
+                        $this->widths[$i] = round($width / $totalWidths * 100);
+                    }
                     
                     
                     print "<table style='border-collapse:collapse' width='100%'><thead style='background-color:rgb(102,128,102);color:white; font-size:8pt;font-weight:bold;'><tr>";
@@ -132,11 +114,10 @@ class HTMLReport extends Report
                         	$key = $keys[$i];
                             $row[$key] = str_replace("\n","<br/>",trim($row[$key]));
                             print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;'" . 
-                                ($content->data_params["type"][$i] == 'number' || $content->data_params["type"][$i] == 'double' ? "align='right'":"") . 
+                                ($content->data_params["type"][$i] == 'number' || $content->data_params["type"][$i] == 'double' ? " align='right'":"") . 
                             ">{$row[$key]}</td>";
                         }
                         print "</tr>";
-                        //print "<tr" . ($fill ? "class='fill'" : "") . "><td>" . implode("</td><td>",$row)."</td></tr>";
                         $fill = !$fill;
                     }
 

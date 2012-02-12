@@ -30,7 +30,7 @@ class Db
     {
         if($instance === null) $instance = Db::$lastInstance;
         $result = pg_query(Db::get($instance), $query);
-        return pg_fetch_all($result);
+        return is_bool($result) ? null : pg_fetch_all($result);
     }
     
     public static function reset($db = 'main')
