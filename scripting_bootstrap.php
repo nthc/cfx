@@ -9,12 +9,12 @@ require "app/config.php";
 require "app/includes.php";
 
 add_include_path("lib");
-add_include_path("app/lib/nthc/mq");
 add_include_path("lib/models");
 add_include_path("lib/models/datastores");
 add_include_path("lib/models/datastores/databases/oracle");
 add_include_path("lib/models/datastores/databases/postgresql");
 add_include_path("lib/cache");
+add_include_path("lib/rapi");
 
 Cache::init($cache_method);
 SQLDBDataStore::$activeDriver = $db_driver;
