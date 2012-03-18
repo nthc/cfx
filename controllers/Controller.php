@@ -128,6 +128,8 @@ class Controller
     public static function load($path,$get_contents=true)
     {
         global $redirectedPackage;
+        global $packageSchema;
+        
         $controller_path = "";
         $controller_name = "";
         $redirected = false;
@@ -185,6 +187,7 @@ class Controller
                 $previousControllerPath = $controller_path . "/$p"; 
                 $controller_path = "";
                 $redirectedPackage = $package_path;
+                $packageSchema = $package_schema;
             }
             else if($redirected === true && file_exists(SOFTWARE_HOME . "app/lib/$redirect_path/$controller_path/$p/report.xml"))
             {
@@ -361,6 +364,14 @@ class Controller
         return array(
            "template"=>"file:/" . getcwd() . "/app/modules/{$this->path}/{$template}.tpl", 
            "data"=>$data
+        );
+    }
+    
+    public function arbitraryTemplate($arbitraryTemplate, $data)
+    {
+        return array(
+            'template' => "file:/".SOFTWARE_HOME."/$arbitraryTemplate",
+            'data' => $data        
         );
     }
     
