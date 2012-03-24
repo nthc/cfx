@@ -288,6 +288,7 @@ abstract class SQLDBDataStore extends DataStore
     			print $query . "\n";
     			break;
     		case "file":
+    		    Logger::setPath("app/logs/sql.log");
     			Logger::log($query);
     			break;
     		

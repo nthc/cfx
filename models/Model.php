@@ -39,6 +39,7 @@ abstract class Model implements ArrayAccess
     public $explicitRelations = array();
     public $keyField;
     public $assumedTransactionMode;
+    public $disableAuditTrails = false;
 
     /**
      *
@@ -384,7 +385,7 @@ abstract class Model implements ArrayAccess
             {
                 $id = $this->datastore->data[$this->getKeyField()];
             }
-            if(ENABLE_AUDIT_TRAILS === true)
+            if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails != false)
             {
                 SystemAuditTrailModel::log(
                     array(
@@ -462,7 +463,7 @@ abstract class Model implements ArrayAccess
             )
         );
         
-        if(ENABLE_AUDIT_TRAILS === true)
+        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails != false)
         {
             if($this->datastore->tempData[0][$this->getKeyField()] == null)
             {
@@ -514,7 +515,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            if(ENABLE_AUDIT_TRAILS === false)
+            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails != false)
             {
                 SystemAuditTrailModel::log(
                     array(

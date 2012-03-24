@@ -16,7 +16,20 @@ class Logger
      * Path of the log file
      * @var string
      */
-    public static $path;
+    private static $path;
+    
+    public static function setPath($path = 'app/logs/wyf.log')
+    {
+        if($path != self::$path)
+        {
+            Logger::$fd[$path] = fopen($path, "a");
+            self::$path = $path;
+            if(Logger::$fd[$path] == false)
+            { 
+                throw new Exception("Could not open log file [$path]");
+            }
+        }
+    }
 
     /**
      * Writes to the log file.
@@ -25,10 +38,8 @@ class Logger
      */
     public static function log($msg, $format = "[%s] %s\n")
     {
-        if(!is_resource(Logger::$fd))
-        {
-            Logger::$fd = fopen(Logger::$path == "" ? SOFTWARE_HOME . "app/temp/log.sql" : Logger::$path, "a");
-        }
-        fwrite(Logger::$fd, sprintf($format, date("Y/m/d h:i:s"), $msg));
+        $fd = Logger::$fd[self::$path];
+        if(!is_resource($fd)) self::setPath();
+        fwrite($fd, sprintf($format, date("Y/m/d h:i:s"), $msg));
     }
 }
