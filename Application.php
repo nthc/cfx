@@ -68,13 +68,15 @@ class Application
     
     public static $cliOutput = "";
     
+    public static $config;
+    
     /**
      * A method to add a stylesheet to the list of stylesheets
      *
      * @param string $href A path to the stylesheet
      * @param string $media The media of the stylesheet. Defaults to all.
      */
-    public static function addStylesheet($href, $media="all")
+    public static function addStylesheet($href, $searchPath = '', $media="all")
     {
         if(array_search(array("href"=>$href,"media"=>$media),Application::$stylesheets)===false)
         {

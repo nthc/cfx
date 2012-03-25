@@ -17,63 +17,12 @@ if(isset($_REQUEST["__api_session_id"]))
  */
 session_start();
 
-/**
- * Load the core utilities which handle auto loading of classes.
- */
-include "coreutils.php";
-
-/**
- * Set the default timezone to Africa/Accra
- */
-date_default_timezone_set("Africa/Accra");
-
-
-/**
- * Tone down on error reporting. Let's igonore notices so that PHP is not too
- * loud.
- */
-error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-
-require "app/config.php";
-
-/**
- * Setup default include paths.
- */
-
-add_include_path("lib");
-add_include_path("lib/controllers");
-add_include_path("lib/fapi/Forms");
-add_include_path("lib/toolbar");
-add_include_path("lib/tapi");
-add_include_path("lib/rapi");
-add_include_path("lib/user");
-add_include_path("lib/models");
-add_include_path("lib/models/datastores");
-add_include_path("lib/cache/");
-add_include_path("lib/models/datastores/databases/$db_driver/");
-
-require_once "lib/models/datastores/databases/$db_driver/$db_driver.php";
-require "app/includes.php";
-
-global $redirectedPackage;
-global $packageSchema;
-
-
-SQLDBDataStore::$activeDriver = $db_driver;
-Cache::init($cache_method);
-define('CACHE_MODELS', $cache_models);
-define('CACHE_PREFIX', "");
-define('ENABLE_AUDIT_TRAILS', $enable_audit_trails);
-
-if(ENABLE_AUDIT_TRAILS === true)
-{
-    require_once "app/modules/system/audit_trail/SystemAuditTrailModel.php";
-}
+require "wyf_bootstrap.php";
 
 /**
  * Bootstrap for CLI utilization
  */
-if(defined("STDIN"))
+if($cliMode === true)
 {
     for ($i = 1; $i < $argc; $i++)
     {

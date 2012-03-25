@@ -9,8 +9,7 @@ class SQLDatabaseModel extends Model
     
     public static function getDatastoreInstance() 
     {
-        require SOFTWARE_HOME . "app/config.php";
-        $class = new ReflectionClass($db_driver);
+        $class = new ReflectionClass(SQLDBDataStore::$activeDriverClass);
         return $class->newInstance();
     }
     

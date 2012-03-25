@@ -6,7 +6,7 @@
  * @author james
  *
  */
-class postgresql extends SQLDBDataStore
+class Postgresql extends SQLDBDataStore
 {
     protected static $_conn = null;
     private static $namesSeen = array();
@@ -14,33 +14,33 @@ class postgresql extends SQLDBDataStore
 
     public function __construct()
     {
-        if(!is_resource(postgresql::$_conn))
+        if(!is_resource(self::$_conn))
         {
-            postgresql::$_conn = Db::get();
+            self::$_conn = Db::get();
         }
     }
     
     public function __wakeup()
     {
-        if(!is_resource(postgresql::$_conn))
+        if(!is_resource(self::$_conn))
         {
-            postgresql::$_conn = Db::get();
+            self::$_conn = Db::get();
         }
     }
 
     public function beginTransaction($external = true)
     {
-        if(postgresql::$nesting == 0)
+        if(self::$nesting == 0)
         {
             $this->query("BEGIN");
         }
-        postgresql::$nesting++;
+        self::$nesting++;
     }
 
     public function endTransaction($external = true)
     {
-        postgresql::$nesting--;
-        if(postgresql::$nesting == 0)
+        self::$nesting--;
+        if(self::$nesting == 0)
         {
             $this->query("COMMIT");
         }
@@ -54,9 +54,6 @@ class postgresql extends SQLDBDataStore
         $joined = null;
         $sorting = null;
 
-        // Get information about all referenced models and pull out all
-        // the required information as well as build up the join parts
-        // of the query.
         if($resolve)
         {
             $references = $this->referencedFields;//getReferencedFields();
@@ -168,10 +165,10 @@ class postgresql extends SQLDBDataStore
         $rows = array();
         if(SQLDBDataStore::$debugQueries) SQLDBDataStore::log($query);
         if(mb_detect_encoding($query) != 'UTF-8') $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
-        $result = pg_query(postgresql::$_conn, $query);
+        $result = pg_query(self::$_conn, $query);
         if($result === false)
         {
-            throw new Exception("PGSQL Says " . pg_errormessage(postgresql::$_conn) . " [$query]");
+            throw new Exception("PGSQL Says " . pg_errormessage(self::$_conn) . " [$query]");
         }
         
         switch($mode)
@@ -189,7 +186,7 @@ class postgresql extends SQLDBDataStore
             $rows[] = $row;
         }
         
-        postgresql::$namesSeen = array();
+        self::$namesSeen = array();
         
         return $rows;
     }
@@ -257,11 +254,7 @@ class postgresql extends SQLDBDataStore
         switch($field["type"])
         {
             case "date":
-                /*$ret = "CASE WHEN $value='' THEN NULL ELSE ($value - to_date('01-JAN-1970','DD-MON-YYYY')) * (86400) END";
-                break;*/
-
             case "datetime":
-                //$ret = "CASE WHEN $value='' THEN NULL ELSE ($value - to_date('01-JAN-1970','DD-MON-YYYY')) * (86400) END";
                 $ret = "date_part('epoch', \"timestamp\"($value))";
                 break;
 
@@ -275,12 +268,12 @@ class postgresql extends SQLDBDataStore
     {
         if($uniqueNames)
         {
-            if(array_search($field["name"], postgresql::$namesSeen) !== false)
+            if(array_search($field["name"], self::$namesSeen) !== false)
             {
-                $prepend = count(array_keys(postgresql::$namesSeen, $field["name"]));
+                $prepend = count(array_keys(self::$namesSeen, $field["name"]));
             }
             $aliasValue = $field["name"].$prepend;
-            postgresql::$namesSeen[] = $aliasValue;
+            self::$namesSeen[] = $aliasValue;
         }
         else
         {

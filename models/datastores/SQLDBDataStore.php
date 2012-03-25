@@ -18,6 +18,7 @@ abstract class SQLDBDataStore extends DataStore
     private static $multiQueryCache;
     public $database;
     public static $activeDriver;
+    public static $activeDriverClass;
     public static $debugQueries = false;
     public static $debugMode = "file";
     public $modelName;
@@ -271,7 +272,7 @@ abstract class SQLDBDataStore extends DataStore
 
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
-        $method = new ReflectionMethod(SQLDBDataStore::$activeDriver, "getMulti");
+        $method = new ReflectionMethod(SQLDBDataStore::$activeDriverClass, "getMulti");
         return $method->invokeArgs(null, func_get_args());
     }
     

@@ -22,16 +22,18 @@ class TextField extends Field
 
     public function render()
     {
-        $this->addAttribute("class","fapi-textfield ".$this->getCSSClasses());
-        $this->addAttribute("name",$this->getName());
-        $this->addAttribute("id",$this->getId());
-        $this->addAttribute("value",$this->getValue());
+        $this->addAttribute("class", "fapi-textfield ".$this->getCSSClasses());
+        $this->addAttribute("name", $this->getName());
+        $this->addAttribute("id", $this->getId());
+        $this->addAttribute("value", $this->getValue());
+        
         $validations = $this->getJsValidations();
         if($this->ajax && $validations != "[]")
         {
             $this->addAttribute("onblur","fapiValidate('".$this->getId()."',$validations)");
         }
-        return "<input {$this->getAttributes()} />";//.($this->ajax?"<script type='text/javascript'>var {$this->getName()}_errors;</script>"); //class="fapi-textfield '.$this->getCSSClasses().'" type="text" name="'.$this->getName().'" id="'.$this->getId().'" value="'.$this->getValue().'" />';
+        
+        return "<input {$this->getAttributes()} />";
     }
 
     public function getCSSClasses()
