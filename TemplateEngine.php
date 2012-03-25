@@ -9,7 +9,7 @@ class TemplateEngine extends Smarty
     function __construct()
     {
         parent::__construct();
-        $this->template_dir = SOFTWARE_HOME . 'app/templates/';
+        $this->template_dir = SOFTWARE_HOME . 'app/themes/' . Application::$config['theme'] . '/templates';
         $this->compile_dir = SOFTWARE_HOME . 'app/cache/template_compile';
         $this->config_dir = SOFTWARE_HOME . 'config/template/';
         $this->cache_dir = SOFTWARE_HOME . 'app/cache/template';

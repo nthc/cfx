@@ -76,12 +76,9 @@ class Application
      * @param string $href A path to the stylesheet
      * @param string $media The media of the stylesheet. Defaults to all.
      */
-    public static function addStylesheet($href, $searchPath = '', $media="all")
+    public static function addStylesheet($href, $pathPrefix = false, $media="all")
     {
-        if(array_search(array("href"=>$href,"media"=>$media),Application::$stylesheets)===false)
-        {
-            Application::$stylesheets[] = array("href"=>$href,"media"=>$media);
-        }
+        Application::$stylesheets[] = array("href"=>($pathPrefix === false ? "app/themes/" . Application::$config['theme'] . "/" : $pathPrefix) . $href,"media"=>$media);
     }
 
     /**

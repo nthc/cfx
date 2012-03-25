@@ -1,7 +1,7 @@
 <?php
 /**
  * A class for working with data associated to the users.
- * @ingroup Utilities
+ * 
  */
 class User
 {
@@ -14,8 +14,8 @@ class User
     {
         $db = Db::get();
         $data = Db::escape(json_encode($data));
-        
-        if(ENABLE_AUDIT_TRAILS === false)
+                
+        if(ENABLE_AUDIT_TRAILS === true)
         {
             SystemAuditTrailModel::log(
                 array(
@@ -33,6 +33,7 @@ class User
      *
      * @param string $permission The permission to be tested
      * @param integer $role_id The role for which the permission should be tested
+     * 
      * @return boolean
      */
     public static function getPermission($permission,$role_id=null)
