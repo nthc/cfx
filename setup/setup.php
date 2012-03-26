@@ -14,7 +14,7 @@ $host = get_response("Where is your application's database hosted", 'localhost',
 $port = get_response("What is the port of this database", '5432', null, true);
 $username = get_response("What is the database username", null, null, true);
 $password = get_response("What is the password for the database");
-$database = get_response("What is the name of your application's database", null, null, true);
+$database = get_response("What is the name of your application's database (please ensure that the database exists)", null, null, true);
 $home = get_response("Where is your application residing", getcwd(), null, null, true) . "/";
 $prefix = get_response("What is the prefix of your application (Enter 'no prefix' if you do not want a prefix)", basename($home));
 
@@ -81,12 +81,28 @@ $config = <<< "CONFIG"
 );
 CONFIG;
 file_put_contents($home . 'app/config.php', $config);
-
-
 file_put_contents($home . 'app/includes.php', "<?php\n");
 file_put_contents($home . 'app/bootstrap.php', "<?php\n");
 
+require "lib/wyf_bootstrap.php";
 
+echo "\nSetting up the database ...\n";
+
+Db::query(file_get_contents("lib/setup/schema.sql"));
+$username = get_response("Enter a name for the superuser account", 'super', null, true);
+$email = get_response('Provide your email address', null, null, true);
+Db::query("INSERT INTO system.roles(role_id, role_name) VALUES(1, 'Super User')");
+Db::query(
+    sprintf(
+    	"INSERT INTO system.users
+    		(user_name, password, role_id, first_name, last_name, user_status, email) 
+    	VALUES
+    	 	('%s', '%s', 1, 'Super', 'User', 2, '%s')", 
+        Db::escape($username),
+        Db::escape($username),
+        Db::escape($email)
+    )
+);
 
 echo "\nDone! Happy programming ;)\n\n";
 
@@ -141,7 +157,7 @@ function get_response($question, $default=null, $answers=null, $notNull = false)
 
 function mkdir2($path)
 {
-    echo("\nCreating directory $path\n");
+    echo("Creating directory $path\n");
     if(!\is_writable(dirname($path)))
     {
         fputs(STDERR, "You do not have permissions to create the $path directory\n");

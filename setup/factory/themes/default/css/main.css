@@ -4,7 +4,7 @@ body
 {
     font-family:Arial, Sans;
     font-size:small;
-    background-color:#F6FFDB;
+    background-color:#fff;
     background-image:url(../images/noise.png);
     margin:0px;
 }
@@ -82,9 +82,7 @@ body
 {
     font-size:0.7em;
     text-align:center;
-    color:#fff;
     clear:both;
-    background-color:#739f73;
     padding:10px;
 }
 
@@ -423,29 +421,29 @@ div#table-wrapper
 
 ul.table-pages
 {
-list-style:none;
-margin:0px;
-padding:2px;
-background-color:#DCECAE;
-background-image:url('../images/bottom-gradient.gif');
-font-size:smaller;
+	list-style:none;
+	margin:0px;
+	padding:2px;
+	background-color:#DCECAE;
+	background-image:url('../images/bottom-gradient.gif');
+	font-size:smaller;
 }
 
 ul.table-pages li
 {
-display:inline;
-padding:5px;
+	display:inline;
+	padding:5px;
 }
 
 ul.table-pages a.page-selected
 {
-color:#fff;
+    color:#fff;
 }
 
 .tapi-search-row
 {
-background-color:#C7DA91;
-display:none;
+	background-color:#C7DA91;
+	display:none;
 }
 
 /**************************[REPORTING]******************************/

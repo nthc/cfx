@@ -35,7 +35,7 @@
 </div>
 </div>
 <div id="footer">
-    <p>Copyright &copy; 2009-2010, NTHC Limited</p>
+    <p>Powered by WYF Framework</p>
 </div>
 </div>
 </body>
