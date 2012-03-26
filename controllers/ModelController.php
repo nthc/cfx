@@ -164,13 +164,13 @@ class ModelController extends Controller
     public function __construct($model = "")
     {
         global $redirectedPackage;
-        $this->modelName = $redirectedPackage . ($this->modelName == "" ? $model : $this->modelName);
+        $this->modelName = ($this->modelName == "" ? $model : $this->modelName);
         $this->permissionPrefix = str_replace(".", "_", $this->modelName);
         $this->model = Model::load($this->modelName);
         $this->name = $this->model->name;
         $this->t = $t;
         $this->path = $path;
-        $this->urlBase = $this->urlBase == '' ? $this->modelName : $this->urlBase;
+        $this->urlBase = $this->urlBase == '' ? ($redirectedPackage != '' ? "$redirectedPackage" : '') . $this->modelName : $this->urlBase;
         $this->urlPath = Application::$prefix."/".str_replace(".","/",$this->urlBase);
         $this->localPath = "app/modules/".str_replace(".","/",$this->urlBase);
         
@@ -180,7 +180,6 @@ class ModelController extends Controller
             $this->apiMode = true;
             unset($_REQUEST["__api_mode"]);
             unset($_REQUEST["q"]);
-            //header("Content-Type: text/javascript");
         }
         else
         {
@@ -348,7 +347,7 @@ class ModelController extends Controller
         if($this->redirected)
         {
             $formName = $this->redirectedPackageName . Application::camelize($this->mainRedirectedPackage) . "Form";
-            $formPath = "app/lib/". $this->redirectPath . "/" . str_replace(".", "/", $this->mainRedirectedPackage) . "/" . $formName . ".php";
+            $formPath = $this->redirectPath . "/" . str_replace(".", "/", $this->mainRedirectedPackage) . "/" . $formName . ".php";
         }
         else
         {

@@ -1,0 +1,75 @@
+.tapi-table
+{
+border-collapse:collapse;
+empty-cells:show;
+background-color:#ffffff;
+width:100%;
+table-layout:fixed;
+}
+
+.tapi-table thead
+{
+background-color:#dae9e9;
+color:#3F863F;
+font-weight:bold;
+}
+
+.tapi-table thead td
+{
+	padding:3px;
+	padding-right:7px;
+	padding-left:7px;
+
+}
+
+.tapi-table tbody td
+{
+	padding:3px;
+	height: 20px;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+}
+
+.tapi-table tbody td,.tapi-table tbody tr
+{
+	border-bottom:1px solid #CACACA;
+	border-right:1px dotted #dadada;
+	padding-right:7px;
+	padding-left:7px;
+}
+
+div.operations-box
+{
+    padding:3px;
+    height:20px;
+    display:none;
+    position:absolute;
+    padding-left:60px;
+    background-image:url(../images/operations.png);
+    background-position:0%;
+}
+
+a.tapi-operation
+	{
+	padding-right:4px;
+	padding-top:2px;
+	padding-bottom:2px;
+	font-weight:normal;
+	font-size:smaller;
+	margin:2px;
+	background-color:#F7F7F7;
+}
+
+.tapi-icon
+{
+    padding-left:17px;
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+}
+
+.tapi-iaction{background-image:url(../images/icons/action.png)}
+.tapi-idelete{background-image:url(../images/icons/deletesmall.png)}
+.tapi-iedit{background-image:url(../images/icons/edit.png)}
+.tapi-iaudit{background-image:url(../images/icons/history.png)}
+.tapi-iview{background-image:url(../images/icons/view.png)}

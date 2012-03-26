@@ -50,7 +50,7 @@ Db::$defaultDatabase = $selected;
 SQLDBDataStore::$activeDriverClass = $dbDriverClass;
 
 Application::$config = $config;
-
+Application::$prefix = $config['prefix'];
 
 Cache::init($config['cache']['method']);
 define('CACHE_MODELS', $config['cache']['models']);

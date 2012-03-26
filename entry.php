@@ -19,6 +19,10 @@ session_start();
 
 require "wyf_bootstrap.php";
 
+$authExcludedPaths = array(
+    "system/login",
+);
+
 /**
  * Bootstrap for CLI utilization
  */
@@ -91,6 +95,60 @@ if($cliMode === true)
 }
 else
 {
+    $t = new TemplateEngine();
+    Application::$templateEngine = $t;
+            
+    if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 3) != "api")
+    {
+        $redirect = urlencode(Application::getLink($_GET["q"]));
+        foreach($_GET as $key=>$value) 
+        {
+            if($key == "q") continue;
+            $redirect .= urlencode("$key=$value");
+        }
+        header("Location: ".Application::getLink("/system/login") . "?redirect=$redirect");
+    }
+    else if ($_SESSION["logged_in"] === true )
+    {
+        if ($_SESSION["user_mode"] == 2 && $_GET["q"] != "system/login/change_password")
+        {
+            header("Location: " . Application::getLink("/system/login/change_password"));
+        }
+        
+        Application::addJavaScript("lib/js/ntentan.js");
+        
+        $t->assign('username', $_SESSION["user_name"]);
+        if (isset($_GET["notification"]))
+        {
+            $t->assign('notification', "<div id='notification'>" . $_GET["notification"] . "</div>");
+        }
+    
+        $menuFile = SOFTWARE_HOME . "app/cache/menus/side_menu_{$_SESSION["role_id"]}.html";
+        if(file_exists($menuFile))
+        {
+            $t->assign(
+                'side_menu', 
+                file_get_contents($menuFile)
+            );
+        }
+    
+        $top_menu_items = explode("/", $_GET["q"]);
+        for($i = 0; $i < count($top_menu_items); $i++)
+        {
+            $item = $top_menu_items[$i];
+            $link .= "/" . $item;
+            while(is_numeric($top_menu_items[$i + 1]))
+            {
+                $link .= "/" . $top_menu_items[$i + 1];
+                $i++;
+            }
+            $item = str_replace("_", " ", $item);
+            $item = ucwords($item);
+            $top_menu .= " <a href='".Application::getLink($link)."'><span>$item</span></a>";
+        }
+        $t->assign('top_menu', $top_menu);
+    }
+    
     if($_SESSION['logged_in'] == true && ($_GET['q']!='api/table') && ENABLE_AUDIT_TRAILS === true)
     {
         $data = json_encode(
@@ -111,6 +169,16 @@ else
                 'data' => $data
             )
         );
-    }    
+    }
+    
+    Application::addStylesheet("css/fapi.css", "lib/fapi/");
+    Application::addStylesheet("css/main.css");
+    
+    Application::addJavaScript("lib/fapi/js/fapi.js", "lib/fapi");
+    Application::addJavaScript("lib/js/jquery.js");
+    Application::addJavaScript("lib/js/jquery-ui.js");
+    Application::addJavaScript("lib/js/json2.js");
+    
+    Application::$site_name = Application::$config['name'];
     Application::render();
 }

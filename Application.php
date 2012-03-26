@@ -70,6 +70,8 @@ class Application
     
     public static $config;
     
+    public static $templateEngine;
+    
     /**
      * A method to add a stylesheet to the list of stylesheets
      *
@@ -127,20 +129,18 @@ class Application
      */
     public static function render()
     {
-        $t = new TemplateEngine();
+        $t = Application::$templateEngine;
         if($_GET["q"]=="")
         {
             $_GET["q"]= "dashboard";
         }
         $path = explode("/",$_GET["q"]);
-        $mod_prefix = "";
         Application::$template = "main.tpl";
 
         require SOFTWARE_HOME . "app/bootstrap.php";
         $t->assign('prefix',Application::$prefix);
 
         Application::setTitle();
-
         $module = Controller::load($path);
         
         if(Application::$cli)

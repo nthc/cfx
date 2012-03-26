@@ -189,21 +189,21 @@ class Controller
                 $redirectedPackage = $package_path;
                 $packageSchema = $package_schema;
             }
-            else if($redirected === true && file_exists(SOFTWARE_HOME . "app/lib/$redirect_path/$controller_path/$p/report.xml"))
+            else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/report.xml"))
             {
                 $controller_name = $p;
                 $controller_path .= "/$p";
                 $controller_type = Controller::TYPE_REPORT;
                 break;
             }
-            else if($redirected === true && file_exists(SOFTWARE_HOME . "app/lib/$redirect_path/$controller_path/$p/{$baseClassName}Controller.php"))
+            else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/{$baseClassName}Controller.php"))
             {
                 $controller_class_name = $baseClassName . "Controller";
                 $controller_name = $p;
                 $controller_path .= "/$p";
                 $controller_type = Controller::TYPE_MODULE;
                 $package_main .= $p;
-                add_include_path("app/lib/$redirect_path/$controller_path/");
+                add_include_path("$redirect_path/$controller_path/");
                 break;
             }
             else
@@ -257,7 +257,7 @@ class Controller
                     $get_contents = true;
                     $force_output = true;
                 }
-                else if($redirected === true && is_dir(SOFTWARE_HOME . "app/lib/$redirect_path/$controller_path"))
+                else if($redirected === true && is_dir(SOFTWARE_HOME . "$redirect_path/$controller_path"))
                 {
                     $controller = new PackageController($path);
                     $controller_name = "PackageController";

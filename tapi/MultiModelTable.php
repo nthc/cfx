@@ -17,7 +17,7 @@ class MultiModelTable extends Table
     {
         $params["limit"] = $this->itemsPerPage;
         $params["offset"] = $this->itemsPerPage * $params["page"];
-        $params["url"] = Application::$prefix . "/api/table";
+        $params["url"] = Application::$prefix . "/system/api/table";
         $params["id"] = $this->name;
         $params["operations"] = $this->operations;
         $params["moreInfo"] = true;
@@ -163,7 +163,7 @@ class MultiModelTable extends Table
         {
             $table .= "<tr>
                 <td align='center' colspan='".count($this->headers)."'>
-                    <img style='margin:80px' src='".Application::$prefix."/images/loading-image-big.gif' />
+                    <img style='margin:80px' src='".Application::$prefix."/lib/tapi/images/loading-image-big.gif' />
                 </td></tr>";
         }
         else

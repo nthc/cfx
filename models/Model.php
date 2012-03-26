@@ -137,7 +137,7 @@ abstract class Model implements ArrayAccess
                     include $baseModelPath . "package_redirect.php";
                     $modelPathArray = array_slice($modelPathArray, $index + 1);
                     $modelClassName = $package_name . Application::camelize(implode(".", $modelPathArray)) . "Model";
-                    $modelIncludePath = SOFTWARE_HOME . "app/lib/" . $redirect_path . "/" . implode("/" , $modelPathArray);
+                    $modelIncludePath = SOFTWARE_HOME . $redirect_path . "/" . implode("/" , $modelPathArray);
                     $packageSchema = $package_schema;
                     $redirectedPackage = $redirectedPackage == "" ? $package_path : $redirectedPackage;
                     add_include_path($modelIncludePath, false);
