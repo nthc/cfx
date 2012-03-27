@@ -8,7 +8,6 @@
  * call during class loading.
  * 
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
- * @ingroup Controllers
  */
 class Application
 {

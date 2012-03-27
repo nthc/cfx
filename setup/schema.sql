@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2012-03-26 19:48:44 GMT
+-- Started on 2012-03-27 07:52:02 GMT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -12,14 +12,12 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 
 --
--- TOC entry 6 (class 2615 OID 1198248)
--- Name: system; Type: SCHEMA; Schema: -; Owner: postgres
+-- TOC entry 7 (class 2615 OID 1206352)
+-- Name: system; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA system;
 
-
-ALTER SCHEMA system OWNER TO postgres;
 
 SET search_path = system, pg_catalog;
 
@@ -28,9 +26,9 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 1514 (class 1259 OID 1206315)
--- Dependencies: 6
--- Name: audit_trail; Type: TABLE; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1512 (class 1259 OID 1206353)
+-- Dependencies: 7
+-- Name: audit_trail; Type: TABLE; Schema: system; Owner: -; Tablespace: 
 --
 
 CREATE TABLE audit_trail (
@@ -45,12 +43,10 @@ CREATE TABLE audit_trail (
 );
 
 
-ALTER TABLE system.audit_trail OWNER TO postgres;
-
 --
--- TOC entry 1513 (class 1259 OID 1206313)
--- Dependencies: 6 1514
--- Name: audit_trail_audit_trail_id_seq; Type: SEQUENCE; Schema: system; Owner: postgres
+-- TOC entry 1513 (class 1259 OID 1206359)
+-- Dependencies: 7 1512
+-- Name: audit_trail_audit_trail_id_seq; Type: SEQUENCE; Schema: system; Owner: -
 --
 
 CREATE SEQUENCE audit_trail_audit_trail_id_seq
@@ -61,21 +57,19 @@ CREATE SEQUENCE audit_trail_audit_trail_id_seq
     CACHE 1;
 
 
-ALTER TABLE system.audit_trail_audit_trail_id_seq OWNER TO postgres;
-
 --
--- TOC entry 1816 (class 0 OID 0)
+-- TOC entry 1823 (class 0 OID 0)
 -- Dependencies: 1513
--- Name: audit_trail_audit_trail_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: postgres
+-- Name: audit_trail_audit_trail_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: -
 --
 
 ALTER SEQUENCE audit_trail_audit_trail_id_seq OWNED BY audit_trail.audit_trail_id;
 
 
 --
--- TOC entry 1516 (class 1259 OID 1206331)
--- Dependencies: 6
--- Name: audit_trail_data; Type: TABLE; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1514 (class 1259 OID 1206361)
+-- Dependencies: 7
+-- Name: audit_trail_data; Type: TABLE; Schema: system; Owner: -; Tablespace: 
 --
 
 CREATE TABLE audit_trail_data (
@@ -85,12 +79,10 @@ CREATE TABLE audit_trail_data (
 );
 
 
-ALTER TABLE system.audit_trail_data OWNER TO postgres;
-
 --
--- TOC entry 1515 (class 1259 OID 1206329)
--- Dependencies: 1516 6
--- Name: audit_trail_data_audit_trail_data_id_seq; Type: SEQUENCE; Schema: system; Owner: postgres
+-- TOC entry 1515 (class 1259 OID 1206367)
+-- Dependencies: 7 1514
+-- Name: audit_trail_data_audit_trail_data_id_seq; Type: SEQUENCE; Schema: system; Owner: -
 --
 
 CREATE SEQUENCE audit_trail_data_audit_trail_data_id_seq
@@ -101,21 +93,19 @@ CREATE SEQUENCE audit_trail_data_audit_trail_data_id_seq
     CACHE 1;
 
 
-ALTER TABLE system.audit_trail_data_audit_trail_data_id_seq OWNER TO postgres;
-
 --
--- TOC entry 1817 (class 0 OID 0)
+-- TOC entry 1824 (class 0 OID 0)
 -- Dependencies: 1515
--- Name: audit_trail_data_audit_trail_data_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: postgres
+-- Name: audit_trail_data_audit_trail_data_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: -
 --
 
 ALTER SEQUENCE audit_trail_data_audit_trail_data_id_seq OWNED BY audit_trail_data.audit_trail_data_id;
 
 
 --
--- TOC entry 1508 (class 1259 OID 1198252)
--- Dependencies: 6
--- Name: permissions; Type: TABLE; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1516 (class 1259 OID 1206369)
+-- Dependencies: 7
+-- Name: permissions; Type: TABLE; Schema: system; Owner: -; Tablespace: 
 --
 
 CREATE TABLE permissions (
@@ -127,12 +117,10 @@ CREATE TABLE permissions (
 );
 
 
-ALTER TABLE system.permissions OWNER TO postgres;
-
 --
--- TOC entry 1509 (class 1259 OID 1198258)
--- Dependencies: 1508 6
--- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: system; Owner: postgres
+-- TOC entry 1517 (class 1259 OID 1206375)
+-- Dependencies: 7 1516
+-- Name: permissions_permission_id_seq; Type: SEQUENCE; Schema: system; Owner: -
 --
 
 CREATE SEQUENCE permissions_permission_id_seq
@@ -143,21 +131,19 @@ CREATE SEQUENCE permissions_permission_id_seq
     CACHE 1;
 
 
-ALTER TABLE system.permissions_permission_id_seq OWNER TO postgres;
-
 --
--- TOC entry 1818 (class 0 OID 0)
--- Dependencies: 1509
--- Name: permissions_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: postgres
+-- TOC entry 1825 (class 0 OID 0)
+-- Dependencies: 1517
+-- Name: permissions_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: -
 --
 
 ALTER SEQUENCE permissions_permission_id_seq OWNED BY permissions.permission_id;
 
 
 --
--- TOC entry 1510 (class 1259 OID 1198260)
--- Dependencies: 6
--- Name: roles; Type: TABLE; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1518 (class 1259 OID 1206377)
+-- Dependencies: 7
+-- Name: roles; Type: TABLE; Schema: system; Owner: -; Tablespace: 
 --
 
 CREATE TABLE roles (
@@ -166,12 +152,10 @@ CREATE TABLE roles (
 );
 
 
-ALTER TABLE system.roles OWNER TO postgres;
-
 --
--- TOC entry 1511 (class 1259 OID 1198263)
--- Dependencies: 1510 6
--- Name: roles_role_id_seq; Type: SEQUENCE; Schema: system; Owner: postgres
+-- TOC entry 1519 (class 1259 OID 1206380)
+-- Dependencies: 7 1518
+-- Name: roles_role_id_seq; Type: SEQUENCE; Schema: system; Owner: -
 --
 
 CREATE SEQUENCE roles_role_id_seq
@@ -182,21 +166,19 @@ CREATE SEQUENCE roles_role_id_seq
     CACHE 1;
 
 
-ALTER TABLE system.roles_role_id_seq OWNER TO postgres;
-
 --
--- TOC entry 1819 (class 0 OID 0)
--- Dependencies: 1511
--- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: postgres
+-- TOC entry 1826 (class 0 OID 0)
+-- Dependencies: 1519
+-- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: -
 --
 
 ALTER SEQUENCE roles_role_id_seq OWNED BY roles.role_id;
 
 
 --
--- TOC entry 1507 (class 1259 OID 1198249)
--- Dependencies: 6
--- Name: users; Type: TABLE; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1520 (class 1259 OID 1206382)
+-- Dependencies: 7
+-- Name: users; Type: TABLE; Schema: system; Owner: -; Tablespace: 
 --
 
 CREATE TABLE users (
@@ -212,12 +194,10 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE system.users OWNER TO postgres;
-
 --
--- TOC entry 1512 (class 1259 OID 1198265)
--- Dependencies: 1507 6
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: system; Owner: postgres
+-- TOC entry 1521 (class 1259 OID 1206385)
+-- Dependencies: 7 1520
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: system; Owner: -
 --
 
 CREATE SEQUENCE users_user_id_seq
@@ -228,66 +208,64 @@ CREATE SEQUENCE users_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE system.users_user_id_seq OWNER TO postgres;
-
 --
--- TOC entry 1820 (class 0 OID 0)
--- Dependencies: 1512
--- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: postgres
+-- TOC entry 1827 (class 0 OID 0)
+-- Dependencies: 1521
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: system; Owner: -
 --
 
 ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 
 
 --
--- TOC entry 1797 (class 2604 OID 1206318)
--- Dependencies: 1513 1514 1514
--- Name: audit_trail_id; Type: DEFAULT; Schema: system; Owner: postgres
+-- TOC entry 1801 (class 2604 OID 1206387)
+-- Dependencies: 1513 1512
+-- Name: audit_trail_id; Type: DEFAULT; Schema: system; Owner: -
 --
 
 ALTER TABLE audit_trail ALTER COLUMN audit_trail_id SET DEFAULT nextval('audit_trail_audit_trail_id_seq'::regclass);
 
 
 --
--- TOC entry 1798 (class 2604 OID 1206334)
--- Dependencies: 1516 1515 1516
--- Name: audit_trail_data_id; Type: DEFAULT; Schema: system; Owner: postgres
+-- TOC entry 1802 (class 2604 OID 1206388)
+-- Dependencies: 1515 1514
+-- Name: audit_trail_data_id; Type: DEFAULT; Schema: system; Owner: -
 --
 
 ALTER TABLE audit_trail_data ALTER COLUMN audit_trail_data_id SET DEFAULT nextval('audit_trail_data_audit_trail_data_id_seq'::regclass);
 
 
 --
--- TOC entry 1795 (class 2604 OID 1198267)
--- Dependencies: 1509 1508
--- Name: permission_id; Type: DEFAULT; Schema: system; Owner: postgres
+-- TOC entry 1803 (class 2604 OID 1206389)
+-- Dependencies: 1517 1516
+-- Name: permission_id; Type: DEFAULT; Schema: system; Owner: -
 --
 
 ALTER TABLE permissions ALTER COLUMN permission_id SET DEFAULT nextval('permissions_permission_id_seq'::regclass);
 
 
 --
--- TOC entry 1796 (class 2604 OID 1198268)
--- Dependencies: 1511 1510
--- Name: role_id; Type: DEFAULT; Schema: system; Owner: postgres
+-- TOC entry 1804 (class 2604 OID 1206390)
+-- Dependencies: 1519 1518
+-- Name: role_id; Type: DEFAULT; Schema: system; Owner: -
 --
 
 ALTER TABLE roles ALTER COLUMN role_id SET DEFAULT nextval('roles_role_id_seq'::regclass);
 
 
 --
--- TOC entry 1794 (class 2604 OID 1198269)
--- Dependencies: 1512 1507
--- Name: user_id; Type: DEFAULT; Schema: system; Owner: postgres
+-- TOC entry 1805 (class 2604 OID 1206391)
+-- Dependencies: 1521 1520
+-- Name: user_id; Type: DEFAULT; Schema: system; Owner: -
 --
 
 ALTER TABLE users ALTER COLUMN user_id SET DEFAULT nextval('users_user_id_seq'::regclass);
 
 
 --
--- TOC entry 1808 (class 2606 OID 1206323)
--- Dependencies: 1514 1514
--- Name: audit_trail_audit_id_pk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1807 (class 2606 OID 1206393)
+-- Dependencies: 1512 1512
+-- Name: audit_trail_audit_id_pk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY audit_trail
@@ -295,9 +273,9 @@ ALTER TABLE ONLY audit_trail
 
 
 --
--- TOC entry 1810 (class 2606 OID 1206339)
--- Dependencies: 1516 1516
--- Name: audit_trail_data_id_pk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1809 (class 2606 OID 1206395)
+-- Dependencies: 1514 1514
+-- Name: audit_trail_data_id_pk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY audit_trail_data
@@ -305,9 +283,9 @@ ALTER TABLE ONLY audit_trail_data
 
 
 --
--- TOC entry 1804 (class 2606 OID 1198271)
--- Dependencies: 1508 1508
--- Name: perm_id_pk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1811 (class 2606 OID 1206397)
+-- Dependencies: 1516 1516
+-- Name: perm_id_pk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY permissions
@@ -315,9 +293,9 @@ ALTER TABLE ONLY permissions
 
 
 --
--- TOC entry 1806 (class 2606 OID 1198273)
--- Dependencies: 1510 1510
--- Name: role_id_pk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1813 (class 2606 OID 1206399)
+-- Dependencies: 1518 1518
+-- Name: role_id_pk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY roles
@@ -325,9 +303,9 @@ ALTER TABLE ONLY roles
 
 
 --
--- TOC entry 1800 (class 2606 OID 1198275)
--- Dependencies: 1507 1507
--- Name: user_id_pk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1815 (class 2606 OID 1206401)
+-- Dependencies: 1520 1520
+-- Name: user_id_pk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY users
@@ -335,9 +313,9 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 1802 (class 2606 OID 1198277)
--- Dependencies: 1507 1507
--- Name: user_name_uk; Type: CONSTRAINT; Schema: system; Owner: postgres; Tablespace: 
+-- TOC entry 1817 (class 2606 OID 1206403)
+-- Dependencies: 1520 1520
+-- Name: user_name_uk; Type: CONSTRAINT; Schema: system; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY users
@@ -345,9 +323,9 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 1813 (class 2606 OID 1206324)
--- Dependencies: 1799 1514 1507
--- Name: audit_trail_user_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: postgres
+-- TOC entry 1818 (class 2606 OID 1206404)
+-- Dependencies: 1512 1814 1520
+-- Name: audit_trail_user_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: -
 --
 
 ALTER TABLE ONLY audit_trail
@@ -355,9 +333,9 @@ ALTER TABLE ONLY audit_trail
 
 
 --
--- TOC entry 1812 (class 2606 OID 1198278)
--- Dependencies: 1805 1510 1508
--- Name: permissios_role_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: postgres
+-- TOC entry 1819 (class 2606 OID 1206409)
+-- Dependencies: 1518 1516 1812
+-- Name: permissios_role_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: -
 --
 
 ALTER TABLE ONLY permissions
@@ -365,16 +343,16 @@ ALTER TABLE ONLY permissions
 
 
 --
--- TOC entry 1811 (class 2606 OID 1198283)
--- Dependencies: 1510 1507 1805
--- Name: users_role_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: postgres
+-- TOC entry 1820 (class 2606 OID 1206414)
+-- Dependencies: 1518 1812 1520
+-- Name: users_role_id_fk; Type: FK CONSTRAINT; Schema: system; Owner: -
 --
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_role_id_fk FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL;
 
 
--- Completed on 2012-03-26 19:48:44 GMT
+-- Completed on 2012-03-27 07:52:03 GMT
 
 --
 -- PostgreSQL database dump complete

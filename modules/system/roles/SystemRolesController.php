@@ -234,12 +234,12 @@ class SystemRolesController extends ModelController
         
         $list = array();
         while (false !== ($entry = $d->read()))
-        {    
+        {
             if($entry != "." && $entry != ".."  && is_dir("$path/$entry"))
             {
                 if($redirected)
                 {
-                    $urlPath = substr("$originalPath/$entry",strlen($prefix));
+                    $urlPath = substr("$originalPath/$entry",strlen($prefix)+1);
                     $modulePath = explode("/", substr(substr("$originalPath/$entry", strlen($prefix)), 1));
                     $module = Controller::load($modulePath, false);
                 }
@@ -252,7 +252,6 @@ class SystemRolesController extends ModelController
                 
                 if($module->showInMenu())
                 {
-                    //$children = $this->getPermissionList("$path/$entry", $prefix);
                     $permissions = $module->getPermissions();
                     $list[] = array(
                         "title"          => ucwords(str_replace("_", " ", $entry)), 

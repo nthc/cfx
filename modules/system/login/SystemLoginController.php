@@ -67,8 +67,7 @@ class SystemLoginController extends Controller
 
     public function api()
     {
-        var_dump($_POST);
-        die();
+        
     }
 
     /**
@@ -137,7 +136,7 @@ class SystemLoginController extends Controller
                 {
                     case "0":
                         $form->addErrorr("Your account is currently inactive"
-                                  . "please contact the system administrator.");
+                             . "please contact the system administrator.");
                         return true;
                         break;
                     
