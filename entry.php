@@ -174,10 +174,10 @@ else
     Application::addStylesheet("css/fapi.css", "lib/fapi/");
     Application::addStylesheet("css/main.css");
     
-    Application::addJavaScript("lib/fapi/js/fapi.js", "lib/fapi");
-    Application::addJavaScript("lib/js/jquery.js");
-    Application::addJavaScript("lib/js/jquery-ui.js");
-    Application::addJavaScript("lib/js/json2.js");
+    Application::addJavaScript(Application::getLink("/lib/fapi/js/fapi.js"));
+    Application::addJavaScript(Application::getLink("/lib/js/jquery.js"));
+    Application::addJavaScript(Application::getLink("/lib/js/jquery-ui.js"));
+    Application::addJavaScript(Application::getLink("/lib/js/json2.js"));
     
     Application::$site_name = Application::$config['name'];
     Application::render();
