@@ -100,7 +100,7 @@ else
             
     if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 3) != "api")
     {
-        $redirect = urlencode(Application::getLink($_GET["q"]));
+        $redirect = urlencode(Application::getLink("/{$_GET["q"]}"));
         foreach($_GET as $key=>$value) 
         {
             if($key == "q") continue;

@@ -245,8 +245,9 @@ class SystemRolesController extends ModelController
                 }
                 else
                 {
-                    $urlPath = substr("$path/$entry",strlen($prefix));
+                    $urlPath = str_replace("//", "/", substr("$path/$entry",strlen($prefix)));
                     $modulePath = explode("/", substr(substr("$path/$entry", strlen($prefix)), 1));
+                    if($modulePath[0] == '') array_shift($modulePath);
                     $module = Controller::load($modulePath, false);
                 }
                 

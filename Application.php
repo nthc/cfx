@@ -61,6 +61,10 @@ class Application
      */
     public static $menus = array();
 
+    /**
+     * The path of the packages
+     * @var unknown_type
+     */
     public static  $packagesPath;
     
     public static $cli = false;
