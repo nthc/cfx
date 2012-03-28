@@ -115,7 +115,7 @@ else
             header("Location: " . Application::getLink("/system/login/change_password"));
         }
         
-        Application::addJavaScript("lib/js/ntentan.js");
+        Application::addJavaScript(Application::getLink("/lib/js/ntentan.js"));
         
         $t->assign('username', $_SESSION["user_name"]);
         if (isset($_GET["notification"]))
