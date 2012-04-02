@@ -23,6 +23,9 @@ $authExcludedPaths = array(
     "system/login",
 );
 
+$t = new TemplateEngine();
+Application::$templateEngine = $t;
+
 /**
  * Bootstrap for CLI utilization
  */
@@ -95,8 +98,6 @@ if($cliMode === true)
 }
 else
 {
-    $t = new TemplateEngine();
-    Application::$templateEngine = $t;
             
     if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 3) != "api")
     {
