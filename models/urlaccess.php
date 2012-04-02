@@ -1,20 +1,10 @@
 <?php
 session_start();
-error_reporting(E_ALL ^ E_NOTICE);
-set_include_path(get_include_path() . PATH_SEPARATOR . "../../");
 
-date_default_timezone_set("Africa/Accra");
+set_include_path("../.." . PATH_SEPARATOR . get_include_path());
+//set_include_path( . $path . PATH_SEPARATOR . get_include_path());
 
-require "lib/coreutils.php";
-require "../../app/config.php";
-require "../../app/includes.php";
-
-add_include_path("lib");
-add_include_path("lib/models");
-add_include_path("lib/models/datastores");
-add_include_path("lib/models/datastores/databases/oracle");
-add_include_path("lib/models/datastores/databases/postgresql");
-add_include_path("lib/cache");
+require "../wyf_bootstrap.php";
 
 Cache::init($cache_method);
 
@@ -22,8 +12,6 @@ define('CACHE_PREFIX', "../../");
 define('CACHE_MODELS', $cache_models);
 
 $object = unserialize(base64_decode($_REQUEST["object"]));
-
-//Application::$packagesPath = "../../";
 
 $model = Model::load($object["model"]);
 
