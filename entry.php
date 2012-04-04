@@ -98,7 +98,7 @@ if($cliMode === true)
 }
 else
 {
-    if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 3) != "api")
+    if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 10) != "system/api")
     {
         $redirect = urlencode(Application::getLink("/{$_GET["q"]}"));
         foreach($_GET as $key=>$value) 
@@ -149,7 +149,7 @@ else
         $t->assign('top_menu', $top_menu);
     }
     
-    if($_SESSION['logged_in'] == true && ($_GET['q']!='api/table') && ENABLE_AUDIT_TRAILS === true)
+    if($_SESSION['logged_in'] == true && ($_GET['q']!='system/api/table') && ENABLE_AUDIT_TRAILS === true)
     {
         $data = json_encode(
             array(
