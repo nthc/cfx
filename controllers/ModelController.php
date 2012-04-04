@@ -151,6 +151,10 @@ class ModelController extends Controller
      */
     protected $hasDeleteOperation = true;
     
+    protected $forceAddOperation = false;
+    protected $forceEditOperation = false;
+    protected $forceDeleteOperation = false;
+    
     protected $historyModels = array();
     
     protected $urlBase;
@@ -208,7 +212,7 @@ class ModelController extends Controller
     {
         if($this->hasAddOperation)
         {
-            if(User::getPermission($this->permissionPrefix . "_can_add"))
+            if(User::getPermission($this->permissionPrefix . "_can_add") || $this->forceAddOperation)
             {
                 $this->toolbar->addLinkButton("New",$this->name . "/add");
             }
@@ -234,7 +238,7 @@ class ModelController extends Controller
     
         if($this->hasEditOperation)
         {
-            if(User::getPermission($this->permissionPrefix."_can_edit"))
+            if(User::getPermission($this->permissionPrefix."_can_edit") || $this->forceEditOperation)
             {
                 $this->table->addOperation("edit","Edit");
             }
@@ -242,10 +246,9 @@ class ModelController extends Controller
         
         if($this->hasDeleteOperation)
         {
-            if(User::getPermission($this->permissionPrefix."_can_delete"))
+            if(User::getPermission($this->permissionPrefix."_can_delete") || $this->forceDeleteOperation)
             {
                 $this->table->addOperation("delete","Delete","javascript:ntentan.confirmRedirect('Are you sure you want to delete','{$this->urlPath}/%path%/%key%')");
-                //$this->toolbar->addLinkButton("Delete","javascript:ntentan.tapi.remove(\"{$this->table->name}\")");
             }
         }
 
