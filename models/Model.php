@@ -385,7 +385,7 @@ abstract class Model implements ArrayAccess
             {
                 $id = $this->datastore->data[$this->getKeyField()];
             }
-            if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails != false)
+            if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails == false)
             {
                 SystemAuditTrailModel::log(
                     array(
@@ -445,7 +445,7 @@ abstract class Model implements ArrayAccess
         $explicitRelations = $this->queryExplicitRelations;
         $this->queryResolve = false;
         $this->queryExplicitRelations = false;
-        $before = $this->getWithField2($field, $value);
+        $before = reset($this->getWithField2($field, $value));
         $this->queryResolve = $resolve;
         $this->queryExplicitRelations = $explicitRelations;
         
@@ -454,16 +454,14 @@ abstract class Model implements ArrayAccess
         $this->updateImplementation($field, $value);
         $this->postUpdateHook();
         
-        $data = $this->escape(
-            json_encode(
-                array(
-                    "after"=>$this->datastore->data ,
-                    "before"=>$before
-                )
+        $data = json_encode(
+            array(
+                "after"=>$this->datastore->data ,
+                "before"=>$before
             )
         );
         
-        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails != false)
+        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails == false)
         {
             if($this->datastore->tempData[0][$this->getKeyField()] == null)
             {
@@ -480,7 +478,7 @@ abstract class Model implements ArrayAccess
                     'item_type' => $this->package,
                     'description' => 'Updated item',
                     'type' => SystemAuditTrailModel::AUDIT_TYPE_UPDATED_DATA,
-                    'data' => json_encode($data)
+                    'data' => $data
                 )
             );
         }
@@ -515,7 +513,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails != false)
+            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails == false)
             {
                 SystemAuditTrailModel::log(
                     array(
