@@ -445,7 +445,10 @@ abstract class Model implements ArrayAccess
         $explicitRelations = $this->queryExplicitRelations;
         $this->queryResolve = false;
         $this->queryExplicitRelations = false;
-        $before = reset($this->getWithField2($field, $value));
+        
+        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails === false)
+            $before = reset($this->getWithField2($field, $value));
+        
         $this->queryResolve = $resolve;
         $this->queryExplicitRelations = $explicitRelations;
         
@@ -454,15 +457,15 @@ abstract class Model implements ArrayAccess
         $this->updateImplementation($field, $value);
         $this->postUpdateHook();
         
-        $data = json_encode(
-            array(
-                "after"=>$this->datastore->data ,
-                "before"=>$before
-            )
-        );
-        
         if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails == false)
         {
+            $data = json_encode(
+                array(
+                    "after"=>$this->datastore->data ,
+                    "before"=>$before
+                )
+            );
+                        
             if($this->datastore->tempData[0][$this->getKeyField()] == null)
             {
                 $id = $before[0][$this->getKeyField()];
