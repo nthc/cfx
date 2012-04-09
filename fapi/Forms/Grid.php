@@ -79,9 +79,9 @@ class Grid extends Field
         $ret .= "</tr></table>";
 
         $ret .= "<div class='fapi-grid'><table width='100%'><tbody>$gauge";
-        for($i = 0; $i < 50; $i++)
+        for($i = 0; $i < 500; $i++)
         {
-            $ret .= "<tr><td  class='fapi-grid-header'>$i</td>";
+            $ret .= "<tr><td  class='fapi-grid-header'><center>" . ($i + 1) . "</center></td>";
             foreach($this->columns as $j => $column)
             {
                 if(isset($data[$this->name][$i][$column->getName()]))

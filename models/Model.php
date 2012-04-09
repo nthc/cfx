@@ -40,7 +40,7 @@ abstract class Model implements ArrayAccess
     public $keyField;
     public $assumedTransactionMode;
     public $disableAuditTrails = false;
-
+    
     /**
      *
      * @var Array
@@ -296,10 +296,10 @@ abstract class Model implements ArrayAccess
         {
             $this->datastore->data["user_id"] = $_SESSION["user_id"];
         }
-
+        
         foreach($this->fixedValues as $field => $value)
         {
-        	$this->datastore->data[$field] = $value;
+            $this->datastore->data[$field] = $value;
         }
 
         $errors = $this->preValidateHook();
@@ -307,6 +307,30 @@ abstract class Model implements ArrayAccess
 
         if($this->runValidations)
         {
+            $keyField = $this->getKeyField();
+            foreach($this->explicitRelations as $relationship)
+            {
+                $value = $this->datastore->data[$relationship];
+                if(is_array($value) && count($value) > 0)
+                {
+                    $model = Model::load($relationship);
+                    foreach($value as $i => $row)
+                    {
+                        $row[$keyField] = '0';
+                        $rowErrors = $model->setData($row);
+                        if($rowErrors !== true)
+                        {
+                            foreach($rowErrors['errors'] as $fieldName => $error)
+                            {
+                                if($error[0] == '') continue;
+                                $errors[$relationship][] = "Errors on line " . ($i + 1) . ": <b>{$fieldName}</b> ({$error[0]})";
+                                $numErrors++;
+                            }
+                        }
+                    }
+                }
+            }
+            
             foreach($fields as $field)
             {
                 if(!isset($errors[$field["name"]])) $errors[$field["name"]] = array();
