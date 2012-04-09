@@ -138,6 +138,10 @@ class PDFReport extends Report
                     $this->contents[$key] = $content;
                 }
                 break;
+            case "image":
+                $this->pdf->image($content->image, null, null, $content->width, $content->height);
+                break;  
+            
             case "logo":
                 $this->pdf->image($content->image,null,null,8,8);
                 //print $this->pdf->getY();
