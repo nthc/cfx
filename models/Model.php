@@ -468,7 +468,7 @@ abstract class Model implements ArrayAccess
                         
             if($this->datastore->tempData[0][$this->getKeyField()] == null)
             {
-                $id = $before[0][$this->getKeyField()];
+                $id = $before[$this->getKeyField()];
             }
             else
             {
