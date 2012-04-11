@@ -282,6 +282,8 @@ class ModelController extends Controller
         else
         {
             $fieldNames = array();
+            $keyField = $this->model->getKeyField();
+            $fieldNames[$keyField] = "{$this->model->package}.{$keyField}";
             $fields = $this->model->getFields();
 
             foreach($fields as $i => $field)

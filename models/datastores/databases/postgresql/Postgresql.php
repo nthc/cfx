@@ -562,17 +562,19 @@ class Postgresql extends SQLDBDataStore
              
         if(count($databaseInfo) == 1)
         {
-        	$pgFields = $this->query("select * from information_schema.columns where table_name='{$databaseInfo[0]}'");
+            $pgFields = $this->query("select * from information_schema.columns where table_name='{$databaseInfo[0]}'");
         }
         else
         {
             $pgFields = $this->query("select * from information_schema.columns where table_schema='{$databaseInfo[0]}' and table_name='{$databaseInfo[1]}'");
         }
-        
+                
         if(count($pgFields) == 0)
         {
             throw new Exception("Database table [{$this->database}] not found.");
         }
+        
+        $primaryKeyFound = false;
         
         foreach($pgFields as $index => $pgField)
         {
@@ -630,13 +632,7 @@ class Postgresql extends SQLDBDataStore
             if($pgField["column_name"] == $primaryKey[0]["column_name"])
             {
                 $field["key"] = "primary";
-            }
-            else
-            {
-                if($index == 0)
-                {
-                    $field["key"] = "primary";
-                }
+                $primaryKeyFound = true;
             }
             
             foreach($uniqueKeys as $uniqueKey)
@@ -648,6 +644,11 @@ class Postgresql extends SQLDBDataStore
             }
 
             $fields[] = $field;
+        }
+        
+        if($primaryKeyFound === false)
+        {
+            $fields[0]['key'] = 'primary';
         }
 
         return $fields;

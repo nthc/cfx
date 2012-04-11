@@ -33,7 +33,7 @@ abstract class Model implements ArrayAccess
     
     public $storedFields;
     public $referencedFields = array();
-    private $runValidations = true;
+    protected $runValidations = true;
     public $fixedConditions;
     public $fixedValues = array();
     public $explicitRelations = array();
