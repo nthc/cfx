@@ -395,6 +395,7 @@ class Postgresql extends SQLDBDataStore
         $fieldList = array();
         $rawFields = array();
         $functions = $params["global_functions"];
+        
         foreach($fields as $i => $field)
         {
             $field_info = $field_infos[$i];
@@ -418,6 +419,17 @@ class Postgresql extends SQLDBDataStore
                 $rawFields[] = $models[$field_info["model"]]->getDatabase().".".$field_info["field"];
             }
         }
+        
+        if($params['moreInfoOnly'] === true)
+        {
+            return array
+                (
+                    "data" => $data,
+                    "fieldInfos" => $fieldDescriptions,
+                    "headers" => $headers,
+                    "rawFields" => $rawFields,
+                );            
+        }   
         
         $tableList = array();
         foreach($models as $model)

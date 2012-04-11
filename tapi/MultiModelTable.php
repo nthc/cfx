@@ -21,8 +21,15 @@ class MultiModelTable extends Table
         $params["id"] = $this->name;
         $params["operations"] = $this->operations;
         $params["moreInfo"] = true;
+        
         $this->params = $params;
-        $this->tableData = SQLDBDataStore::getMulti($this->params);
+        
+        if($this->useAjax)
+        {
+            $params['moreInfoOnly'] = true;
+        }
+        
+        $this->tableData = SQLDBDataStore::getMulti($params);
     }
 
     protected function renderHeader()
