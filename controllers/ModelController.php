@@ -18,7 +18,6 @@
  * the actual name of the model). For exampld of your model is called users then
  * the custom form that this controller can pick up should be called usersForm.
  *
- * @ingroup Controllers
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  * 
  */
@@ -375,26 +374,8 @@ class ModelController extends Controller
         else
         {
             // Generate a form automatically
-            if($this->app == null)
-            {
-                $fieldNames = array();
-                $fields = $this->model->getFields();
-                array_shift($fields);
-            }
-            else
-            {
-                $fieldNames = $this->app->xpath("/app:app/app:form/app:field");
-                if(count($fieldNames) > 0)
-                {
-                    $fields = $this->model->getFields($fieldNames);
-                }
-                else
-                {
-                    $fieldNames = array();
-                    $fields = $this->model->getFields();
-                    array_shift($fields);
-                }
-            }
+            $fieldNames = array();
+            $fields = $this->model->getFields();
 
             $form = new Form();
             $form->setModel($this->model);
@@ -403,6 +384,8 @@ class ModelController extends Controller
             for($i=0; $i<count($fields); $i++)
             {
                 $field = $fields[$names[$i]];
+                if($field['key'] == 'primary') continue;
+                
                 if($fieldNames[$i]["renderer"]=="")
                 {
                     if($field["reference"]=="")
