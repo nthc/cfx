@@ -34,6 +34,7 @@ abstract class Model implements ArrayAccess
     public $storedFields;
     public $referencedFields = array();
     protected $runValidations = true;
+    public static $disableAllValidations = false;
     public $fixedConditions;
     public $fixedValues = array();
     public $explicitRelations = array();
@@ -53,6 +54,7 @@ abstract class Model implements ArrayAccess
      */
     public $datastore;
     private static $instances = array();
+    
     
     public static function getDatastoreInstance()
     {
@@ -305,7 +307,7 @@ abstract class Model implements ArrayAccess
         $errors = $this->preValidateHook();
         $numErrors = count($errors);
 
-        if($this->runValidations)
+        if($this->runValidations && Model::$disableAllValidations === false)
         {
             $keyField = $this->getKeyField();
             foreach($this->explicitRelations as $relationship)
@@ -540,7 +542,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails == false)
+            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails === false)
             {
                 SystemAuditTrailModel::log(
                     array(
