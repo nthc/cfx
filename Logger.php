@@ -1,8 +1,6 @@
 <?php
 /**
- * A simple class for logging software activities. Normally used during
- * debugging.
- * @ingroup Utilities
+ * A simple class for logging software activities.
  */
 class Logger
 {
@@ -18,6 +16,11 @@ class Logger
      */
     private static $path;
     
+    /**
+     * Set the path which would be used for logging.
+     * @param unknown_type $path
+     * @throws Exception
+     */
     public static function setPath($path = 'app/logs/wyf.log')
     {
         if($path != self::$path)
@@ -33,8 +36,8 @@ class Logger
 
     /**
      * Writes to the log file.
-     * @param string $msg
-     * @param string $format
+     * @param string $msg The message to be logged.
+     * @param string $format Much like the format you can send to the printf command
      */
     public static function log($msg, $format = "[%s] %s\n")
     {

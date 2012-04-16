@@ -1,32 +1,43 @@
 <?php
-/**
- * Load the core utilities which handle auto loading of classes.
+
+/*
+ * WYF Framework
+ * Copyright (c) 2011 James Ekow Abaka Ainooson
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+/**
+ * This script bootstraps the entire WYF framework. It should be included in
+ * CLI scripts which intend to use the wyf framework for their operations.
+ */
+
+// Load the core utilities which handle auto loading of classes.
 include "coreutils.php";
 
-/**
- * Set the default timezone to Africa/Accra
- */
-date_default_timezone_set("Africa/Accra");
-
-
-/**
- * Tone down on error reporting. Let's igonore notices so that PHP is not too
- * loud.
- */
-error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-
-/**
- * Add the configuration file
- */
+// Load the applications configuration file and define the home
 require "app/config.php";
 define("SOFTWARE_HOME", $config['home']);
 
 
-/**
- * Setup default include paths.
- */
-
+// Setup the default include paths of the framework
 add_include_path("lib");
 add_include_path("lib/controllers");
 add_include_path("lib/fapi/Forms");
@@ -37,12 +48,15 @@ add_include_path("lib/user");
 add_include_path("lib/models");
 add_include_path("lib/models/datastores");
 add_include_path("lib/cache/");
+
+// Add the script which contains the third party libraries
 require "app/includes.php";
 
+// Setup the global variables needed by the redirected packages
 global $redirectedPackage;
 global $packageSchema;
 
-
+// Setup the database driver and other boilerplate stuff 
 $dbDriver = $config['db'][$selected]['driver'];
 $dbDriverClass = Application::camelize($dbDriver);
 add_include_path("lib/models/datastores/databases/$dbDriver");
@@ -57,6 +71,7 @@ define('CACHE_MODELS', $config['cache']['models']);
 define('CACHE_PREFIX', "");
 define('ENABLE_AUDIT_TRAILS', $config['audit_trails']);
 
+// Include the audit trail class if required
 if(ENABLE_AUDIT_TRAILS === true)
 {
     require_once "app/modules/system/audit_trail/SystemAuditTrailModel.php";
