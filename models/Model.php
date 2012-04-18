@@ -209,7 +209,7 @@ abstract class Model implements ArrayAccess
         $primary_key_field = $primary_key_field == "" ? $this->getKeyField() : $primary_key_field;
         $primary_key_value = $primary_key_value == "" ? $data[$primary_key_field] : $primary_key_value;
 
-        if($primary_key_field!="" && $primary_key_value !="") 
+        if($primary_key_field !="" && $primary_key_value !="") 
         {
             $this->datastore->tempData = $this->getWithField($primary_key_field,$primary_key_value);
             $this->assumedTransactionMode = Model::TRANSACTION_MODE_EDIT;
@@ -411,7 +411,7 @@ abstract class Model implements ArrayAccess
             {
                 $id = $this->datastore->data[$this->getKeyField()];
             }
-            if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails == false)
+            if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails === false)
             {
                 SystemAuditTrailModel::log(
                     array(
