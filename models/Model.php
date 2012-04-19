@@ -483,7 +483,7 @@ abstract class Model implements ArrayAccess
         $this->updateImplementation($field, $value);
         $this->postUpdateHook();
         
-        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails == false)
+        if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails === false)
         {
             $data = json_encode(
                 array(
@@ -542,7 +542,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            if(ENABLE_AUDIT_TRAILS === false  && $this->disableAuditTrails === false)
+            if(ENABLE_AUDIT_TRAILS === true  && $this->disableAuditTrails === false)
             {
                 SystemAuditTrailModel::log(
                     array(
