@@ -11,9 +11,8 @@ class Db
      * The instances of the various databases
      * @var array
      */
-	private static $instances = array();
-	
-	public static $defaultDatabase;
+    private static $instances = array();
+    public static $defaultDatabase;
     
     /**
      * 

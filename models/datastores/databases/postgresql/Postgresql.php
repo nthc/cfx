@@ -147,7 +147,7 @@ class Postgresql extends SQLDBDataStore
 
     public function escape($string)
     {
-        if(is_string($string)) return pg_escape_string($string);
+        if(is_string($string) || is_numeric($string)) return pg_escape_string($string);
     }
 
     public function getSearch($searchValue,$field)
