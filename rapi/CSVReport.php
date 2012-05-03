@@ -6,7 +6,7 @@ class CSVReport extends Report
         //parent::__construct();
     }
 
-    public function output()
+    public function output($file = null)
     {
         header("Content-Type: text/csv");
         header('Content-Disposition: attachment; filename="report.csv"');
