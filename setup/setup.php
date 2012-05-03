@@ -9,14 +9,14 @@ as fast as possible.
 
 WELCOME;
 
-$name = get_response("What is the name of your application", null, null, true);
-$host = get_response("Where is your application's database hosted", 'localhost', null, true);
-$port = get_response("What is the port of this database", '5432', null, true);
+$name =     get_response("What is the name of your application", null, null, true);
+$host =     get_response("Where is your application's database hosted", 'localhost', null, true);
+$port =     get_response("What is the port of this database", '5432', null, true);
 $username = get_response("What is the database username", null, null, true);
 $password = get_response("What is the password for the database");
 $database = get_response("What is the name of your application's database (please ensure that the database exists)", null, null, true);
-$home = get_response("Where is your application residing", getcwd(), null, null, true) . "/";
-$prefix = get_response("What is the prefix of your application (Enter 'no prefix' if you do not want a prefix)", basename($home));
+$home =     get_response("Where is your application residing", getcwd(), null, null, true) . "/";
+$prefix =   get_response("What is the prefix of your application (Enter 'no prefix' if you do not want a prefix)", basename($home));
 
 echo "\nSetting up the application ...\n";
 
@@ -32,8 +32,16 @@ mkdir2($home . 'app/temp');
 mkdir2($home . 'app/themes');
 mkdir2($home . 'app/uploads');
 
-echo shell_exec("cp -r lib/setup/factory/* app");
-echo shell_exec("cp -r lib/setup/htaccess .htaccess");
+copyDir("lib/setup/factory/*", "$home/app");
+copy("lib/setup/htaccess", ".htaccess");
+file_put_contents(
+    "$home/app/cache/menus/side_menu_1.html",
+    str_replace(
+        '{$prefix}', 
+        "/$prefix", 
+        file_get_contents("lib/setup/factory/cache/menus/side_menu_1.html")
+    )
+);
 
 $system = <<< SYSTEM
 <?php
@@ -173,3 +181,23 @@ function mkdir2($path)
     }
     return $path;
 }
+
+function copyDir($source, $destination)
+{
+    foreach(glob($source) as $file)
+    {
+        $newFile = (is_dir($destination) ?  "$destination/" : ''). basename("$file");
+        
+        if(is_dir($file))
+        {
+            mkdir2($newFile);
+            copyDir("$file/*", $newFile);
+        }
+        else
+        {
+            copy($file, $newFile);
+        }
+    }
+}
+
+
