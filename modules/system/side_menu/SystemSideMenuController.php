@@ -2,7 +2,6 @@
 /**
  * A class for showing the menu at the side of the application.
  * 
- * @package nthc.system
  * @author james
  *
  */
