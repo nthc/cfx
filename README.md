@@ -1,0 +1,36 @@
+The wyf framework is a framework has been put together over the past
+couple of years. It's really old and "cranky" .... but you'll definately find a 
+time where it would be soooo useful to you. Its not a one size fits all kind of
+framework. No! its main aim is to help build those database driven apps where you
+have views,lots of complex forms and reports. 
+  
+Basic Architecture
+==================
+The WYF Application Framework is somehow Object Oriented and it exhibits some 
+model-view-controller (MVC) characteristics. 
+The framework provides API's which aid in:
+ - Database interfacing and abstraction. (Although it only supports pgsql for now :(. So why call it abstraction?)
+ - Object Relational Mapping of Database Tables
+ - Form generation and validation.
+ - Views or lists generation and manipulation.
+ - Report Generation
+ - Testing through the PHPUnit test automation framework.
+ - User Access control and authentication.
+ - Logging and audit trails
+
+A few limitations
+=================
+The following things have been the pain of many developers who have worked with 
+this framework:
+- It only works with postgresql (for now)
+- It hurts to theme your application (you can however mess with the css that ships with the framework)
+- You may have to write classes with long names like SystemSetupUsersRolesController ... smh
+
+Third Party Software
+====================
+The WYF framework utilizes other third party libraries to help it work. These software include:
+ - The smarty Template Engine which is used for rendering the templates.
+ - The FPDF PDF generation library which is used for generating the PDF documents. (soon to be replaced by TCPDF)
+ - The Pear Spreadsheet Package which is used for generating the Microsoft Excel documents.
+ - The PHPUnit framework which is used for unit testing the applications built with the framework. (this is in fact a work in progress)
+
