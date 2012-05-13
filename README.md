@@ -47,12 +47,19 @@ Getting Started
 ===============
  To setup the wyf framework you have to do the following:
  
- 1. Checkout the code from here into a directory called `lib`. This directory should be in the document root of your application.
+ 1. Checkout the code from here into a directory called `lib`. This directory 
+    should be in the document root of your application.
  2. From your document root execute `php lib/setup/setup.php`
- 3. Follow the steps and you should have a working dummy application before you know it. Remember you must have an empty postgres database read
+ 3. Follow the steps and you should have a working dummy application before you 
+    know it. Remember you must have an empty postgres database read
 
-So to sum these up in commands (assuming your document root is /home/webapp/htdocs):
+So to sum these up in commands (assuming your document root is /var/www ):
     
-    $ cd /home/webapp/htdocs
+    $ cd /var/www
+    $ mkdir wyftest
+    $ cd wyftest
     $ git clone git://github.com/ekowabaka/wyf.git lib
     $ php lib/setup/setup.php
+
+After that you can point your browser to `http://localhost/wyftest` and if your
+system is behaving "normally" you should see a pretty login page.
