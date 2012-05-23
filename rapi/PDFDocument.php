@@ -104,7 +104,7 @@ class PDFDocument extends FPDF
             {
                 $this->Cell(40,10,'Page '.($this->PageNo() - $this->pageNumberOffset),0,0);
             }
-            $this->Cell(0,10,"Generated on ".date("jS F, Y @ g:i:s A")." by ".$_SESSION["user_lastname"]." ".$_SESSION["user_firstname"],0,0,'R');
+            $this->Cell(0,10,"Generated on " . date("jS F, Y @ g:i:s A") ." by ".$_SESSION["user_lastname"]." ".$_SESSION["user_firstname"],0,0,'R');
             $this->Ln();
         }
     }

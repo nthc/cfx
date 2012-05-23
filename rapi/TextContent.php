@@ -38,4 +38,3 @@ class TextContent extends ReportContent
         return $this->style;
     }
 }
-?>

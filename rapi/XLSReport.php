@@ -40,7 +40,7 @@ class XLSReport extends Report
                     {
                         $format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
-                        $format->setSize(8);
+                        $format->setSize(12);
                         $spreadsheet->setCustomColor(13,180,200,180);
                         $format->setBorderColor(13);
                         $format->setBottom(2);
@@ -67,7 +67,7 @@ class XLSReport extends Report
                         $headers = $content->getHeaders();
                         $format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
-                        $format->setSize(8);
+                        $format->setSize(12);
                         $spreadsheet->setCustomColor(12,102,128,102);
                         $format->setFgColor(12);
                         $format->setColor("white");
@@ -82,7 +82,7 @@ class XLSReport extends Report
 
                         $format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
-                        $format->setSize(8);
+                        $format->setSize(12);
                         $spreadsheet->setCustomColor(13,180,200,180);
                         $format->setBorderColor(13);
                         $format->setBorder(1);
@@ -106,4 +106,3 @@ class XLSReport extends Report
     }
 }
 
-?>
