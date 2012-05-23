@@ -12,10 +12,11 @@ class Db
      * @var array
      */
     private static $instances = array();
+    
     public static $defaultDatabase;
     
     /**
-     * 
+     * The last instance of the database
      * @var type 
      */
     private static $lastInstance;
@@ -45,39 +46,57 @@ class Db
         }
     }
     
+    
     /**
      * Returns an instance of a named database. All the database configurations
-     * are stored in the <tt>app/config.php</tt>.
+     * are stored in the app/config.php
      * @param string $db
      * @return resource
      */
     public static function get($db = null)
     {
-        if(!isset(Application::$config))
+        if(class_exists('Application'))
         {
-            require "app/config.php";
-            if($db == null) $db = $selected;
+            if(!isset(Application::$config))
+            {
+                require "app/config.php";
+                if($db == null) $db = $selected;
+            }
+            else 
+            {
+                $database = Application::$config['db'];
+                if($db == null) $db = self::$defaultDatabase;
+            }
         }
-        else 
+        else if(is_array($db))
         {
-            $database = Application::$config['db'];
-            if($db == null) $db = self::$defaultDatabase;
+            $index = json_encode($db);
+            $database[$index] = $db;
+            $db = $index;
+        }
+        else
+        {
+            throw new Exception('Invalid configuration parameters passed');
         }
         
-
-        $db_host = $database[$db]["host"];
-        $db_port = $database[$db]["port"];
-        $db_name = $database[$db]["name"];
-        $db_user = $database[$db]["user"];
-        $db_password = $database[$db]["password"];
-        
-        Db::$instances[$db] = pg_connect("host=$db_host port=$db_port dbname=$db_name user=$db_user password=$db_password");
-        
-        if(!Db::$instances[$db]) {
-            throw new Exception("Could not connect to $db database");
+        if(!is_resource(Db::$instances[$db]))
+        {
+            $db_host = $database[$db]["host"];
+            $db_port = $database[$db]["port"];
+            $db_name = $database[$db]["name"];
+            $db_user = $database[$db]["user"];
+            $db_password = $database[$db]["password"];
+            
+            Db::$instances[$db] = pg_connect("host=$db_host port=$db_port dbname=$db_name user=$db_user password=$db_password");
+            
+            if(!Db::$instances[$db]) 
+            {
+                throw new Exception("Could not connect to $db database");
+            }
         }
         
         Db::$lastInstance = $db;
         return Db::$instances[$db];
     }
 }
+

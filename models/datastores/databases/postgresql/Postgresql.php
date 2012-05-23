@@ -449,6 +449,12 @@ class Postgresql extends SQLDBDataStore
             }
         }
         
+        if($params["distinct"]===true)
+        {
+            $query .= " DISTINCT ";
+            
+        }
+        
         if($params["count"] === true || $params["enumerate"] === true)
         {
             $query .= ' COUNT(*) as "count" FROM ' . implode(', ',array_unique($tableList));
