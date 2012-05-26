@@ -17,6 +17,9 @@
  * this class is found should be modelnameForm.php (where modelname represents
  * the actual name of the model). For exampld of your model is called users then
  * the custom form that this controller can pick up should be called usersForm.
+ * 
+ * In cases where extra functionality and operations are to be added, the
+ * ModelController class could be extended.
  *
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  * 

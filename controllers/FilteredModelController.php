@@ -1,4 +1,9 @@
 <?php
+/**
+ * A subclass of the ModelController class which provides all the features
+ * of the ModelController class with an added filter which allows the user
+ * to filter the contents of the view in realtime. 
+ */
 abstract class FilteredModelController extends ModelController
 {
     protected $selectionList;

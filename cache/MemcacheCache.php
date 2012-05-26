@@ -3,7 +3,7 @@
  * A memcache storing backend for the Caching framework. 
  * 
  * @author ekow
- * @ingroup Caching
+ * @package wyf.caching
  */
 
 class MemcacheCache extends Cache

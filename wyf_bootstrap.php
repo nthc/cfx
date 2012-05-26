@@ -70,9 +70,3 @@ Cache::init($config['cache']['method']);
 define('CACHE_MODELS', $config['cache']['models']);
 define('CACHE_PREFIX', "");
 define('ENABLE_AUDIT_TRAILS', $config['audit_trails']);
-
-// Include the audit trail class if required
-if(ENABLE_AUDIT_TRAILS === true)
-{
-    require_once "app/modules/system/audit_trail/SystemAuditTrailModel.php";
-}

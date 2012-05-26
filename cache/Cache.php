@@ -27,8 +27,8 @@
  * An abstract caching class. Defines all the methods needed to cache classes
  * based on base caching methods.
  * 
- * @author ekow
- * @ingroup Caching
+ * @author ekowabaka
+ * @package wyf.caching
  */
 abstract class Cache
 {
@@ -52,9 +52,9 @@ abstract class Cache
     
     /**
      * Add an object to the cache.
-     * @param &key A unique identity for the object being cached
-     * @param $object The object to be cached
-     * @param $ttl The number of minutes the object should spend in 
+     * @param string $key A unique identity for the object being cached
+     * @param mixed $object The object to be cached
+     * @param int $ttl The number of minutes the object should spend in 
      *                       the cache. If set to 0 the object exists in the
      *                       cache indefinately.
      */
@@ -64,9 +64,11 @@ abstract class Cache
     }
     
     /**
-     * Get an object from the cache.
+     * Get an object from the cache. Returns the object or false if the object 
+     * has expired or doesn't exist in the cache. 
+     * 
      * @param string $key  The unique key for the object to retrieve from the cache
-     * @return The object or false if the object has expired or doesn't exist in the cache.
+     * @return mixed
      */
     public static function get($key)
     {

@@ -4,7 +4,7 @@
  * A file storing backend for the the Caching framework.
  *  
  * @author ekow
- * @ingroup Caching
+ * @package wyf.caching
  */
 class FileCache extends Cache
 {
