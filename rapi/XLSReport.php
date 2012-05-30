@@ -10,8 +10,8 @@ class XLSReport extends Report
     public function output($file = null)
     {
     	ob_clean();
-        $spreadsheet = new Spreadsheet_Excel_Writer();
-        $spreadsheet->send("report.xls");
+        $spreadsheet = new Spreadsheet_Excel_Writer($file);
+        if($file == null) $spreadsheet->send("report.xls");
         $worksheet =& $spreadsheet->addWorkSheet("Report");
         $worksheet->setLandscape();
         $worksheet->hideGridlines();
