@@ -50,10 +50,11 @@ class Db
     /**
      * Returns an instance of a named database. All the database configurations
      * are stored in the app/config.php
-     * @param string $db
+     * @param string $db The tag of the database in the config file
+     * @param boolean $atAllCost When set to true this function will block till a valid db is found.
      * @return resource
      */
-    public static function get($db = null)
+    public static function get($db = null, $atAllCost = false)
     {
         if(class_exists('Application'))
         {
@@ -79,7 +80,7 @@ class Db
             throw new Exception('Invalid configuration parameters passed');
         }
         
-        if(!is_resource(Db::$instances[$db]))
+        while(!is_resource(Db::$instances[$db]))
         {
             $db_host = $database[$db]["host"];
             $db_port = $database[$db]["port"];
@@ -91,7 +92,14 @@ class Db
             
             if(!Db::$instances[$db]) 
             {
-                throw new Exception("Could not connect to $db database");
+                if($atAllCost)
+                {
+                    sleep(10);
+                }
+                else
+                {
+                    throw new Exception("Could not connect to $db database");
+                }
             }
         }
         

@@ -104,7 +104,7 @@ abstract class Model implements ArrayAccess
     }
     
     private static function _load($model, $path)
-    {
+    {        
         global $packageSchema;
         global $redirectedPackage;
         

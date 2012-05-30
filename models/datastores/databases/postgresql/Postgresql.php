@@ -168,6 +168,7 @@ class Postgresql extends SQLDBDataStore
         $result = pg_query(self::$_conn, $query);
         if($result === false)
         {
+            pg_query(self::$_conn, "ROLLBACK");
             throw new Exception("PGSQL Says " . pg_errormessage(self::$_conn) . " [$query]");
         }
         
