@@ -99,6 +99,8 @@ create_file($home . 'index.php', $index);
 
 $config = <<< "CONFIG"
 <?php
+error_reporting(E_ALL ^ E_NOTICE);
+
 \$selected = "main";
 
 \$config = array(
