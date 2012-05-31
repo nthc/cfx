@@ -411,6 +411,7 @@ abstract class Model implements ArrayAccess
             {
                 $id = $this->datastore->data[$this->getKeyField()];
             }
+            
             if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails === false)
             {
                 SystemAuditTrailModel::log(

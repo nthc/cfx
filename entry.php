@@ -160,15 +160,18 @@ else
             )
         );
         
-        SystemAuditTrailModel::log(
-            array(
-                'item_id' => '0',
-                'item_type' =>'routing_activity',
-                'description' => "Accessed [{$_GET['q']}]",
-                'type' => SystemAuditTrailModel::AUDIT_TYPE_ROUTING,
-                'data' => $data
-            )
-        );
+        if(class_exists("SystemAuditTrailModel", false))
+        {
+            SystemAuditTrailModel::log(
+                array(
+                    'item_id' => '0',
+                    'item_type' =>'routing_activity',
+                    'description' => "Accessed [{$_GET['q']}]",
+                    'type' => SystemAuditTrailModel::AUDIT_TYPE_ROUTING,
+                    'data' => $data
+                )
+            );
+        }
     }
     
     Application::addStylesheet("css/fapi.css", "lib/fapi/");

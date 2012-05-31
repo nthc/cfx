@@ -15,7 +15,7 @@ class User
         $db = Db::get();
         $data = Db::escape(json_encode($data));
                 
-        if(ENABLE_AUDIT_TRAILS === true)
+        if(ENABLE_AUDIT_TRAILS === true && class_exists("SystemAuditTrailModel", false))
         {
             SystemAuditTrailModel::log(
                 array(
