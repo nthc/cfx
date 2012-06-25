@@ -119,6 +119,10 @@ abstract class SQLDBDataStore extends DataStore
             $lastval = $this->query("SELECT LASTVAL() as last");
             $keyValue = $lastval[0]["last"];
         }
+        else
+        {
+            $keyValue = $this->formattedData[$this->getKeyField()];
+        }
         
         if(count($relatedData)>0)
         {

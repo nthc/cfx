@@ -244,15 +244,15 @@ class XmlDefinedReportController extends ReportController
                                         {
                                             switch($_POST[$name."_".$fieldInfo["name"]."_option"])
                                             {
-                                                case "CONTAINS":
-                                                        $filterSummaries[] = "{$headers[$key]} containing {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
-                                                        $filters[] = $models[$modelInfo["model"]]->getSearch($models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"]),"{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}");
-                                                    break;
+                                            case "CONTAINS":
+                                                $filterSummaries[] = "{$headers[$key]} containing {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
+                                                $filters[] = $models[$modelInfo["model"]]->getSearch($models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"]),"{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}");
+                                                break;
 
-                                                case "EXACTLY";
-                                                    $filterSummaries[] = "{$headers[$key]} being exactly {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"])."'";
-                                                    break;
+                                            case "EXACTLY";
+                                                $filterSummaries[] = "{$headers[$key]} being exactly {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"])."'";
+                                                break;
                                             }
                                         }
                                         break;
@@ -769,7 +769,7 @@ class XmlDefinedReportController extends ReportController
             $container = new FieldSet($table["name"]);
             $container->add(
                 Element::create("FieldSet","Filters")->add($filters)->setId("table_{$table['name']}"),
-                Element::create("FieldSet","Sorting * Limiting")->add(
+                Element::create("FieldSet","Sorting & Limiting")->add(
                     $sortingField,
                     Element::create("SelectionList","Direction","{$table["name"]}.sorting_direction")->addOption("Ascending","ASC")->addOption("Descending","DESC"),
                     Element::create('TextField', 'Limit', "{$table['name']}.limit")->setAsNumeric()
