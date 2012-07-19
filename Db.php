@@ -132,4 +132,3 @@ class Db
         return Db::$instances[$db];
     }
 }
-
