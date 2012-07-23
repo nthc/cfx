@@ -27,11 +27,12 @@ class PDFDocument extends FPDF
             switch($paper)
             {
             	case "A3":
-            		if($orientation == "L")
-            		$this->twidth = 400;
-            		else
-            		$this->twidth = 277;
-            		break;
+                    if($orientation == "L")
+                    $this->twidth = 400;
+                    else
+                    $this->twidth = 277;
+                    break;
+                    
                 case "A4":
                     if($orientation=="L")
                     $this->twidth = 277;
