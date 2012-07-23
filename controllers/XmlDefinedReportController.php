@@ -487,6 +487,7 @@ class XmlDefinedReportController extends ReportController
                         $params['limit'] = $_POST[$name."_limit"];
                     }
                     $params["no_num_formatting"] = true;
+                    $params = $this->paramsCallback($params);
                     $this->reportData = ReportController::getReportData($params, SQLDatabaseModel::MODE_ARRAY);
 
                     unset($params["sort_field"]);
@@ -574,6 +575,11 @@ class XmlDefinedReportController extends ReportController
             }
         }
         $report->output();
+    }
+    
+    protected function paramsCallback($params)
+    {
+        return $params;
     }
 
     /**
