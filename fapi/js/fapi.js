@@ -1,5 +1,7 @@
 var curtab = 0;
 
+var request = undefined;
+
 /**
  * Switches the current FAPI tab to the one specified.
  * @todo The tab id should be specified to make it easy to differentiate
@@ -194,49 +196,57 @@ function fapiStartUpload(field,form,script,func,showFieldAfterUpload)
 
 function fapiUpdateSearchField(name,url,fields,element,boldFirst, onChangeFunction)
 {
-	var conditions = '';
+    var conditions = '';
     if(element.value == '')
     {
         $("#"+name+"_search_area").html(content).hide('fast');            
         return;
     }
     
-	fields = JSON.parse(unescape(fields));
+    fields = JSON.parse(unescape(fields));
 	
-	for(var i = 0; i<fields.length; i++)
-	{
-		conditions += fields[i]+"="+element.value+",";
-	}
+    for(var i = 0; i<fields.length; i++)
+    {
+        conditions += fields[i]+"="+element.value+",";
+    }
+    
+    try{
+        request.abort();
+    }
+    catch(e)
+    {
+        
+    }
 	
-	$.ajax({
-		type:"GET",
-		url:url+"&conditions="+escape(conditions)+"&conditions_opr=OR",
-		dataType:"json",
-		success:function(r)
-		{
-			var content = "<table class='fapi-select-table'>";
+    request = $.ajax({
+        type:"GET",
+        url:url+"&conditions="+escape(conditions)+"&conditions_opr=OR",
+        dataType:"json",
+        success:function(r)
+        {
+            var content = "<table class='fapi-select-table'>";
             var data;
-			for(var i = 0; i<r.length; i++)
-			{
-				var value = boldFirst?r[i][fields[1]]+' - ':'';
-				for(var j=(boldFirst?2:1); j<fields.length; j++)
-				{
+            for(var i = 0; i<r.length; i++)
+            {
+                var value = boldFirst?r[i][fields[1]]+' - ':'';
+                for(var j=(boldFirst?2:1); j<fields.length; j++)
+                {
                     data = r[i][fields[j]];
-					value += (data===null?"":data)+" ";
-				}
-				content += "<tr id='" + name + "_search_entry_" + i + "' onclick='fapiSetSearchValue(\""+name+"\",\""+r[i][fields[0]]+"\",\""+value.replace(/^\s+|\s+$/g,"").replace(/'/,"")+"\",\""+onChangeFunction+"\")'><td>";
-				for(j=1; j<fields.length; j++)
-				{
+                    value += (data===null?"":data)+" ";
+                }
+                content += "<tr id='" + name + "_search_entry_" + i + "' onclick='fapiSetSearchValue(\""+name+"\",\""+r[i][fields[0]]+"\",\""+value.replace(/^\s+|\s+$/g,"").replace(/'/,"")+"\",\""+onChangeFunction+"\")'><td>";
+                for(j=1; j<fields.length; j++)
+                {
                     data = r[i][fields[j]];
-					content += (j==1 && boldFirst===true?"<b>":"")+(data===null?"":data)+(j==1?"</b>":"")+" ";
-				}
-				content += "</td></tr>";
-			}
-			content += "</table>";
+                    content += (j==1 && boldFirst===true?"<b>":"")+(data===null?"":data)+(j==1?"</b>":"")+" ";
+                }
+                content += "</td></tr>";
+            }
+            content += "</table>";
             window[name+'_table_position'] = -1;
-			if(r.length>0)
-			{
-				$("#"+name+"_search_area").html(content).show('fast');
+            if(r.length>0)
+            {
+                $("#"+name+"_search_area").html(content).show('fast');
                 
                 $('body').click(
                     function()
@@ -244,13 +254,13 @@ function fapiUpdateSearchField(name,url,fields,element,boldFirst, onChangeFuncti
                         $("#"+name+"_search_area").html(content).hide('fast');                        
                     }
                 );
-			}
-			else
-			{
-				$("#"+name+"_search_area").html(content).hide('fast');
-			}
-		}
-	});	
+            }
+            else
+            {
+                $("#"+name+"_search_area").html(content).hide('fast');
+            }
+        }
+    });	
 }
 
 function fapiSetSearchValue(name, value, display, func)
