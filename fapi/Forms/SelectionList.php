@@ -1,7 +1,6 @@
 <?php
 /**
  * An item that can be added to a selection list.
- * @ingroup Forms
  */
 class SelectionListItem
 {
@@ -20,22 +19,20 @@ class SelectionListItem
     }
 }
 
-//! The SelectionList represents a list of selectible items. These items
-//! can be shown in a combo box or a regular list.
-//! \ingroup Forms
+/**
+ * Renders a selection list 
+ */
 class SelectionList extends Field
 {
-    //! Array of options.
     protected $options = array();
-
-    //! A boolean value set if multiple selections.
     protected $multiple;
+    protected $hasGroups;
+    protected $groupedOptions;
 
     public function __construct($label="", $name="", $description="")
     {
         Field::__construct($name);
         Element::__construct($label, $description);
-        $this->addOption("","");
     }
 
     //! Sets weather multiple selections could be made.
@@ -46,20 +43,33 @@ class SelectionList extends Field
         return $this;
     }
 
-    //! Add an option to the selection list.
-    //! \param $label The label of the options
-    //! \param $value The value associated with the label.
-    public function addOption($label="", $value="")
+    /**
+     * Add an option to the selection list
+     * 
+     * @param type $label
+     * @param type $value
+     * @param type $group
+     * @return \SelectionList 
+     */
+    public function addOption($label="", $value="", $group = '')
     {
         if($value==="") $value=$label;
-        $this->options[] = new SelectionListItem($label, $value);
+            
+        if($group != null)
+        {
+            $this->hasGroups = true;
+            $this->groupedOptions[$group][] = new SelectionListItem($label, $value);
+        }
+        else
+        {
+            $this->options[] = new SelectionListItem($label, $value);
+        }
         return $this;
     }
     
     public function flush()
     {
         $this->options = array();
-        $this->addOption('','');
         return $this;
     }
 
@@ -73,9 +83,38 @@ class SelectionList extends Field
         $this->addAttribute("id",$this->getId());
         if(count($this->jsOnChangeParams)>0) $this->addAttribute("onchange",$this->getId()."OnChangeFunction()");
         $ret = "<select {$this->getAttributes()} class='fapi-list ".$this->getCSSClasses()."' name='".$this->getName()."' ".($this->multiple?"multiple='multiple'":"").">";
-        foreach($this->options as $option)
+        
+        
+        // Default option for null values
+        $ret .= "<option value=''></option>";
+        
+        if($this->hasGroups)
         {
-            $ret .= "<option value='$option->value' ".($this->getValue()===$option->value?"selected='selected'":"").">$option->label</option>";
+            foreach($this->groupedOptions as $group => $options)
+            {
+                $ret .= "<optgroup label='$group'>";
+                foreach($options as $option)
+                {
+                    $ret .= "<option value='$option->value' ".($this->getValue()===$option->value?"selected='selected'":"").">$option->label</option>";
+                }
+                $ret .= "</optgroup>";
+                if(count($this->options))
+                {
+                    $ret .= "<optgroup label='Un Grouped'>";
+                    foreach($this->options as $option)
+                    {
+                        $ret .= "<option value='$option->value' ".($this->getValue()===$option->value?"selected='selected'":"").">$option->label</option>";
+                    }
+                    $ret .= "</optgroup>";
+                }
+            }
+        }
+        else
+        {
+            foreach($this->options as $option)
+            {
+                $ret .= "<option value='$option->value' ".($this->getValue()===$option->value?"selected='selected'":"").">$option->label</option>";
+            }
         }
         $ret .= "</select>";
         $ret .= $this->getJsOnChangeScript();

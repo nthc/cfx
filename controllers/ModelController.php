@@ -681,6 +681,132 @@ class ModelController extends Controller
         $report->add($title,$table);
         $report->output();
     }
+    
+    private function doImport()
+    {
+        $uploadfile = "app/uploads/" . uniqid() . "_data";
+        $cleared = move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);        
+        
+        if (!$cleared) die("Failed to upload file");
+            
+        $file = fopen($uploadfile,"r");
+        $headers = fgetcsv($file);
+        $model = $this->model;
+        $fieldInfo = $model->getFields();
+        foreach($fieldInfo as $key => $field)
+        {
+            if($field['key'] == 'primary')
+            {
+                unset($fieldInfo[$key]);
+            }
+        }
+        $fields = array_keys($fieldInfo);
+        $primary_key = $model->getKeyField("primary");
+        $secondary_key = $model->getKeyField("secondary");
+        $tertiary_key = $model->getKeyField("tertiary");
+
+        foreach($model->getLabels() as $i => $label)
+        {
+            if(strtolower($label)!=strtolower($headers[$i]))
+            {
+                print "Invalid file format ($label and {$headers[$i]} do not match)";
+            }
+        }
+
+        if($secondary_key == null)
+        {
+            //print "<div id='information'><h4>Warning</h4>  This model has no secondary keys so imported data may overlap</div>";
+            print "<h4>Warning</h4> This model has no secondary keys. Imported data may overlap";
+        }
+
+
+        $out = "<table class='data-table'>";
+        $out .= "<thead><tr><td>".implode("</td><td>",$headers)."</td></tr></thead>";
+        $out .= "<tbody>";
+        $line = 1;
+        $status = "<h3>Successfully Imported</h3>";
+
+        while(!feof($file))
+        {
+            $data = fgetcsv($file);
+            $model_data = array();
+            $errors = array();
+            if(count($data)<count($headers)) break;
+
+            foreach($data as $i => $value)
+            {
+                $model_data[$fields[$i]] = $value;
+            }                
+            $display_data = $model_data;
+
+            if($secondary_key!=null && count($errors==false))
+            {
+                $temp_data = $model->getWithField($secondary_key,$model_data[$secondary_key]);
+                if(count($temp_data)>0) 
+                {
+                    if($tertiary_key != "")
+                    {
+                        $model_data[$primary_key] = $temp_data[0][$primary_key];
+                        $model_data[$tertiary_key] = $temp_data[0][$tertiary_key];
+                    }
+                    $validated = $model->setResolvableData($model_data,$secondary_key,$model_data[$secondary_key]);
+                    if($validated===true) $model->update($secondary_key,$model_data[$secondary_key]);
+                }
+                else
+                {
+                    $validated = $model->setResolvableData($model_data);
+                    if($validated===true) $model->save();
+                }
+            }
+            else
+            {
+                $validated = $model->setResolvableData($model_data);
+                if($validated===true) $model->save();
+            }
+
+            if($validated===true)
+            {
+                $out .= "<tr><td>".implode("</td><td>",$display_data)."</td></tr>";
+            }
+            else
+            {
+                $out .= "<tr style='border:1px solid red'>";
+                foreach($display_data as $field=>$value)
+                {
+                    $out .= "<td>$value";
+                    if(count($validated["errors"][$field])>0)
+                    {
+                        $out .= "<div class='fapi-error'><ul>";
+                        foreach($validated["errors"][$field] as $error)
+                        {
+                            $error = str_replace("%field_name%",$fieldInfo[$field]["label"],$error);
+                            $out .= "<li>$error</li>";
+                            if($cli) echo "*** Error on line $line ! [$field] $error ($value)\n";
+                        }
+                        $out .= "</ul></div>";
+                    }
+                    $out .= "</td>";
+                }
+                $out .= "</tr>";
+                $hasErrors = true;
+                $status = "<h3>Errors Importing Data</h3><div class='error'>\n\nErrors on line $line</div><div>$errors</div>";
+                if($_POST["break_on_errors"]=="1") break;
+            }
+            $line++;
+        }
+        $out .= "</tbody>";
+        $out .= "</table>";
+
+        if($cli)
+        {
+            message($status, $cli, null, false);
+        }
+        else
+        {
+            print $status.$out;
+        }
+        die();
+    }
 
     /**
      * Provides all the necessary forms needed to start an update.
@@ -689,12 +815,18 @@ class ModelController extends Controller
      */
     public function import($params)
     {
+        if($params[0] == 'execute') 
+        {
+            $this->doImport();
+            die();
+        }           
+        
         $data = array();
         $form = new Form();
         $form->
         add(
             Element::create("FileUploadField","File","file","Select the file you want to upload.")->
-                setScript(Application::$prefix."/lib/controllers/import.php?model=$this->modelName")->
+                setScript($this->urlPath . "/import/execute")->
                 setJsExpression("wyf.showUploadedData(callback_data)"),
             Element::create("Checkbox","Break on errors","break_on_errors","","1")->setValue("1")
         );

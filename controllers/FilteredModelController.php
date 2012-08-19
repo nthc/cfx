@@ -21,13 +21,13 @@ abstract class FilteredModelController extends ModelController
         $this->addListItems();
         if($this->filterFieldModel == null)
         {
-        	$this->filterFieldModel = $this->model;
+            $this->filterFieldModel = $this->model;
         }
         else
         {
-        	$this->filterFieldModel = Model::load($this->filterFieldModel);
+            $this->filterFieldModel = Model::load($this->filterFieldModel);
         }
-        $this->selectionList->onchange = "updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}',this.value)";
+        $this->selectionList->onchange = "updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', this.value)";
         $this->toolbar->add($this->selectionList);
     }
 
@@ -38,7 +38,7 @@ abstract class FilteredModelController extends ModelController
         {
             $ret .=
                 "<script type='text/javascript'>
-                    updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}','{$this->defaultValue}');
+                    updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', '{$this->defaultValue}');
                     {$this->table->name}Search();
                 </script>";
         }

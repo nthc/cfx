@@ -176,9 +176,9 @@ abstract class Model implements ArrayAccess
         {
             foreach($this->fields as $field)
             {
+                if(!$key && isset($field['key'])) continue;
                 $labels[] = $field["label"];
             }
-            if(!$key) array_shift($labels);
         }
         else
         {
@@ -361,7 +361,7 @@ abstract class Model implements ArrayAccess
         }
     }
 
-    public function getFields($fieldList=null, $displayFields = false)
+    public function getFields($fieldList=null)
     {
         if($fieldList == null)
         {
