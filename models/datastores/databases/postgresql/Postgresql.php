@@ -622,6 +622,7 @@ class Postgresql extends SQLDBDataStore
                     break;
             
                 case "character varying":
+                case "character":
                     if($pgField["character_maximum_length"]<256)
                     {
                         $type = "string";

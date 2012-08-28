@@ -67,6 +67,6 @@ class Logger
     {
         $fd = Logger::$fd[self::$path];
         if(!is_resource($fd)) self::setPath();
-        fwrite($fd, sprintf($format, date("Y/m/d h:i:s"), $msg));
+        fwrite(Logger::$fd[self::$path], sprintf($format, date("Y/m/d h:i:s"), $msg));
     }
 }

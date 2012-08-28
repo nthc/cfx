@@ -59,8 +59,9 @@ class Db
         return is_bool($result) ? null : pg_fetch_all($result);
     }
     
-    public static function reset($db = 'main')
+    public static function reset($db = null)
     {
+        $db = $db == null ? Db::$defaultDatabase : $db;
         if(is_resource(Db::$instances[$db])) 
         {
             pg_close(Db::$instances[$db]);
