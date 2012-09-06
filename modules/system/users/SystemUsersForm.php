@@ -11,7 +11,6 @@ class SystemUsersForm extends Form
             Element::create("TextField", "Othernames", "other_names"),
             Element::create("ModelField", ".roles.role_id", "role_name"),
             Element::create("TextField", "Email", "email"),
-            Element::create("TextField", "Phone", "phone"),
             Element::create("HiddenField", "password")
         );
         $this->addAttribute("style", "width:450px");
