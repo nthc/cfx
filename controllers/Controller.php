@@ -321,16 +321,24 @@ class Controller
      */
     protected function getContents()
     {
-        return "No Content";
+        return "<h1>Ooops! No Content</h1><p>Create a <b><code>" . $this->getClassName() . ".getContents()</code></b> method to provide default content for this controller.";
     }
 
     /**
      * Getter for the Controller::_showInMenu method
      * @return boolean
      */
-    public function showInMenu()
+    public function showInMenu($value = '')
     {
-        return $this->_showInMenu;
+        if($value === '') 
+        {
+            return $this->_showInMenu;
+        }
+        else
+        {
+            $this->_showInMenu = $value;
+            return $this;
+        }
     }
     
     /**

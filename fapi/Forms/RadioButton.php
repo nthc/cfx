@@ -17,7 +17,7 @@ class RadioButton extends Field
      * @param $description
      * @param $id
      */
-    public function __construct($label="", $name="", $description="", $value="", $id="")
+    public function __construct($label="", $name="", $description="", $value="")
     {
         Element::__construct($label, $description, $id );
         $this->setName($name);
@@ -32,6 +32,11 @@ class RadioButton extends Field
     public function setCheckedValue($checked_value)
     {
         $this->checked_value = $checked_value;
+    }
+    
+    public function getType()
+    {
+        return 'RadioButton';
     }
 
     public function render()

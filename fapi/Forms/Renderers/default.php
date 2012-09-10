@@ -63,6 +63,13 @@ function default_renderer_element($element, $showfields=true)
             $ret .= "<input type='hidden' name='".$element->getName()."' value='".$element->getValue()."'/>";
         }
     }
+    else if($element->getType() == "RadioButton")
+    {
+        if($element->getShowField())
+        {
+            $ret .= $element->render() . "<span class='fapi-label'>" . $element->getLabel() . "</span>";
+        }
+    }
     else
     {
         $ret .= $element->render();

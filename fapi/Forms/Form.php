@@ -112,7 +112,6 @@
 
 include_once ("Container.php");
 include_once ("HiddenField.php");
-include_once ("DefaultRenderer.php");
 
 /**
  * The Form class is the main Container for all forms. This form class renders

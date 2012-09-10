@@ -442,6 +442,15 @@ abstract class Model implements ArrayAccess
         return array_keys($this->fields);
     }
     
+    /**
+     * Get data from the database
+     * 
+     * @param array $params
+     * @param string $mode
+     * @param boolean $explicit_relations
+     * @param boolean $resolve
+     * @return array
+     */
     public function get($params=null,$mode="",$explicit_relations="",$resolve="")
     {
         if($this->fixedConditions != "")

@@ -1,6 +1,5 @@
 <?php
 include_once "Container.php";
-include_once "DefaultRenderer.php";
 
 //!
 //! A FieldSet is a container for containing other Elements. It has
@@ -37,4 +36,3 @@ class Fieldset extends Container
         return $ret;
     }
 }
-?>

@@ -1,7 +1,12 @@
 <?php
-//! The MonthField is a SelectionList which is used to show a list of
-//! months.
-//! \ingroup Forms
+/**
+ * A field which lists the months in the year. The values associated with these
+ * months are the numbers which correspond with the position of the month in the
+ * annual calendar.
+ * 
+ * @package wyf.fapi 
+ * @author James Ainooson <jainooson@gmail.com>
+ */
 class MonthField extends SelectionList
 {
     public function __construct($label="",$name="",$descriptiom="")
@@ -21,4 +26,3 @@ class MonthField extends SelectionList
         $this->addOption("December","12");
     }
 }
-?>
