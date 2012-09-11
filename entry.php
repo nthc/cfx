@@ -125,6 +125,8 @@ if($cliMode === true)
 }
 else
 {
+    // Authentication ... check if someone is already logged in if not force 
+    // a login
     if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 10) != "system/api")
     {
         $redirect = urlencode(Application::getLink("/{$_GET["q"]}"));
@@ -137,6 +139,7 @@ else
     }
     else if ($_SESSION["logged_in"] === true )
     {
+        // Force a password reset if user is logging in for the first time
         if ($_SESSION["user_mode"] == 2 && $_GET["q"] != "system/login/change_password")
         {
             header("Location: " . Application::getLink("/system/login/change_password"));
@@ -149,7 +152,8 @@ else
         {
             $t->assign('notification', "<div id='notification'>" . $_GET["notification"] . "</div>");
         }
-    
+        
+        // Load the side menus
         $menuFile = SOFTWARE_HOME . "app/cache/menus/side_menu_{$_SESSION["role_id"]}.html";
         if(file_exists($menuFile))
         {
@@ -176,6 +180,7 @@ else
         $t->assign('top_menu', $top_menu);
     }
     
+    // Log the route into the audit trail if it is enabled
     if($_SESSION['logged_in'] == true && ($_GET['q']!='system/api/table') && ENABLE_AUDIT_TRAILS === true)
     {
         $data = json_encode(
@@ -201,6 +206,7 @@ else
         }
     }
     
+    // Load the styleseets and the javascripts
     Application::addStylesheet("css/fapi.css", "lib/fapi/");
     Application::addStylesheet("css/main.css");
     
@@ -209,6 +215,7 @@ else
     Application::addJavaScript(Application::getLink("/lib/js/jquery-ui.js"));
     Application::addJavaScript(Application::getLink("/lib/js/json2.js"));
     
+    // Blast the HTML code to the browser!
     Application::$site_name = Application::$config['name'];
     Application::render();
 }

@@ -59,7 +59,7 @@ class Db
         return is_bool($result) ? null : pg_fetch_all($result);
     }
     
-    public static function reset($db = null)
+    public static function close($db = null)
     {
         $db = $db == null ? Db::$defaultDatabase : $db;
         if(is_resource(Db::$instances[$db])) 
@@ -70,8 +70,14 @@ class Db
         {
             Db::$instances = null;
         }
+        
     }
     
+    public static function reset($db = null, $atAllCost = false)
+    {
+        Db::close($db);
+        Db::get($db, $atAllCost);
+    }
     
     /**
      * Returns an instance of a named database. All the database configurations
@@ -97,6 +103,7 @@ class Db
         }
         else if(is_array($db))
         {
+            // When connecting from outside the framework
             $index = json_encode($db);
             $database[$index] = $db;
             $db = $index;

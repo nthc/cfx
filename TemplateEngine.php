@@ -27,10 +27,13 @@ include SOFTWARE_HOME . "lib/smarty/libs/Smarty.class.php";
 
 /**
  * A simple wrapper class for smarty. This class provides the boilerplate code
- * for template rendering.
+ * for initialising the template engine for use in the WYF framework.
  */
 class TemplateEngine extends Smarty
 {
+    /**
+     * Sets up the smarty engine
+     */
     function __construct()
     {
         parent::__construct();
