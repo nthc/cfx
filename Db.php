@@ -135,7 +135,6 @@ class Db
                 }
             }
         }
-        
         Db::$lastInstance = $db;
         return Db::$instances[$db];
     }

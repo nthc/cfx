@@ -192,7 +192,7 @@ else
             )
         );
         
-        if(class_exists("SystemAuditTrailModel", false))
+        if(class_exists("SystemAuditTrailModel", false) && ENABLE_ROUTING_TRAILS === true)
         {
             SystemAuditTrailModel::log(
                 array(

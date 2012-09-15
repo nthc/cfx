@@ -276,11 +276,6 @@ abstract class SQLDBDataStore extends DataStore
         return $method->invokeArgs(null, func_get_args());
     }
     
-    public function setData($data, $fields)
-    {
-        
-    }
-    
     public static function log($query)
     {
     	switch (SQLDBDataStore::$debugMode)
