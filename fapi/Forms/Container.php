@@ -493,9 +493,13 @@ abstract class Container extends Element
         return $this;
     }
 
-    //! Sets whether the fields should be exposed for editing. If this
-    //! field is set as true then the values of the fields as retrieved
-    //! from the database are showed.
+    /**
+     * Sets whether the fields should be exposed for editing. If this
+     * field is set as true then the values of the fields as retrieved
+     * from the database are showed.
+     * (non-PHPdoc)
+     * @see Element::setShowField()
+     */
     public function setShowField($showfield)
     {
         Element::setShowField($showfield);
@@ -503,6 +507,7 @@ abstract class Container extends Element
         {
             $element->setShowField($showfield);
         }
+        return $this;
     }
 
     //! Returns an array of all the Elements found in this container.

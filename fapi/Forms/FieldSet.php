@@ -1,12 +1,12 @@
 <?php
 include_once "Container.php";
 
-//!
-//! A FieldSet is a container for containing other Elements. It has
-//! a descriptive legend which describes what is contained in the
-//! field.
-//! \ingroup Forms
-//!
+/**
+ * A fieldset container.
+ * 
+ * @author ekow
+ *
+ */
 class Fieldset extends Container
 {
     private $collapsible = false;
