@@ -124,7 +124,7 @@ class Postgresql extends SQLDBDataStore
         if(isset($params["offset"]))
         {
             $query .= " OFFSET {$params["offset"]}";    
-        }            
+        }
         
         $rows = $this->query($query,$mode);
         

@@ -294,7 +294,11 @@ abstract class Model implements ArrayAccess
         $fields = $this->getFields();
         $numErrors = 0;
         
-        if(array_search("user_id", array_keys($this->fields)) &&  $this->datastore->data["user_id"] == "")
+        if(
+            array_search("user_id", array_keys($this->fields)) &&
+            $this->datastore->data["user_id"] == "" &&
+            $this->assumedTransactionMode == Model::TRANSACTION_MODE_ADD
+        )
         {
             $this->datastore->data["user_id"] = $_SESSION["user_id"];
         }
