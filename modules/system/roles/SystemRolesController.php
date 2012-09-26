@@ -13,10 +13,6 @@ class SystemRolesController extends ModelController
     private $save;
     private $permissions;
 
-    /**
-     * 
-     * 
-     */
     public function __construct()
     {
         parent::__construct(".roles");
@@ -42,7 +38,7 @@ class SystemRolesController extends ModelController
      * method is called by the application and it performs recursive calls to 
      * the drawPermissions() method.
      * 
-     * @param $params Passes the role_id through an array.
+     * @param $params array Passes the role_id through an array.
      * @return String
      */
     public function permissions($params)
@@ -55,6 +51,7 @@ class SystemRolesController extends ModelController
             array_pop($permissions);
             foreach($permissions as $permission => $value)
             {
+                var_dump($value);
                 $this->permissions->delete("role_id = '{$params[0]}' AND permission = '$permission'");
                 $this->permissions->setData(
                     array(
@@ -89,7 +86,7 @@ class SystemRolesController extends ModelController
 
         $path = $params;
         array_shift($path);
-        $accum = "/system/roles/permissions/{$params[0]}";
+        $accum = Application::$prefix . "/system/roles/permissions/{$params[0]}";
         $menu = "<a href='$accum'>Permissions</a>";
         
         foreach($path as $section)
@@ -117,12 +114,12 @@ class SystemRolesController extends ModelController
      * method causes ot to go through the menu for the purpose of generating
      * HTML representation of the permissions tree.
      *
-     * @param $menu     An array containing a list of all the modules for which 
+     * @param $menu     array An array containing a list of all the modules for which 
      *                 	the tree should be generated
      * 
-     * @param $roleId   The id for the role which is currently being processed
-     * @param $level    The level of the tree
-     * @return String
+     * @param $roleId   integer The id for the role which is currently being processed
+     * @param $level    integer The level of the tree
+     * @return string
      */
     private function drawPermissions($menu, $roleId, $level = 0)
     {
@@ -239,7 +236,7 @@ class SystemRolesController extends ModelController
             {
                 if($redirected)
                 {
-                    $urlPath = substr("$originalPath/$entry",strlen($prefix)+1);
+                    $urlPath = substr("$originalPath/$entry",strlen($prefix));
                     $modulePath = explode("/", substr(substr("$originalPath/$entry", strlen($prefix)), 1));
                     $module = Controller::load($modulePath, false);
                 }
@@ -344,7 +341,7 @@ class SystemRolesController extends ModelController
                     $urlPath = substr("$path/$entry",strlen($prefix));
                         $modulePath = substr("$path/$entry", strlen($prefix)
                     );
-                    
+                        
                     $this->permissions->queryResolve = true;
                     $value = $this->permissions->get(array("conditions"=>"roles.role_id='$roleId' AND module = '{$modulePath}' AND value='1'"));
                     $children = $this->generateMenus($roleId, "$path/$entry");
