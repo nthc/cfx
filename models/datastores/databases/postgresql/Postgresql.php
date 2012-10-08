@@ -163,7 +163,7 @@ class Postgresql extends SQLDBDataStore
     public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC)
     {
         $rows = array();
-        if(SQLDBDataStore::$debugQueries) SQLDBDataStore::log($query);
+        if(SQLDBDataStore::$logQueries) SQLDBDataStore::log($query);
         if(mb_detect_encoding($query) != 'UTF-8') $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
         $result = pg_query(self::$_conn, $query);
         if($result === false)
@@ -442,7 +442,13 @@ class Postgresql extends SQLDBDataStore
         {
             foreach($models as $other_model)
             {
+                // skip if the models are the same
                 if($model->name == $other_model->name) continue;
+                
+                // skip explicitly selected models
+                if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
+                if(array_search("{$other_model->package},{$model->package}", $params['dont_join']) !== false) continue;
+                
                 if($model->hasField($other_model->getKeyField()))
                 {
                     $joinConditions[] = "{$model->getDatabase()}.{$other_model->getKeyField()}={$other_model->getDatabase()}.{$other_model->getKeyField()}";
