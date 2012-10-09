@@ -73,7 +73,7 @@ class MultiModelTable extends Table
                         $name = $this->fields[$i+1]["name"];
                         // veeery dirty code @todo clean this up small
                         //$this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower('\" + $('#$name').val() +\"') in lower({$this->tableData["rawFields"][$i+1]}))>0\";\n";
-                        $this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower({$this->tableData["rawFields"][$i+1]}::varchar) like '%\"+$('#$name').val()+\"%'\";\n";
+                        $this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower({$this->tableData["rawFields"][$i+1]}::varchar) like '%\"+$('#$name').val().toLowerCase()+\"%'\";\n";
                         break;
 
                     /*case "reference":
