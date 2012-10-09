@@ -310,7 +310,7 @@ abstract class Model implements ArrayAccess
 
         $errors = $this->preValidateHook();
         $numErrors = count($errors);
-
+        
         if($this->runValidations && Model::$disableAllValidations === false)
         {
             $keyField = $this->getKeyField();
@@ -355,6 +355,7 @@ abstract class Model implements ArrayAccess
         }
         
         $this->postValidateHook($errors);
+                
         if($numErrors>0)
         {
             return array("errors"=>$errors,"numErrors"=>$numErrors);
@@ -701,7 +702,7 @@ abstract class Model implements ArrayAccess
 
     public function validatorRequired($name,$parameters)
     {
-    if((string)$this->datastore->data[$name]!=="" || $this->datastore->tempData[$name] !== "")
+        if((string)$this->datastore->data[$name]!=="")
         {
             return true;
         }
