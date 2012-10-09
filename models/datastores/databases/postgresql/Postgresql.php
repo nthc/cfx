@@ -152,7 +152,8 @@ class Postgresql extends SQLDBDataStore
 
     public function getSearch($searchValue,$field)
     {
-        return "position (lower('".$this->escape($searchValue)."'::varchar) in lower($field::varchar))>0";
+        return sprintf("lower(%s::varchar) LIKE '%%%s%%'", $field, strtolower($searchValue));
+        //return "position (lower('".$this->escape($searchValue)."'::varchar) in lower($field::varchar))>0";
     }
 
     public function concatenate($fields)
@@ -446,8 +447,11 @@ class Postgresql extends SQLDBDataStore
                 if($model->name == $other_model->name) continue;
                 
                 // skip explicitly selected models
-                if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
-                if(array_search("{$other_model->package},{$model->package}", $params['dont_join']) !== false) continue;
+                if(is_array($params['dont_join']))
+                {
+                    if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
+                    if(array_search("{$other_model->package},{$model->package}", $params['dont_join']) !== false) continue;
+                }
                 
                 if($model->hasField($other_model->getKeyField()))
                 {
