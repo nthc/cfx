@@ -71,7 +71,9 @@ class MultiModelTable extends Table
                         $text->addAttribute("onkeyup",$searchFunction);
                         $table .= $text->render();
                         $name = $this->fields[$i+1]["name"];
-                        $this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"position(lower('\" + $('#$name').val() +\"') in lower({$this->tableData["rawFields"][$i+1]}))>0\";\n";
+                        // veeery dirty code @todo clean this up small
+                        //$this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower('\" + $('#$name').val() +\"') in lower({$this->tableData["rawFields"][$i+1]}))>0\";\n";
+                        $this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower({$this->tableData["rawFields"][$i+1]}::varchar) like '%\"+$('#$name').val()+\"%'\";\n";
                         break;
 
                     /*case "reference":

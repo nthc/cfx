@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The form element class. An element can be anything from the form
  * itself to the objects that are put in the form. Provides an

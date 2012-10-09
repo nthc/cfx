@@ -44,6 +44,7 @@ $params = array(
     "limit"=>$object["limit"],
     "offset"=>$_REQUEST["offset"],
     "conditions"=>"($conditions) " . ($object['and_conditions'] != '' ? " AND ({$object['and_conditions']})" : '')
+       . ($_REQUEST['and_conditions'] != '' ? " AND ({$_REQUEST['and_conditions']})" : '')
 );
 
 //$data = $model->formatData();
@@ -75,3 +76,4 @@ switch($object["format"])
         print json_encode($data);
         break;
 }
+

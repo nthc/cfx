@@ -324,7 +324,8 @@ abstract class Field extends Element
     
     public function addJsOnChangeParameter($thisValue,$element,$scope,$property,$propertyValue)
     {
-        $this->jsOnChangeParams[$thisValue][] = array("element"=>$element,"scope"=>$scope,"property"=>$property,"propertyValue"=>$propertyValue);
+        $this->jsOnChangeParams[$thisValue][] = array(
+            "element"=>$element,"scope"=>$scope,"property"=>$property,"propertyValue"=>$propertyValue);
         return $this;
     }
     

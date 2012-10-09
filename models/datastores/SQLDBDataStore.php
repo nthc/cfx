@@ -19,8 +19,8 @@ abstract class SQLDBDataStore extends DataStore
     public $database;
     public static $activeDriver;
     public static $activeDriverClass;
-    public static $debugQueries = false;
-    public static $debugMode = "file";
+    public static $logQueries = false;
+    public static $logMode = "file";
     public $modelName;
 
     public function getExpandedFieldList($fields,$references,$resolve=true,$functions=null)
@@ -278,7 +278,7 @@ abstract class SQLDBDataStore extends DataStore
     
     public static function log($query)
     {
-    	switch (SQLDBDataStore::$debugMode)
+    	switch (SQLDBDataStore::$logMode)
     	{
     		case "print":
     			print $query . "\n";
