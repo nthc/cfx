@@ -1,8 +1,28 @@
 <?php
-/**
- * Controllers and all their classes
- * @defgroup Controllers
+/*
+ * Copyright (c) 2011 James Ekow Abaka Ainooson
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
  */
+
 
 /**
  * The Controller class represents the base class for all controllers that are
@@ -16,7 +36,7 @@
  * All the controllers you build must extend this class end implement
  *
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
- * @ingroup Controllers
+ * @package wyf.controllers
  *
  */
 class Controller
@@ -30,21 +50,25 @@ class Controller
     protected $_showInMenu = false;
 
     /**
-     * A descriptive label for this controler.
+     * A descriptive label for this controler. Labels are normally rendered
+     * in the views. In certain configurations labels could be used as titles
+     * for the webpage.
      * @var string
      */
     public $label;
 
     /**
-     * A piece of text which briefly describes this controller
+     * A piece of text which briefly describes this controller. These 
+     * descriptions are normally rendered as part of the views. 
      * @var string
      */
     public $description;
 
     /**
      * A variable which contains the contents of a given controller after a
-     * particular method has been called. This is what external controllers
-     * usually use.
+     * particular method has been called. This property is what different
+     * controllers use when interfacing with each other.
+     * 
      * @var string
      */
     public $content;

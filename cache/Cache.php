@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) 2011 James Ekow Abaka Ainooson
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -86,7 +86,7 @@ abstract class Cache
     }
     
     /**
-     * A function which implements the add method for a given backend. 
+     * A function which implements the add method for a given backend.
      * @param string $key
      * @param mixed $object
      * @param int $ttl

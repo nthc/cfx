@@ -137,6 +137,7 @@ class ImageCache
     /**
      * A smart thumbnailing function. Generates thumbnail images without
      * distorting the output of the final image.
+     * 
      * @param string $file
      * @param string $width
      * @param string $height
@@ -159,15 +160,11 @@ class ImageCache
 
             if($width>$height)
             {
-                //if($i_width>$i_height) ImageCache::resize_image($file,"cache/images/$tempImage",$width,0);
-                //else ImageCache::resize_image($file,"cache/images/$tempImage",0,$height);
                 ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",$width,0);
                 ImageCache::crop_image(SOFTWARE_HOME . "app/cache/images/$tempImage",$src,$width,$height,$head);
             }
             else if($height>$width)
             {
-                //if($i_width>$i_height) ImageCache::resize_image($file,"cache/images/$tempImage",0,$height);
-                //else ImageCache::resize_image($file,"cache/images/$tempImage",$width,0);
                 ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",$height,0);
                 ImageCache::crop_image(SOFTWARE_HOME . "app/cache/images/$tempImage",$src,$width,$height,$head);
             }
