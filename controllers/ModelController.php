@@ -153,6 +153,11 @@ class ModelController extends Controller
      */
     protected $hasDeleteOperation = true;
     
+    /**
+     * Enforce the add operation. This overrides the permissions on the system.
+     * 
+     * @var boolean
+     */
     protected $forceAddOperation = false;
     protected $forceEditOperation = false;
     protected $forceDeleteOperation = false;
@@ -160,6 +165,8 @@ class ModelController extends Controller
     protected $historyModels = array();
     
     protected $urlBase;
+    
+    private static $pendingErrors;
     
     
     /**
@@ -478,7 +485,7 @@ class ModelController extends Controller
             }
             else
             {
-                return json_encode(array("success"=>false, "data"=>$return));                
+                return json_encode(array("success"=>false, "data"=>$return));
             }
         }
         else
@@ -499,7 +506,7 @@ class ModelController extends Controller
 
     /**
      * The callback used by the form class. This callback is only called when
-     * the add or edit controller actions are performed.
+     * the add or edit controller actions are performed. 
      * 
      * @param array $data The data from the form
      * @param Form $form an instance of the form
@@ -538,6 +545,11 @@ class ModelController extends Controller
                         $element->addError(str_replace("%field_name%",$element->getLabel(),$error));
                     }
                 }
+                
+                foreach($return['errors'] as $fieldName => $error)
+                {
+                    $form->addError(str_replace("%field_name%",str_replace('_', ' ', $fieldName),$error));
+                }
             }
             break;
 
@@ -559,6 +571,7 @@ class ModelController extends Controller
             else
             {
                 $fields = array_keys($return["errors"]);
+                self::$pendingErrors = $return['errors'];
                 foreach($fields as $field)
                 {
                     foreach($return["errors"][$field] as $error)
@@ -566,6 +579,10 @@ class ModelController extends Controller
                         $element = $c["form"]->getElementByName($field);
                         $element->addError(str_replace("%field_name%",$element->getLabel(),$error));
                     }
+                }
+                foreach($return['errors'] as $fieldName => $error)
+                {
+                    $form->addError(str_replace("%field_name%",str_replace('_', ' ', $fieldName),$error));
                 }
             }
             break;
