@@ -223,11 +223,11 @@ class Application
      * 
      * @param string $url The url to redirect to.
      */
-    public static function redirect($url)
+    public static function redirect($url, $notification = false)
     {
         if(isset($_GET["redirect"]))
         {
-            header("Location: {$_GET["redirect"]}");
+            header("Location: {$_GET["redirect"]}" . ($notification === false ? '' : "?notification={$notification}"));
         }
         else
         {
