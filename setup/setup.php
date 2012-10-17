@@ -151,25 +151,26 @@ Db::query(
     )
 );
 Db::query("
-    INSERT INTO permissions VALUES (13, 1, 'can_log_in_to_web', 1, '/dashboard');
-    INSERT INTO permissions VALUES (38, 1, 'system_audit_trail_can_add', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (39, 1, 'system_audit_trail_can_edit', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (40, 1, 'system_audit_trail_can_delete', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (41, 1, 'system_audit_trail_can_view', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (42, 1, 'system_audit_trail_can_export', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (43, 1, 'system_audit_trail_can_import', 1, '/system/audit_trail');
-    INSERT INTO permissions VALUES (44, 1, 'system_roles_can_add', 1, '/system/roles');
-    INSERT INTO permissions VALUES (45, 1, 'system_roles_can_edit', 1, '/system/roles');
-    INSERT INTO permissions VALUES (46, 1, 'system_roles_can_delete', 1, '/system/roles');
-    INSERT INTO permissions VALUES (47, 1, 'system_roles_can_view', 1, '/system/roles');
-    INSERT INTO permissions VALUES (48, 1, 'system_roles_can_export', 1, '/system/roles');
-    INSERT INTO permissions VALUES (49, 1, 'system_roles_can_import', 1, '/system/roles');
-    INSERT INTO permissions VALUES (50, 1, 'system_users_can_add', 1, '/system/users');
-    INSERT INTO permissions VALUES (51, 1, 'system_users_can_edit', 1, '/system/users');
-    INSERT INTO permissions VALUES (52, 1, 'system_users_can_delete', 1, '/system/users');
-    INSERT INTO permissions VALUES (53, 1, 'system_users_can_view', 1, '/system/users');
-    INSERT INTO permissions VALUES (54, 1, 'system_users_can_export', 1, '/system/users');
-    INSERT INTO permissions VALUES (55, 1, 'system_users_can_import', 1, '/system/users');"
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'can_log_in_to_web', 1, '/dashboard');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_add', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_edit', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_delete', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_view', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_export', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_audit_trail_can_import', 1, '/system/audit_trail');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_add', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_edit', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_delete', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_view', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_export', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_roles_can_import', 1, '/system/roles');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_add', 1, '/system/users');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_edit', 1, '/system/users');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_delete', 1, '/system/users');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_view', 1, '/system/users');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_export', 1, '/system/users');
+    INSERT INTO permissions (role_id, permission, value, module) VALUES (1, 'system_users_can_import', 1, '/system/users');
+"
 );
 
 echo "\nDone! Happy programming ;)\n\n";
