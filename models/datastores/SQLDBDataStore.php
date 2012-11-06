@@ -1,7 +1,5 @@
 <?php
 
-//require_once "DataStore.php";
-
 /**
  * A model represents a basic data storage block. Services built around models
  * can be used to extend models to contains some form of logic which sort of
@@ -119,7 +117,7 @@ abstract class SQLDBDataStore extends DataStore
             $lastval = $this->query("SELECT LASTVAL() as last");
             $keyValue = $lastval[0]["last"];
         }
-        
+
         if(count($relatedData)>0)
         {
             // Save related data
@@ -134,13 +132,13 @@ abstract class SQLDBDataStore extends DataStore
                 }
             }
         }
-
+        
         $this->endTransaction();
         return $keyValue;
     }
 
     /**
-     *
+     * 
      * @see lib/models/model#update($field, $value)
      */
     public function update($key_field,$key_value)

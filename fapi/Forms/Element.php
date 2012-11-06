@@ -5,7 +5,8 @@
  * abstract render class that is used to output the HTML associated
  * with this form element. All visible elements of the form must be
  * subclasses of the element class.
- * @ingroup Forms
+ * 
+ * @package wyf.forms
  *
  */
 abstract class Element
