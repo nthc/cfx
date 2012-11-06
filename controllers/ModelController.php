@@ -202,13 +202,13 @@ class ModelController extends Controller
     {
         global $redirectedPackage;
         $this->modelName = ($this->modelName == "" ? $model : $this->modelName);
-        $this->permissionPrefix = str_replace(".", "_", $this->modelName);
         $this->model = Model::load($this->modelName);
         $this->name = $this->model->name;
         $this->t = $t;
         $this->path = $path;
         $this->urlBase = $this->urlBase == '' ? ($redirectedPackage != '' ? "$redirectedPackage" : '') . $this->modelName : $this->urlBase;
         $this->urlPath = Application::$prefix."/".str_replace(".","/",$this->urlBase);
+        $this->permissionPrefix = $redirectedPackage . str_replace(".", "_", $this->modelName);
         $this->localPath = "app/modules/".str_replace(".","/",$this->urlBase);
         
         if($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || $_REQUEST["__api_mode"] == "yes")

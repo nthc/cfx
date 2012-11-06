@@ -51,7 +51,6 @@ class SystemRolesController extends ModelController
             array_pop($permissions);
             foreach($permissions as $permission => $value)
             {
-                var_dump($value);
                 $this->permissions->delete("role_id = '{$params[0]}' AND permission = '$permission'");
                 $this->permissions->setData(
                     array(
