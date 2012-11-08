@@ -88,7 +88,7 @@ class TableContent extends ReportContent
             {
                 if($this->data_params["total"][$i])
                 {
-                    $totals[$i] = bcadd($totals[$i], Common::round(str_replace(",","",$field),2));
+                    $totals[$i] = bcadd($totals[$i], str_replace(",","",$field));
                 }
                 $i++;
             }

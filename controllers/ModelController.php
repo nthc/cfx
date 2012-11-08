@@ -208,7 +208,7 @@ class ModelController extends Controller
         $this->path = $path;
         $this->urlBase = $this->urlBase == '' ? ($redirectedPackage != '' ? "$redirectedPackage" : '') . $this->modelName : $this->urlBase;
         $this->urlPath = Application::$prefix."/".str_replace(".","/",$this->urlBase);
-        $this->permissionPrefix = $redirectedPackage . str_replace(".", "_", $this->modelName);
+        $this->permissionPrefix = str_replace(".", "_", $redirectedPackage) . str_replace(".", "_", $this->modelName);
         $this->localPath = "app/modules/".str_replace(".","/",$this->urlBase);
         
         if($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || $_REQUEST["__api_mode"] == "yes")
