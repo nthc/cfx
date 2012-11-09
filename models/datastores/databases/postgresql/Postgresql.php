@@ -163,17 +163,20 @@ class Postgresql extends SQLDBDataStore
 
     public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC)
     {
+        //$connection = Db::getCachedInstance();
         $rows = array();
         if(SQLDBDataStore::$logQueries) SQLDBDataStore::log($query);
         if(mb_detect_encoding($query) != 'UTF-8') $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
-        $result = pg_query(self::$_conn, $query);
-        if($result === false)
+        $rows = Db::query($query, Db::$defaultDatabase, $mode);
+        
+        if($rows === false)
         {
-            pg_query(self::$_conn, "ROLLBACK");
-            throw new Exception("PGSQL Says " . pg_errormessage(self::$_conn) . " [$query]");
+            $errorMessage = pg_errormessage(Db::getCachedInstance(Db::$defaultDatabase));
+            Db::query("ROLLBACK", Db::$defaultDatabase);
+            throw new Exception("PGSQL Says $errorMessage query :$query");
         }
         
-        switch($mode)
+        /*switch($mode)
         {
             case SQLDatabaseModel::MODE_ASSOC:
                 $pgSqlMode = PGSQL_ASSOC;
@@ -186,7 +189,7 @@ class Postgresql extends SQLDBDataStore
         while ($row = pg_fetch_row($result, null, $pgSqlMode))
         {
             $rows[] = $row;
-        }
+        }*/
         
         self::$namesSeen = array();
         

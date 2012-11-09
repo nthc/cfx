@@ -83,12 +83,13 @@ class TableContent extends ReportContent
         foreach($this->data as $fields)
         {
             $i = 0;
-            if(!is_array($fields)) return $totals;
+            if(!is_array($fields)) continue; //return $totals;
             foreach($fields as $field)
             {
                 if($this->data_params["total"][$i])
                 {
-                    $totals[$i] = bcadd($totals[$i], str_replace(",","",$field));
+                    $field = (double)str_replace(",","",$field);
+                    $totals[$i] = $totals[$i] + $field;
                 }
                 $i++;
             }
@@ -97,7 +98,7 @@ class TableContent extends ReportContent
         {
             $totals[$i] = is_numeric($totals[$i]) ? $totals[$i] : null;
         }
-        return $totals;    
+        return $totals;
     }
     
     public function getHeaders()

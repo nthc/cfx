@@ -1,6 +1,6 @@
 <?php
+ini_set('html_errors', 0);
 session_start();
-
 set_include_path("../.." . PATH_SEPARATOR . get_include_path());
 //set_include_path( . $path . PATH_SEPARATOR . get_include_path());
 

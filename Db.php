@@ -32,6 +32,9 @@
  */
 class Db
 {
+    const MODE_ASSOC = "assoc";
+    const MODE_ARRAY = "array";
+    
     /**
      * The instances of the various databases
      * @var array
@@ -39,6 +42,7 @@ class Db
     private static $instances = array();
     
     public static $defaultDatabase;
+    public static $error;
     
     /**
      * The last instance of the database
@@ -52,11 +56,37 @@ class Db
         return pg_escape_string(Db::$instances[$instance], $string);
     }
     
-    public static function query($query, $instance = null)
+    public static function query($query, $instance = null, $mode = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
-        $result = pg_query(Db::get($instance), $query);
-        return is_bool($result) ? null : pg_fetch_all($result);
+        $instance = Db::getCachedInstance($instance);
+        $result = pg_query($instance, $query);
+        if($result === false)
+        {
+
+            Db::$error = pg_errormessage($instance);
+            return false;
+        }
+        else if(pg_num_rows($result) > 0)
+        {
+            if($mode == Db::MODE_ARRAY)
+            {
+                $rows = array();
+                while($row = pg_fetch_array($result))
+                {
+                    $rows[] = $row;
+                }
+                return $rows;
+            }
+            else
+            {
+                return pg_fetch_all($result);
+            }
+        }
+        else
+        {
+            return array();
+        }
     }
     
     public static function close($db = null)
@@ -65,6 +95,7 @@ class Db
         if(is_resource(Db::$instances[$db])) 
         {
             pg_close(Db::$instances[$db]);
+            unset(Db::$instances[$db]);
         }
         else
         {
@@ -77,6 +108,18 @@ class Db
     {
         Db::close($db);
         Db::get($db, $atAllCost);
+    }
+    
+    public static function getCachedInstance($db)
+    {
+        if(isset(Db::$instances[$db]))
+        {
+            return Db::$instances[$db];
+        }
+        else
+        {
+            return Db::get($db, false);
+        }
     }
     
     /**
@@ -112,6 +155,8 @@ class Db
         {
             throw new Exception('Invalid configuration parameters passed');
         }
+        
+        unset(Db::$instances[$db]);
         
         while(!is_resource(Db::$instances[$db]))
         {
