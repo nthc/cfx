@@ -79,6 +79,7 @@ class XmlDefinedReportController extends ReportController
      */
     public function generate($params)
     {
+    	SQLDBDataStore::$logQueries = true;
         $report = $this->getReport();
 
         $reader  = new XMLReader();

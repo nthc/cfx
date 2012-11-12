@@ -72,7 +72,7 @@ class Db
             if($mode == Db::MODE_ARRAY)
             {
                 $rows = array();
-                while($row = pg_fetch_array($result))
+                while($row = pg_fetch_array($result, null, PGSQL_NUM))
                 {
                     $rows[] = $row;
                 }
