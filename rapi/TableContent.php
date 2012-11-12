@@ -106,6 +106,17 @@ class TableContent extends ReportContent
         return $this->headers;
     }
     
+    public function setDataTypes($types)
+    {
+    	$this->data_params['type'] = $types;
+    }
+    
+    public function setTotalsFields($total)
+    {
+    	$this->data_params['total'] = $total;
+    	$this->style['autoTotalsBox'] = true;
+    }
+    
     public function setData($data)
     {
         if(isset($this->data_params["ignore"]))
