@@ -117,6 +117,11 @@ class TableContent extends ReportContent
     	$this->style['autoTotalsBox'] = true;
     }
     
+    public function setWidths($widths)
+    {
+        $this->data_params['widths'] = $widths;
+    }
+    
     public function setData($data)
     {
         if(isset($this->data_params["ignore"]))
@@ -143,4 +148,3 @@ class TableContent extends ReportContent
         return "table";
     }
 }
-?>

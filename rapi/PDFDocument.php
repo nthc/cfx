@@ -227,15 +227,13 @@ class PDFDocument extends FPDF
                 {
                     $totals[$i] = number_format($totals[$i], 0,".",",");
                 }
-                else
-                {
-                    
-                }
             }
             else
             {
                 $borders = 0;
             }
+            
+            //var_dump($totals[$i], $params);
 
             $this->Cell($params["widths"][$i],$this->style["cell_height"],$totals[$i],$borders,0,$i==0?'L':'R');
         }
