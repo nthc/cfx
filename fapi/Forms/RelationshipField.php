@@ -31,15 +31,12 @@ class RelationshipField extends Field
      */
     public function __construct($label, $name, $mainModelPath, $subModelPath)
     {
-        $this->setName($name);
         $this->setLabel($label);
         $this->mainSelectionList = new SelectionList();
-        $this->mainSelectionList->setId($name."_main");
-        $this->mainSelectionList->addAttribute("onchange","fapi_change_$name()");
         $this->subSelectionList = new SelectionList();
-        $this->subSelectionList->setName($name);
+        $this->setName($name);
 
-        $subSelectionList = new SelectionList();
+        //$subSelectionList = new SelectionList();
         $mainModelPathInfo = Model::resolvePath($mainModelPath);
         $this->subModelPathInfo = Model::resolvePath($subModelPath);
         $this->mainModel = Model::load($mainModelPathInfo["model"]);
@@ -64,6 +61,14 @@ class RelationshipField extends Field
         }
         $this->subSelectionList->setValue($value);
     }
+    
+    public function setName($name)
+    {
+        parent::setName($name);        
+        $this->mainSelectionList->setId($name."_main");
+        $this->subSelectionList->setName($name); 
+        return $this;
+    }
 
     public function getDisplayValue()
     {
@@ -75,6 +80,7 @@ class RelationshipField extends Field
 
     public function render()
     {
+        $this->mainSelectionList->addAttribute("onchange","fapi_change_{$this->name}()");        
         $object = array
         (
             "model"=>$this->subModel->package,
@@ -90,7 +96,7 @@ class RelationshipField extends Field
         $params .= "conditions=".urlencode("{$this->subModel->getDatabase()}.{$this->mainModel->getKeyField()}==");
         
         return $this->mainSelectionList->render().
-                "<br/>".
+               "<br/>".
                 $this->subSelectionList->render()
                 ."<script type='text/javascript'>
                     function fapi_change_{$this->name}()
