@@ -777,4 +777,48 @@ abstract class Model implements ArrayAccess
         $this->queryExplicitRelations = $queryExplicitRelations;
         return $this;
     }
+    
+    /**
+     * 
+     * 
+     * @param type $conditionArray
+     * @return string
+     */
+    public static function condition($conditionArray)
+    {
+        foreach($conditionArray as $field => $condition)
+        {
+            if(is_array($condition))
+            {
+                foreach($condition as $clause)
+                {
+                    $conditions[] = "$field = '$clause'";
+                }
+            }
+            else
+            {
+                preg_match("/(?<field>[a-zA-Z1-9_.]*)\w*(?<operator>\>=|\<=|\<\>|\<|\>)?/", $field, $matches);
+                $databaseField = $matches['field'];//$this->resolveName($matches["field"]);
+
+                if($condition === null)
+                {
+                    $operator = 'is';
+                }
+                else
+                {
+                    $operator = $matches["operator"]==""?"=":$matches["operator"];
+                }
+
+                $condition = $condition === null ? 'NULL' : "'" . Db::escape($condition) . "'";
+                $conditions[] = "$databaseField $operator $condition";
+            }
+        }
+        
+        if(is_array($conditions))
+        {
+            $compiled = implode(" AND ", $conditions);
+        }
+        
+        return $compiled;
+    }
 }
