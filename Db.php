@@ -53,7 +53,14 @@ class Db
     public static function escape($string, $instance = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
-        return pg_escape_string(Db::$instances[$instance], $string);
+        if($instance == null)
+        {
+            return pg_escape_string($string);
+        }
+        else
+        {
+            return pg_escape_string(Db::$instances[$instance], $string);
+        }
     }
     
     public static function query($query, $instance = null, $mode = null)

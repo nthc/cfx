@@ -808,7 +808,6 @@ abstract class Model implements ArrayAccess
                 {
                     $operator = $matches["operator"]==""?"=":$matches["operator"];
                 }
-
                 $condition = $condition === null ? 'NULL' : "'" . Db::escape($condition) . "'";
                 $conditions[] = "$databaseField $operator $condition";
             }
