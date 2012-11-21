@@ -65,7 +65,7 @@ class XLSReport extends Report
                         }
 
                         $headers = $content->getHeaders();
-                        $format = &$spreadsheet->addFormat();
+                        @$format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
                         $format->setSize(12);
                         $spreadsheet->setCustomColor(12,102,128,102);
@@ -80,7 +80,7 @@ class XLSReport extends Report
                             $worksheet->write($row,$col,str_replace("\\n","\n",$header),$format);
                         }
 
-                        $format = &$spreadsheet->addFormat();
+                        @$format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
                         $format->setSize(12);
                         $spreadsheet->setCustomColor(13,180,200,180);
@@ -93,6 +93,18 @@ class XLSReport extends Report
                             $col = 0;
                             foreach($rowData as $field)
                             {
+                                switch($content->data_params["type"][$col])
+                                {
+                                     case "number":
+                                         $field = $field === null || $field == "" ? "0" : Common::round($field, 0);
+                                         break;
+                                     case "double":
+                                         $field = $field === null || $field == "" ? "0.00" : Common::round($field, 2);
+                                         break;
+                                     case "right_align":
+                                         //$align = "R";
+                                         break;
+                                 }
                                 $worksheet->write($row,$col,trim($field),$format);
                                 $col++;
                             }
@@ -103,6 +115,7 @@ class XLSReport extends Report
             $row++;
         }
         $spreadsheet->close();
+        die();
     }
 }
 
