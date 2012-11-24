@@ -150,7 +150,10 @@ class SystemApiController extends Controller
 
     public function table()
     {
+        global $redirectedPackage;
         $params = json_decode($_REQUEST["params"], true);
+        $redirectedPackage = $params['redirected_package'];
+        
         $modelTable = new MultiModelTable($prefix);
         $modelTable->setOperations($params["operations"]);
         $modelTable->setParams($params);

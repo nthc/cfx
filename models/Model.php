@@ -150,7 +150,7 @@ abstract class Model implements ArrayAccess
             }
             if($instance == null)
             {
-                throw new Exception("Failed to load Model [$model]", $code);
+                throw new Exception("Failed to load Model [$model] with [$modelClassName]", $code);
             }
         }
         return $instance;

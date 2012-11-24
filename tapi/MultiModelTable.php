@@ -154,6 +154,7 @@ class MultiModelTable extends Table
 
     public function render($headers = true)
     {
+        global $redirectedPackage;
         $results = $this->tableData;
         $this->fields = $results["fieldInfos"];
 
@@ -185,6 +186,7 @@ class MultiModelTable extends Table
 
         if($this->useAjax)
         {
+            $this->params['redirected_package'] = $redirectedPackage;
             $table .=
             "<div id='{$this->name}-operations'></div>
             <script type='text/javascript'>
