@@ -43,6 +43,7 @@ class Db
     
     public static $defaultDatabase;
     public static $error;
+    private static $lastQuery;
     
     /**
      * The last instance of the database
@@ -68,12 +69,14 @@ class Db
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
         $result = pg_query($instance, $query);
+        self::$lastQuery = $query;
+                
         if($result === false)
         {
 
             Db::$error = pg_errormessage($instance);
             return false;
-        }
+        }        
         else if(pg_num_rows($result) > 0)
         {
             if($mode == Db::MODE_ARRAY)
@@ -189,5 +192,10 @@ class Db
         }
         Db::$lastInstance = $db;
         return Db::$instances[$db];
+    }
+    
+    public function getLastQuery()
+    {
+        return self::$lastQuery;
     }
 }

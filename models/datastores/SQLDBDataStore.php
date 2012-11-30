@@ -20,6 +20,7 @@ abstract class SQLDBDataStore extends DataStore
     public static $logQueries = false;
     public static $logMode = "file";
     public $modelName;
+    private $lastQuery;
 
     public function getExpandedFieldList($fields,$references,$resolve=true,$functions=null)
     {
