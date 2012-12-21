@@ -660,7 +660,14 @@ class ModelController extends Controller
     {
         $form = $this->getForm();
         $form->setShowField(false);
-        $data = $this->model->get(array("conditions"=>$this->model->getKeyField()."='".$params[0]."'"),SQLDatabaseModel::MODE_ASSOC,true,false);
+        $data = $this->model->get(
+            array(
+                "conditions"=>$this->model->getKeyField()."='".$params[0]."'"
+            ),
+            SQLDatabaseModel::MODE_ASSOC,
+            true,
+            false
+        );
         $form->setData($data[0]);
         $this->label = "View ".$this->label;
         return $form->render(); //ModelController::frameText(400,$form->render());

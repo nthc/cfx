@@ -37,17 +37,7 @@ class ModelField extends SelectionList
         $this->setLabel($field[0]["label"]);
         $this->setDescription($field[0]["description"]);
         $this->setName($this->info["field"]);
-
-    }
-    
-    public function setConditions($conditions)
-    {
-        $this->conditions = $conditions;
-        return $this;
-    }
-    
-    public function render()
-    {
+        
         $params = array(
             "fields" => array($this->info["field"],$this->valueField),
             "sort_field" => $this->valueField,
@@ -56,7 +46,7 @@ class ModelField extends SelectionList
         if($this->conditions != '')
         {
             $params['conditions'] = $this->conditions;
-        }
+        }           
         
         $data = $this->model->get(
             $params,
@@ -73,8 +63,12 @@ class ModelField extends SelectionList
             {
                 $this->addOption($datum[1],$datum[0]);
             }
-        }        
-        
-        return parent::render();
+        }         
+    }
+    
+    public function setConditions($conditions)
+    {
+        $this->conditions = $conditions;
+        return $this;
     }
 }
