@@ -115,7 +115,6 @@ class XLSReport extends Report
             $row++;
         }
         $spreadsheet->close();
-        die();
     }
 }
 
