@@ -88,8 +88,19 @@ class TableContent extends ReportContent
             {
                 if($this->data_params["total"][$i])
                 {
-                    $field = (double)str_replace(",","",$field);
-                    $totals[$i] = $totals[$i] + $field;
+                    $field = str_replace(array(",", ' '),"",$field);
+                    
+                    switch($this->data_params['type'][$i])
+                    {
+                        case 'double':
+                            $field = Common::round($field, 2);
+                            break;
+                        case 'number':
+                            $field = Common::round($field, 0);
+                            break;
+                    }
+                    
+                    $totals[$i] = bcadd($totals[$i], $field, 32);
                 }
                 $i++;
             }
