@@ -144,7 +144,6 @@ abstract class SQLDBDataStore extends DataStore
      */
     public function update($key_field,$key_value)
     {
-
         $fields = array(); // array_keys($this->data);
         $relatedData = array();
         $assignments = array();

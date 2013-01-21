@@ -482,7 +482,7 @@ abstract class ReportController extends Controller
      * @param string $label A label for the filter
      * @param string $name  A machine readable name for the filter 
      */
-    protected function addDateFilter($label,$name)
+    protected function addDateFilter($label,$name,$opt=null)
     {
         $this->filters
             ->add(Element::create("Label",$label),$this->numFilters,0)
@@ -491,7 +491,7 @@ abstract class ReportController extends Controller
                 ->addOption("After","GREATER")
                 ->addOption("On","EQUALS")
                 ->addOption("Between","BETWEEN")
-                ->setValue("BETWEEN"),$this->numFilters,1)
+                ->setValue($opt),$this->numFilters,1)
             ->add(Element::create("DateField","","{$name}_start_date")->setId("{$name}_start_date"),$this->numFilters,2)
             ->add(Element::create("DateField","","{$name}_end_date")->setId("{$name}_end_date"),$this->numFilters,3);
             $this->numFilters++;
