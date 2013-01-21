@@ -75,7 +75,7 @@ abstract class Model implements ArrayAccess
      * @return Model
      */
     public static function load($model, $path=null, $cached=true)
-    {
+    {	
         global $redirectedPackage;
         $modelName = (substr($model,0,1)=="." ? $redirectedPackage:"") . $model;
         

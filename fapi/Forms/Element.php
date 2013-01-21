@@ -434,7 +434,7 @@ abstract class Element
     {
         $args = func_get_args();
         $element = array_shift($args);
-        //if(!class_exists($element)) throw new Exception("Class requested doesn't exist");
+        if(!class_exists($element)) throw new Exception("Class requested doesn't exist");
         $element = new ReflectionClass($element);
         return $element->newInstanceArgs($args==null?array():$args);
     }
