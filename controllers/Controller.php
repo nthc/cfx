@@ -213,13 +213,6 @@ class Controller
                 $redirectedPackage = $package_path;
                 $packageSchema = $package_schema;
             }
-            else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/report.xml"))
-            {
-                $controller_name = $p;
-                $controller_path .= "/$p";
-                $controller_type = Controller::TYPE_REPORT;
-                break;
-            }
             else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/{$baseClassName}Controller.php"))
             {
                 $controller_class_name = $baseClassName . "Controller";
@@ -230,6 +223,13 @@ class Controller
                 add_include_path("$redirect_path/$controller_path/");
                 break;
             }
+            else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/report.xml"))
+            {
+                $controller_name = $p;
+                $controller_path .= "/$p";
+                $controller_type = Controller::TYPE_REPORT;
+                break;
+            }            
             else
             {
                 $controller_path .= "/$p";

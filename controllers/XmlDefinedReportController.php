@@ -46,7 +46,7 @@ class XmlDefinedReportController extends ReportController
      *                       description of this report
      */
     public function __construct($report, $redirected = false)
-    {
+    {   
         parent::__construct();
         $this->xml = simplexml_load_file(($redirected ? "" : "app/modules").$report);
         $path =  $this->xml["name"]."/generate/pdf";
