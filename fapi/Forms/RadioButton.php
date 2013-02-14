@@ -33,11 +33,6 @@ class RadioButton extends Field
     {
         $this->checked_value = $checked_value;
     }
-    
-    public function getType()
-    {
-        return 'RadioButton';
-    }
 
     public function render()
     {
