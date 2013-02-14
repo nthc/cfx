@@ -135,7 +135,7 @@ class Controller
     public $mainRedirectedPackage;
     
     public $redirectedPackageName;
-
+    
     /**
      * A utility method to load a controller. This method loads the controller
      * and fetches the contents of the controller into the Controller::$contents
@@ -152,6 +152,7 @@ class Controller
     public static function load($path,$get_contents=true)
     {
         global $redirectedPackage;
+        global $redirectPath;
         global $packageSchema;
         
         $controller_path = "";
@@ -212,6 +213,7 @@ class Controller
                 $controller_path = "";
                 $redirectedPackage = $package_path;
                 $packageSchema = $package_schema;
+                $redirectPath = $redirect_path;
             }
             else if($redirected === true && file_exists(SOFTWARE_HOME . "$redirect_path/$controller_path/$p/{$baseClassName}Controller.php"))
             {
