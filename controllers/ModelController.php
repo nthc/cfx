@@ -924,7 +924,10 @@ class ModelController extends Controller
                     'system.audit_trail.audit_trail_id',
                     'system.audit_trail.audit_date',
                     'system.audit_trail.description',
-                    'system.users.user_name'
+                    'system.users.user_name',
+                    'system.users.first_name',
+                    'system.users.last_name',
+                    'system.users.other_names'
                 ),
                 'conditions' => "item_id = '{$params[0]}' AND item_type in ('$models')",
                 'sort_field' => 'audit_trail_id DESC'
