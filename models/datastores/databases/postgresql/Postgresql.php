@@ -645,7 +645,8 @@ class Postgresql extends SQLDBDataStore
                         $type = "text";
                     }
                     break;
-                    
+                
+                case "point":
                 case "text":
                     $type = "text";
                     break;
