@@ -5,18 +5,59 @@ class SystemApiController extends Controller
 
     public function __construct()
     {
+        ini_set('html_errors', 'Off');
         if(substr($_REQUEST["q"],0,10) == "system/api") Application::$template = "";
         $this->format = isset($_REQUEST["__api_format"]) ? $_REQUEST["__api_format"] : $this->format;
         unset($_REQUEST["__api_format"]);
         unset($_REQUEST["q"]);
+        
+        if(isset($_REQUEST['__api_key']) && isset($_REQUEST['__api_signature']))
+        {
+            foreach($_POST as $key => $value)
+            {
+                $aggregatedKey .= $key . substr($_POST[$key], 0, 15);
+            }
+            
+            foreach($_GET as $key => $value)
+            {
+                if($key == '__api_key' || $key == '__api_signature' || $key == '__api_format' || $key == '__api_session_id' || $key == 'q')
+                {
+                    continue;
+                }
+                $aggregatedKey .= $key . substr($_GET[$key], 0, 15);
+            }
+            try{
+                @$apiKey = reset(Model::load('system.api_keys')->setQueryResolve(false)->getWithField2('key', $_REQUEST['__api_key']));
+                if($apiKey['active'] == 't')
+                {
+                    $signature = sha1($aggregatedKey . $apiKey['secret']);
+                    if($signature == $_GET['__api_signature'])
+                    {
+                        $_SESSION['logged_in'] = true;
+                        $_SESSION['user_id'] = $apiKey['user_id'];
+                    }
+                }
+            }
+            catch(Exception $e)
+            {
+                print $this->format(array("success"=>false,  "message"=>$e->getMessage()));
+                die();                
+            }
+        }
 
-        if($_SESSION["logged_in"]==false && $_GET["q"] != "system/api/login")
+        if($_SESSION["logged_in"]==false && $_GET["q"] != "api/login")
         {
             print $this->format(array("success"=>false, "status"=>101, "message"=>"Not authenticated"));
             die();
         }
     }
     
+    /**
+     * 
+     * @param type $params
+     * @return type
+     * @deprecated since version 1.1
+     */
     public function func($params)
     {
         $className = array_shift($params);
@@ -25,7 +66,26 @@ class SystemApiController extends Controller
         $ret = $method->invokeArgs(null, $params);
         return json_encode($ret);
     }
-
+    
+    public function call_function($params)
+    {
+        $className = array_shift($params);
+        $methodName = array_shift($params);
+        try{
+            $method = new ReflectionMethod($className, $methodName);
+            $ret = $method->invokeArgs(null, $params);
+            return json_encode(
+                array('success' => true, 'response' => $ret)
+            );
+        }
+        catch(Exception $e)
+        {
+            return json_encode(
+                array('success' => false, 'message' => $e->getMessage())
+            );
+        }
+    }
+    
     public function getContents()
     {
 
