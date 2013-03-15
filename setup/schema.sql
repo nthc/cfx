@@ -169,7 +169,7 @@ ALTER TABLE ONLY users
     ADD CONSTRAINT users_role_id_fk FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET NULL;
 
 
-CREATE TABLE common.api_keys
+CREATE TABLE system.api_keys
 (
   api_key_id serial NOT NULL,
   user_id integer NOT NULL,
@@ -178,7 +178,7 @@ CREATE TABLE common.api_keys
   secret character varying(512) NOT NULL,
   CONSTRAINT api_keys_pkey PRIMARY KEY (api_key_id ),
   CONSTRAINT api_keys_user_id_fkey FOREIGN KEY (user_id)
-      REFERENCES common.users (user_id) MATCH SIMPLE
+      REFERENCES system.users (user_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
