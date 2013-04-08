@@ -419,7 +419,7 @@ abstract class Model implements ArrayAccess
             
             if(ENABLE_AUDIT_TRAILS === true && $this->disableAuditTrails === false)
             {
-                SystemAuditTrailModel::log(
+                @SystemAuditTrailModel::log(
                     array(
                         'item_id' => $id,
                         'item_type' => $this->package,
