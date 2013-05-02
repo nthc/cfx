@@ -75,6 +75,9 @@ class ModelSearchField extends Field
     
     public function render()
     {
+        global $redirectedPackage;
+        global $packageSchema;
+        
         $name = $this->getName();
         $hidden = new HiddenField($name,$this->getValue());
         $id = $this->getId();
@@ -94,7 +97,9 @@ class ModelSearchField extends Field
             "fields"=>$this->searchFields,
             "limit"=>20,
             "conditions"=>"",
-            "and_conditions"=>$this->andConditions
+            "and_conditions"=>$this->andConditions,
+            'redirected_package' => $redirectedPackage,
+            'package_schema' => $packageSchema
         );
         $jsonSearchFields = array_reverse($this->searchFields);
         $object = base64_encode(serialize($object));
