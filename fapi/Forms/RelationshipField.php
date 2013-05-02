@@ -91,7 +91,7 @@ class RelationshipField extends Field
             
         );
 
-        $path = Application::$prefix."/lib/models/urlaccess.php";
+        $path = Application::$prefix."/system/api/query";
         $params = "object=".urlencode(base64_encode(serialize($object)))."&";
         $params .= "conditions=".urlencode("{$this->subModel->getDatabase()}.{$this->mainModel->getKeyField()}==");
         

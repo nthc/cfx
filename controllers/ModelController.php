@@ -705,6 +705,7 @@ class ModelController extends Controller
                     $table = new TableContent($this->model->getLabels(),array());
                     $report->add($table);
                     $report->output();
+                    die();
                 }
                 break;
                 
@@ -728,6 +729,7 @@ class ModelController extends Controller
 
         $report->add($title,$table);
         $report->output();
+        die();
     }
     
     private function doImport()

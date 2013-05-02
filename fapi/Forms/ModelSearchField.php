@@ -98,7 +98,7 @@ class ModelSearchField extends Field
         );
         $jsonSearchFields = array_reverse($this->searchFields);
         $object = base64_encode(serialize($object));
-        $path = Application::$prefix."/lib/models/urlaccess.php?object=$object";
+        $path = Application::$prefix."/system/api/query?object=$object";
         $fields = urlencode(json_encode($jsonSearchFields));
         
         $text = new TextField();
