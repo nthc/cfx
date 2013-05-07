@@ -81,7 +81,7 @@ class ModelSearchField extends Field
         $name = $this->getName();
         $hidden = new HiddenField($name,$this->getValue());
         $id = $this->getId();
-        $hidden->addAttribute("id",$id);
+        $hidden->addAttribute("id", $id);
         $ret = $hidden->render();
                 
         if($this->storedFieldSet === false)
@@ -109,6 +109,11 @@ class ModelSearchField extends Field
         $text = new TextField();
         $text->addAttribute("onkeyup","fapiUpdateSearchField('$id','$path','$fields',this,".($this->boldFirst?"true":"false").",'{$this->onChangeAttribute}')");
         $text->addAttribute("autocomplete","off");
+        
+        foreach($this->attributes as $attribute)
+        {
+            $text->addAttributeObject($attribute);
+        }
         
         if($this->getValue()!="")
         {

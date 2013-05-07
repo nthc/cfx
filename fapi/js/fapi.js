@@ -1,5 +1,5 @@
 var curtab = 0;
-
+var searchFieldConditions = [];
 var request = undefined;
 
 /**
@@ -220,7 +220,8 @@ function fapiUpdateSearchField(name,url,fields,element,boldFirst, onChangeFuncti
 	
     request = $.ajax({
         type:"GET",
-        url:url+"&conditions="+escape(conditions)+"&conditions_opr=OR",
+        url:url+"&conditions="+escape(conditions)+"&conditions_opr=OR" + 
+            (searchFieldConditions[name] !== undefined ? "&and_conditions="+escape(searchFieldConditions[name]) : ''),
         dataType:"json",
         success:function(r)
         {
