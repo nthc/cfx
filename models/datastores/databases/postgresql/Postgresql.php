@@ -167,6 +167,7 @@ class Postgresql extends SQLDBDataStore
         $rows = array();
         if(SQLDBDataStore::$logQueries) SQLDBDataStore::log($query);
         if(mb_detect_encoding($query) != 'UTF-8') $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
+        SQLDBDataStore::$lastQuery = $query;
         $rows = Db::query($query, Db::$defaultDatabase, $mode);
         
         if($rows === false)
@@ -175,21 +176,6 @@ class Postgresql extends SQLDBDataStore
             Db::query("ROLLBACK", Db::$defaultDatabase);
             throw new Exception("PGSQL Says $errorMessage query :$query");
         }
-        
-        /*switch($mode)
-        {
-            case SQLDatabaseModel::MODE_ASSOC:
-                $pgSqlMode = PGSQL_ASSOC;
-                break;
-            case SQLDatabaseModel::MODE_ARRAY:
-                $pgSqlMode = PGSQL_NUM;
-                break;
-        }
-
-        while ($row = pg_fetch_row($result, null, $pgSqlMode))
-        {
-            $rows[] = $row;
-        }*/
         
         self::$namesSeen = array();
         
