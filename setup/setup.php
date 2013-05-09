@@ -119,7 +119,8 @@ error_reporting(E_ALL ^ E_NOTICE);
     /*
      * Used to specify where the application code resides on the
      * system. The path specified here must be an absolute path to the application's
-     * location. Eg. `/var/apps/myapp`
+     * location. Eg. `/var/apps/myapp/`. The last character should be a forward
+     * slash (/)
      */
     'home' => "$home",
         
