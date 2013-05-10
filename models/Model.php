@@ -54,6 +54,7 @@ abstract class Model implements ArrayAccess
      */
     public $datastore;
     private static $instances = array();
+    private $validationPassed = false;
     
     
     public static function getDatastoreInstance()
@@ -150,7 +151,7 @@ abstract class Model implements ArrayAccess
             }
             if($instance == null)
             {
-                throw new Exception("Failed to load Model [$model] with [$modelClassName]", $code);
+                throw new ModelException("Failed to load Model [$model] with [$modelClassName]");
             }
         }
         return $instance;
@@ -355,13 +356,14 @@ abstract class Model implements ArrayAccess
         }
         
         $this->postValidateHook($errors);
-                
+                        
         if($numErrors>0)
         {
             return array("errors"=>$errors,"numErrors"=>$numErrors);
         }
         else
         {
+            $this->validationPassed = true;            
             return true;
         }
     }
@@ -398,6 +400,13 @@ abstract class Model implements ArrayAccess
 
     public function save()
     {
+        // Force validations to run
+        if($this->validationPassed === false)
+        {
+            $validated = $this->validate();
+            if($validated !== true) throw new ModelException("Failed to validate the model", $validated);
+        }
+        
         $this->datastore->beginTransaction();
         $this->preAddHook();
         
@@ -821,3 +830,14 @@ abstract class Model implements ArrayAccess
         return $compiled;
     }
 }
+
+class ModelException extends Exception{
+    public $object;
+    
+    public function __construct($message, $object)
+    {
+        parent::__construct($message);
+        $this->object = $object;
+    }
+}
+
