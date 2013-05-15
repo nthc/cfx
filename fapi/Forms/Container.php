@@ -612,13 +612,14 @@ abstract class Container extends Element
     {
         foreach($this->getElements() as $element)
         {
+            $elementId = $element->getId();
             if($element->getType()!="Container")
             {
-                if($element->getId()==$id) return $element;
+                if($elementId==$id) return $element;
             }
             else
             {
-                if($element->getId()==$id) return $element;
+                if($elementId==$id) return $element;
                 try
                 {
                     return $element->getElementById($id);

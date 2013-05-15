@@ -1,10 +1,11 @@
 <?php
 /*
+ * WYF Framework
  * Copyright (c) 2011 James Ekow Abaka Ainooson
 *
 * Permission is hereby granted, free of charge, to any person obtaining
 * a copy of this software and associated documentation files (the
-    * "Software"), to deal in the Software without restriction, including
+* "Software"), to deal in the Software without restriction, including
 * without limitation the rights to use, copy, modify, merge, publish,
 * distribute, sublicense, and/or sell copies of the Software, and to
 * permit persons to whom the Software is furnished to do so, subject to
@@ -565,7 +566,13 @@ class ModelController extends Controller
                 {
                     foreach($return["errors"][$field] as $error)
                     {
-                        $element = $c["form"]->getElementByName($field);
+                        try{
+                            $element = $c["form"]->getElementByName($field);
+                        }
+                        catch(Exception $e)
+                        {
+                            $element = $c["form"]->getElementById(str_replace(".", "_", $field));
+                        }
                         $element->addError(str_replace("%field_name%",$element->getLabel(),$error));
                     }
                 }
