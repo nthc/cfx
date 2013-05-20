@@ -209,10 +209,11 @@ else
     // Load the styleseets and the javascripts
     Application::addStylesheet("css/fapi.css", "lib/fapi/");
     Application::addStylesheet("css/main.css");
+    Application::addStylesheet("lib/js/kalendae/kalendae.css", '');
     
     Application::addJavaScript(Application::getLink("/lib/fapi/js/fapi.js"));
     Application::addJavaScript(Application::getLink("/lib/js/jquery.js"));
-    Application::addJavaScript(Application::getLink("/lib/js/jquery-ui.js"));
+    Application::addJavaScript(Application::getLink("/lib/js/kalendae/kalendae.js"));
     Application::addJavaScript(Application::getLink("/lib/js/json2.js"));
     
     // Blast the HTML code to the browser!

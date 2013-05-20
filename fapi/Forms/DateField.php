@@ -23,13 +23,14 @@ class DateField extends TextField
     public function render()
     {
         $format = $this->hasTime ? "d/m/Y H:i:s" : "d/m/Y";
-        $this->addCSSClass( "fapi-textfield");
-        $this->addAttribute( "class" , "fapi-sidefield ".$this->getCSSClasses());
-        $this->addAttribute( "id" , $this->getId());
-        $this->addAttribute( "name" , $this->getName());
-        $this->addAttribute( "value" , $this->getValue()!=="" && $this->getValue()!==false ? date($format ,(int)$this->getValue()) : $_REQUEST[$this->getName()]);
+        $this->addCSSClass("fapi-textfield");
+        $this->addAttribute("class" , "auto-kal ".$this->getCSSClasses());
+        $this->addAttribute("data-kal", "format: 'DD/MM/YYYY'");
+        $this->addAttribute("id" , $this->getId());
+        $this->addAttribute("name" , $this->getName());
+        $this->addAttribute("value" , $this->getValue()!=="" && $this->getValue()!==false ? date($format ,(int)$this->getValue()) : $_REQUEST[$this->getName()]);
         $id = $this->getId();
-        return "<input ".$this->getAttributes()." /><input class='fapi-sidebutton' type='button' value='..' onclick=\"$('#date-picker-$id').datepicker({altField:'#$id',changeYear:true,changeMonth:true,changeDate:true,maxDate:null,yearRange:'1900:2300',dateFormat:'dd/mm/yy'}).toggle()\" /><div class='fapi-datepicker' id='date-picker-$id'></div>";
+        return "<input ".$this->getAttributes()." />";
     }
 
     private function dateToTimestamp($date)
