@@ -625,7 +625,14 @@ abstract class Model implements ArrayAccess
     
     public function offsetGet($offset)
     {
-        $data = $this->datastore->get(array("conditions"=>$this->database . "." . $this->getKeyField()."='$offset'"),$this->queryMode,$this->queryExplicitRelations, $this->queryResolve);
+        $data = $this->datastore->get(
+            array(
+                "conditions"=>$this->database . "." . $this->getKeyField()."='$offset'"
+            ),
+            $this->queryMode,
+            $this->queryExplicitRelations, 
+            $this->queryResolve
+        );
         return $data;
     }
 
