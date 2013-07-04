@@ -404,7 +404,7 @@ abstract class Model implements ArrayAccess
         if($this->validationPassed === false)
         {
             $validated = $this->validate();
-            if($validated !== true) throw new ModelException("Failed to validate the model " . json_encode($validated), $validated);
+        if($validated !== true) throw new ModelException("Failed to validate the model [{$this->package}] " . json_encode($validated), $validated);
         }
         
         $this->datastore->beginTransaction();
@@ -551,6 +551,7 @@ abstract class Model implements ArrayAccess
         $explicitRelations = $this->queryExplicitRelations;
         $this->queryResolve = false;
         $this->queryExplicitRelations = true;
+        
         if($key_value === null)
         {
             $data = reset($this->get(array('conditions' => $key_field)));
@@ -611,11 +612,11 @@ abstract class Model implements ArrayAccess
             {
                 // Extract the path, load the controller and test weather this
                 // role has the rights to access this controller.
-
                 $url_path = substr(Application::$prefix,0,strlen(Application::$prefix)-1).substr("$path/$entry",strlen($prefix));
                 $module_path = explode("/",substr(substr("$path/$entry",strlen($prefix)),1));
                 $module = Controller::load($module_path, false);
                 $list = $module->name;
+                
                 //$children = $this->generateMenus($role_id,"$path/$entry");
             }
         }
