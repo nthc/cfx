@@ -563,7 +563,7 @@ class Postgresql extends SQLDBDataStore
              information_schema.table_constraints pk 
              join information_schema.key_column_usage c on 
                 c.table_name = pk.table_name and 
-                c.constraint_name = pk.constraint_name
+                c.constraint_name = pk.constraint_name and
                 c.constraint_schema = pk.table_schema
              where pk.table_name = '{$databaseInfo[1]}' and pk.table_schema='{$databaseInfo[0]}'
              and constraint_type = 'PRIMARY KEY'"
@@ -574,7 +574,7 @@ class Postgresql extends SQLDBDataStore
              information_schema.table_constraints pk 
              join information_schema.key_column_usage c on 
                 c.table_name = pk.table_name and 
-                c.constraint_name = pk.constraint_name
+                c.constraint_name = pk.constraint_name and
                 c.constraint_schema = pk.table_schema
              where pk.table_name = '{$databaseInfo[1]}' and pk.table_schema='{$databaseInfo[0]}'
              and constraint_type = 'UNIQUE'"
