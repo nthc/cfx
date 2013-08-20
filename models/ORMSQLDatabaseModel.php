@@ -1,7 +1,8 @@
 <?php
-
 /**
  * 
+ * @author ekow
+ *
  */
 class ORMSQLDatabaseModel extends SQLDatabaseModel
 {

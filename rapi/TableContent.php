@@ -5,6 +5,7 @@ class TableContent extends ReportContent
     protected $data;
     public $style;
     public $data_params = null;
+    private $totals = array();
     
     public function __construct($headers, $data, $data_params=null)
     {
@@ -76,8 +77,17 @@ class TableContent extends ReportContent
         return $widths;
     }
     
+    public function setTotals($totals)
+    {
+        $this->totals = $totals;
+    }
+    
     public function getTotals()
     {
+        if(count($this->totals) > 0)
+        {
+            return $this->totals;
+        }
         $totals = array();
         if(!is_array($this->data)) return $totals;
         foreach($this->data as $fields)
