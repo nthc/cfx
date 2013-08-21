@@ -218,7 +218,7 @@ class PDFDocument extends FPDF
         {
             if(isset($totals[$i]) && $i!=0)
             {
-                $totals[$i] = str_replace(",", "", $totals[$i]);
+                //$totals[$i] = str_replace(",", "", $totals[$i]);
                 if($params['type'][$i] == 'double')
                 {
                     $totals[$i] = number_format($totals[$i], 2,".",",");
