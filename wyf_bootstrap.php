@@ -52,6 +52,9 @@ add_include_path("lib/cache/");
 // Add the script which contains the third party libraries
 require "app/includes.php";
 
+// Bootstrap the application
+require SOFTWARE_HOME . "app/bootstrap.php";
+
 // Setup the global variables needed by the redirected packages
 global $redirectedPackage;
 global $packageSchema;

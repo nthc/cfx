@@ -168,7 +168,6 @@ class Application
         $path = explode("/",$_GET["q"]);
         Application::$template = "main.tpl";
 
-        require SOFTWARE_HOME . "app/bootstrap.php";
         $t->assign('prefix',Application::$prefix);
 
         Application::setTitle();
