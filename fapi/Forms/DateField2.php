@@ -5,16 +5,11 @@
  * @author ekow
  * @ingroup Forms
  */
-class DateField extends TextField
+class DateField2 extends TextField
 {
     public $hasTime = false;
 
-    public function __construct($label="",$name="",$description="")
-    {
-        parent::__construct($label,$name,$description);
-    }
-
-    public function getDisplayValue()
+public function getDisplayValue()
     {
         $format = $this->hasTime ? "jS F, Y H:i:s" : "jS F, Y";
         return $this->getValue()!==""?date($format ,(int)$this->getValue()):"";
@@ -23,12 +18,10 @@ class DateField extends TextField
     public function render()
     {
         $format = $this->hasTime ? "d/m/Y H:i:s" : "d/m/Y";
-        $this->addCSSClass("fapi-textfield");
-        $this->addAttribute("class" , "auto-kal ".$this->getCSSClasses());
-        $this->addAttribute("data-kal", "format: 'DD/MM/YYYY'");
-        $this->addAttribute("id" , $this->getId());
-        $this->addAttribute("name" , $this->getName());
-        $this->addAttribute("value" , $this->getValue()!=="" && $this->getValue()!==false ? date($format ,(int)$this->getValue()) : $_REQUEST[$this->getName()]);
+        $this->addCSSClass( "fapi-textfield");
+        $this->addAttribute( "id" , $this->getId());
+        $this->addAttribute( "name" , $this->getName());
+        $this->addAttribute( "value" , $this->getValue()!=="" && $this->getValue()!==false ? date($format ,(int)$this->getValue()) : $_REQUEST[$this->getName()]);
         return "<input ".$this->getAttributes()." />";
     }
 
