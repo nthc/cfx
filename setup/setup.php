@@ -20,6 +20,15 @@ $name = get_response(
 
 $home = get_response("Where is your application residing", getcwd(), null, null, true) . "/";
 $prefix = get_response("What is the prefix of your application (Enter 'no prefix' if you do not want a prefix)", basename($home));
+if($prefix === 'no prefix' || $prefix == '') 
+{
+    $prefix = '';
+}
+else
+{
+    $prefix = "/$prefix";
+}
+
 $db = get_db_credentials();
 
 do
@@ -72,7 +81,7 @@ create_file(
     "$home/app/cache/menus/side_menu_1.html",
     str_replace(
         '{$prefix}', 
-        "/$prefix", 
+        "$prefix", 
         file_get_contents("lib/setup/factory/cache/menus/side_menu_1.html")
     )
 );
@@ -131,7 +140,7 @@ error_reporting(E_ALL ^ E_NOTICE);
      * directories in which the application resides relative to the document root 
      * of the web server.
      */
-    'prefix' => "/$prefix",
+    'prefix' => "$prefix",
         
     /*
      * Used to specify the name of your application. This is normally used for the 
