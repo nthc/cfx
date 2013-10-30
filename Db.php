@@ -64,6 +64,14 @@ class Db
         }
     }
     
+    public static function rawQuery($query, $instance = null)
+    {
+        if($instance === null) $instance = Db::$lastInstance;
+        $instance = Db::getCachedInstance($instance);
+        $result = pg_query($instance, $query);
+        return $result;
+    }
+    
     public static function query($query, $instance = null, $mode = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
