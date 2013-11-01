@@ -103,6 +103,8 @@ class Application
     
     public static $templateEngine;
     
+    private static $sideMenuHidden = false;
+    
     /**
      * A method to add a stylesheet to the list of stylesheets
      *
@@ -187,6 +189,7 @@ class Application
             $t->assign('content',$module->content);
             $t->assign('module_name', $module->label);
             $t->assign('module_description',$module->description);
+            $t->assign('side_menu_hidden', self::$sideMenuHidden);
 
             foreach(array_keys(Application::$menus) as $key)
             {
@@ -257,5 +260,10 @@ class Application
     public static function labelize($name)
     {
         return ucwords(str_replace("_", " ", $name));
+    }
+    
+    public static function hideSideMenu()
+    {
+        self::$sideMenuHidden = true;
     }
 }
