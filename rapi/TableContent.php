@@ -70,7 +70,7 @@ class TableContent extends ReportContent
         {
             foreach($totals as $i => $column)
             {
-                $column = Common::currency($column);
+                $column = number_format($column, 2, '.', ',');
                 $widths[$i] = strlen($column) > $widths[$i] ? strlen($column) : $widths[$i];
             }            
         }

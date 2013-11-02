@@ -704,11 +704,13 @@ class ModelController extends Controller
                 if($params[1]=="")
                 {
                     $report = new CSVReport();
+                    $report->setDownloadFileName("{$this->model->name}.csv");
                     $this->model->datastore->dateFormat = 2;
                 }
                 else if($params[1]=="template")
                 {
                     $report = new CSVReport();
+                    $report->setDownloadFileName("{$this->model->name}_template.csv");
                     $table = new TableContent($this->model->getLabels(),array());
                     $report->add($table);
                     $report->output();

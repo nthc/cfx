@@ -1,9 +1,16 @@
 <?php
 class CSVReport extends Report
 {
+    private $downloadFileName = 'report.csv';
+    
     public function __construct()
     {
         //parent::__construct();
+    }
+    
+    public function setDownloadFileName($downloadFileName)
+    {
+        $this->downloadFileName = $downloadFileName;
     }
 
     public function output($file = null)
@@ -25,7 +32,7 @@ class CSVReport extends Report
         if($file == '')
         {
             header("Content-Type: text/csv");
-            header('Content-Disposition: attachment; filename="report.csv"');
+            header("Content-Disposition: attachment; filename=\"{$this->downloadFileName}\"");
             header('Content-Transfer-Encoding: binary');
             echo $csv;
         }
