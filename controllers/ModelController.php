@@ -757,6 +757,7 @@ class ModelController extends Controller
         $headers = fgetcsv($file);
         $model = $this->model;
         $fieldInfo = $model->getFields();
+        
         foreach($fieldInfo as $key => $field)
         {
             if($field['key'] == 'primary')
@@ -768,19 +769,26 @@ class ModelController extends Controller
         $primary_key = $model->getKeyField("primary");
         $secondary_key = $model->getKeyField("secondary");
         $tertiary_key = $model->getKeyField("tertiary");
+        $hasErrors = false;
 
         foreach($model->getLabels() as $i => $label)
         {
             if(strtolower($label)!=strtolower($headers[$i]))
             {
-                print "Invalid file format ($label and {$headers[$i]} do not match)";
+                $hasErrors = true;
+                $formatErrors .=  "<li>Invalid file format ($label and {$headers[$i]} do not match)</li>";
             }
+        }
+        
+        if($hasErrors)
+        {
+            echo "<ol>$formatErrors</ol>";
+            return;
         }
 
         if($secondary_key == null)
         {
-            //print "<div id='information'><h4>Warning</h4>  This model has no secondary keys so imported data may overlap</div>";
-            print "<h4>Warning</h4> This model has no secondary keys. Imported data may overlap";
+            print "<div id='information'><h4>Warning</h4>  This model has no secondary keys so imported data may overlap</div>";
         }
 
 
@@ -789,6 +797,8 @@ class ModelController extends Controller
         $out .= "<tbody>";
         $line = 1;
         $status = "<h3>Successfully Imported</h3>";
+        
+        $model->datastore->beginTransaction();
 
         while(!feof($file))
         {
@@ -853,13 +863,15 @@ class ModelController extends Controller
                 }
                 $out .= "</tr>";
                 $hasErrors = true;
-                $status = "<h3>Errors Importing Data</h3><div class='error'>\n\nErrors on line $line</div><div>$errors</div>";
+                $status = "<h3>Errors Importing Data</h3><div class='error'>Errors on line $line</div>";
                 if($_POST["break_on_errors"]=="1") break;
             }
             $line++;
         }
         $out .= "</tbody>";
         $out .= "</table>";
+        
+        if(!$hasErrors) $model->datastore->endTransaction();
 
         if($cli)
         {

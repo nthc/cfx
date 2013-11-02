@@ -128,17 +128,17 @@ var wyf =
                 wyf.tapi.tables[id].sort = "ASC";
             }
 			
-            //$("#"+id+">tbody").load(wyf.tapi.tables[id].path+"&sort="+field+"&sort_type="+ntentan.tapi.tables[id].sort);
-            ntentan.tapi.tables[id].sort_field[0].field = field;
-            ntentan.tapi.tables[id].sort_field[0].type = ntentan.tapi.tables[id].sort;
-            ntentan.tapi.render(ntentan.tapi.tables[id]);
+            //$("#"+id+">tbody").load(wyf.tapi.tables[id].path+"&sort="+field+"&sort_type="+wyf.tapi.tables[id].sort);
+            wyf.tapi.tables[id].sort_field[0].field = field;
+            wyf.tapi.tables[id].sort_field[0].type = wyf.tapi.tables[id].sort;
+            wyf.tapi.render(wyf.tapi.tables[id]);
         },
 		
         switchPage:function(id,page)
         {
-            var table = ntentan.tapi.tables[id]; 
+            var table = wyf.tapi.tables[id]; 
             table.page = page;
-            ntentan.tapi.render(table);
+            wyf.tapi.render(table);
             $("#"+id+"-page-id-"+page).addClass("page-selected");
             $("#"+id+"-page-id-"+table.prevPage).removeClass("page-selected");
             table.prevPage = page;
@@ -168,7 +168,7 @@ var wyf =
                         }
                     }
                     );
-                ntentan.tapi.render(ntentan.tapi.tables[id],"delete",JSON.stringify(ids));
+                wyf.tapi.render(wyf.tapi.tables[id],"delete",JSON.stringify(ids));
             }
         },
 		
