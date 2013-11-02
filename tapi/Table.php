@@ -47,7 +47,7 @@ class Table
          
         //Render Headers
         $table .= "<thead><tr>";
-        //$table .= "<td><input type='checkbox' onchange=\"ntentan.tapi.notify('$this->name','0',this)\"></td><td>";
+        //$table .= "<td><input type='checkbox' onchange=\"wyf.tapi.notify('$this->name','0',this)\"></td><td>";
         $table .= implode("</td><td>",$this->headers);
         
         if($this->useInlineOperations)
@@ -74,7 +74,7 @@ class Table
         foreach($this->data as $i => $row)
         {
             $key = array_shift($row);
-            $table .= "<tr id='{$this->name}-operations-row-$i' onmouseover='ntentan.tapi.showOperations(\"{$this->name}\", $i)' >";
+            $table .= "<tr id='{$this->name}-operations-row-$i' onmouseover='wyf.tapi.showOperations(\"{$this->name}\", $i)' >";
             //$table .= "<td><input type='checkbox' class='$this->name-checkbox' value='$key' ></td>";
             
             foreach($row as $name=>$value)

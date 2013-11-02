@@ -26,7 +26,7 @@
 
 /**
  * The Controller class represents the base class for all controllers that are
- * built for the ntentan framework. Controllers are used to direct the flow of
+ * built for the WYF framework. Controllers are used to direct the flow of
  * your application. They are stored in modules and they contain methods which
  * are called from the url. Parameters to the methods are also passed through the
  * URL. If no method is specified, the Controller:getContents() method is called.

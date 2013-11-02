@@ -6,7 +6,7 @@
 {$scripts}
 <title>{$title}</title>
 </head>
-<body onload="ntentan.init()">
+<body onload="wyf.init()">
 <div id="wrapper">
 <div id="header">
 	<div id="logo-image">

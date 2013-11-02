@@ -268,7 +268,7 @@ class ModelController extends Controller
             $this->toolbar->addLinkButton("Import",$this->urlPath."/import");
         }
         
-        $this->toolbar->addLinkButton("Search","#")->linkAttributes="onclick=\"ntentan.tapi.showSearchArea('{$this->table->name}')\"";
+        $this->toolbar->addLinkButton("Search","#")->linkAttributes="onclick=\"wyf.tapi.showSearchArea('{$this->table->name}')\"";
     
         if($this->hasEditOperation)
         {
@@ -282,7 +282,7 @@ class ModelController extends Controller
         {
             if(User::getPermission($this->permissionPrefix."_can_delete") || $this->forceDeleteOperation)
             {
-                $this->table->addOperation("delete","Delete","javascript:ntentan.confirmRedirect('Are you sure you want to delete','{$this->urlPath}/%path%/%key%')");
+                $this->table->addOperation("delete","Delete","javascript:wyf.confirmRedirect('Are you sure you want to delete','{$this->urlPath}/%path%/%key%')");
             }
         }
 

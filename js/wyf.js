@@ -1,8 +1,32 @@
 /**
- * Main package for the entire ntentan javascript file.
+ * Main package for the entire WYF javascript file.
  */
-ntentan = 
+
+var wyf =
 {
+    openWindow : function(location)
+    {
+        window.open(location);
+    },
+
+    showUploadedData : function(data)
+    {
+        $("#import-preview").html(data);
+    },
+    
+    updateFilter: function(table, model, value)
+    {
+        if(value == 0)
+        {
+            externalConditions[table] = "";
+        }
+        else
+        {
+            externalConditions[table] = model + "=" + value;
+        }
+        window[table + 'Search']();
+    },
+
     confirmRedirect:function(message,path)
     {
         if(confirm(message))
@@ -13,8 +37,8 @@ ntentan =
 	
     init:function()
     {
-        ntentan.menus.init();
-        ntentan.tapi.init();
+        wyf.menus.init();
+        wyf.tapi.init();
     },
 
     menus: 
@@ -52,18 +76,18 @@ ntentan =
 		
         addTable: function(id,obj)
         {
-            ntentan.tapi.tableIds.push(id);
-            ntentan.tapi.tables[id] = obj;
-            ntentan.tapi.tables[id].prevPage = 0;
+            wyf.tapi.tableIds.push(id);
+            wyf.tapi.tables[id] = obj;
+            wyf.tapi.tables[id].prevPage = 0;
         },
 		
         init:function()
         {
-            for(var i=0; i<ntentan.tapi.tableIds.length; i++)
+            for(var i=0; i < wyf.tapi.tableIds.length; i++)
             {
-                var id = ntentan.tapi.tableIds[i];  
-                //$("#"+id+">tbody").load(ntentan.tapi.tables[id].path);
-                ntentan.tapi.render(ntentan.tapi.tables[id]);
+                var id = wyf.tapi.tableIds[i];  
+                //$("#"+id+">tbody").load(wyf.tapi.tables[id].path);
+                wyf.tapi.render(wyf.tapi.tables[id]);
             }
         },
 		
@@ -72,14 +96,14 @@ ntentan =
             var urlParams = "params=" + escape(JSON.stringify(table));
             
             try{
-                ntentan.tapi.activity.abort();
+                wyf.tapi.activity.abort();
             }
             catch(e)
             {
                 
             }
 
-            ntentan.tapi.activity = $.ajax({
+            wyf.tapi.activity = $.ajax({
                 type:"POST",
                 url:table.url,
                 dataType:"json",
@@ -95,16 +119,16 @@ ntentan =
 		
         sort:function(id,field)
         {
-            if(ntentan.tapi.tables[id].sort == "ASC")
+            if(wyf.tapi.tables[id].sort == "ASC")
             {
-                ntentan.tapi.tables[id].sort = "DESC";
+                wyf.tapi.tables[id].sort = "DESC";
             }
             else
             {
-                ntentan.tapi.tables[id].sort = "ASC";
+                wyf.tapi.tables[id].sort = "ASC";
             }
 			
-            //$("#"+id+">tbody").load(ntentan.tapi.tables[id].path+"&sort="+field+"&sort_type="+ntentan.tapi.tables[id].sort);
+            //$("#"+id+">tbody").load(wyf.tapi.tables[id].path+"&sort="+field+"&sort_type="+ntentan.tapi.tables[id].sort);
             ntentan.tapi.tables[id].sort_field[0].field = field;
             ntentan.tapi.tables[id].sort_field[0].type = ntentan.tapi.tables[id].sort;
             ntentan.tapi.render(ntentan.tapi.tables[id]);

@@ -82,7 +82,7 @@ abstract class Container extends Element
     protected $llback;
 
     /**
-     * The Ntentan Model which holds the form's data.
+     * The WYF Model which holds the form's data.
      * @see Model
      */
     protected $model;

@@ -39,11 +39,11 @@ class MultiModelTable extends Table
 
         //Render Headers
         $table .= "<thead><tr>";
-        //$table .= "<td><input type='checkbox' onchange=\"ntentan.tapi.checkToggle('$this->name',this)\"></td>";
+        //$table .= "<td><input type='checkbox' onchange=\"wyf.tapi.checkToggle('$this->name',this)\"></td>";
 
         foreach($this->headers as $i => $header)
         {
-            $table.="<td onclick=\"ntentan.tapi.sort('".$this->name."','".$this->tableData["rawFields"][$i+1]."')\">
+            $table.="<td onclick=\"wyf.tapi.sort('".$this->name."','".$this->tableData["rawFields"][$i+1]."')\">
             $header
             </td>";
         }
@@ -190,19 +190,19 @@ class MultiModelTable extends Table
             $table .=
             "<div id='{$this->name}-operations'></div>
             <script type='text/javascript'>
-                ntentan.tapi.addTable('$this->name',(".json_encode($this->params)."));
+                wyf.tapi.addTable('$this->name',(".json_encode($this->params)."));
                 var externalConditions = [];
                 function {$this->name}Search()
                 {
                     var conditions = '';
                     {$this->searchScript}
-                    ntentan.tapi.tables['$this->name'].conditions = conditions;
+                    wyf.tapi.tables['$this->name'].conditions = conditions;
                     if(externalConditions['$this->name'])
                     {
-                        ntentan.tapi.tables['$this->name'].conditions += ((conditions != '' ?' AND ':'') + externalConditions['$this->name']);
+                        wyf.tapi.tables['$this->name'].conditions += ((conditions != '' ?' AND ':'') + externalConditions['$this->name']);
                     }
-                    ntentan.tapi.tables['$this->name'].page = 0;
-                    ntentan.tapi.render(ntentan.tapi.tables['$this->name']);
+                    wyf.tapi.tables['$this->name'].page = 0;
+                    wyf.tapi.render(wyf.tapi.tables['$this->name']);
                 }
             </script>";
         }
@@ -216,18 +216,18 @@ class MultiModelTable extends Table
         
         $table .= "<div id='{$this->name}Footer'>
             <ul class='table-pages'><li>
-                        <a onclick=\"ntentan.tapi.switchPage('$this->name',0)\">
+                        <a onclick=\"wyf.tapi.switchPage('$this->name',0)\">
                             &lt;&lt; First
                         </a>
                     </li>
                     <li>
-                        <a onclick=\"ntentan.tapi.switchPage('$this->name',".($params["page"]-1>=0?$params["page"]-1:"").")\">
+                        <a onclick=\"wyf.tapi.switchPage('$this->name',".($params["page"]-1>=0?$params["page"]-1:"").")\">
                             &lt; Prev
                         </a>
                     </li>".
-                    "<li><a onclick=\"ntentan.tapi.switchPage('$this->name',".($params["page"]+1).")\">Next &gt;</a></li>" .
+                    "<li><a onclick=\"wyf.tapi.switchPage('$this->name',".($params["page"]+1).")\">Next &gt;</a></li>" .
                 "<li> | </li>
-                <li> Page <input style='font-size:small; width:50px' value = '".($params["page"]+1)."' onchange=\"ntentan.tapi.switchPage('$this->name',(this.value > 0 )?this.value-1:0)\" type='text' /></li>
+                <li> Page <input style='font-size:small; width:50px' value = '".($params["page"]+1)."' onchange=\"wyf.tapi.switchPage('$this->name',(this.value > 0 )?this.value-1:0)\" type='text' /></li>
             </ul>
         </div>";
         return $table;

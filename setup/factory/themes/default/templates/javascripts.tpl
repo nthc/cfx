@@ -2,5 +2,5 @@
 <script type="text/javascript" src="{$javascripts[script]}"></script>
 {/section}
 <script type='text/javascript'>
-	var ntentan_prefix = "{$prefix}";
+    var wyf_prefix = "{$prefix}";
 </script>
