@@ -21,10 +21,13 @@
 <div id="top-menu">
 <a href='{$prefix}/'><span class='icon ihome'>Home</span></a> {$top_menu}
 </div>
-<div id="side-menu">
-{$side_menu}
-</div>
-<div id="body">
+{if $side_menu_hidden eq false}
+    <div id="side-menu">
+    {$side_menu}
+    </div>
+    {/if}
+
+<div id="body" {if $side_menu_hidden eq true} style="width:100%" {/if}>
 <div id="body-top">
 <h2>{$module_name}</h2>
 {$module_description}

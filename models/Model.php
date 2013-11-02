@@ -169,6 +169,12 @@ abstract class Model implements ArrayAccess
         $model_name = implode(".",$path_array);
         return array("model"=>$model_name, "field"=>$field_name);
     }
+    
+    public function getOptionDescription($field, $option)
+    {
+        var_dump($this->description);
+        die();
+    }
 
     public function getLabels($fields = null, $key = false)
     {
@@ -725,7 +731,8 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            return "The %field_name% field is required";
+            $name = Application::labelize($name);
+            return "The $name field is required";
         }
     }
     
@@ -751,7 +758,8 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            return "The value of the %field_name% field must be unique.";
+            $name = Application::labelize($name);
+            return "The value of the $name field must be unique.";
         }
     }
 
@@ -763,7 +771,8 @@ abstract class Model implements ArrayAccess
         }
         else
         {
-            return "The %field_name% format is invalid";
+            $name = Application::labelize($name);
+            return "The $name format is invalid";
         }
     }
 
@@ -779,7 +788,8 @@ abstract class Model implements ArrayAccess
 
     public function validatorRegexp($name,$parameter)
     {
-        $ret =  preg_match($parameter,$this->datastore->data[$name])>0?true:"The %field_name% format is invalid";
+        $label = Application::labelize($name);
+        $ret =  preg_match($parameter,$this->datastore->data[$name])>0?true:"The $label format is invalid";
         return $ret;
     }
     

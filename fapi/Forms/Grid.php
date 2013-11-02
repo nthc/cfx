@@ -6,12 +6,19 @@ class Grid extends Field
     private $rawColumnNames = array();
     private $columnIds = array();
     private $hash;
+    private $numRows = 500;
 
     public function __construct($label, $name)
     {
         $this->setLabel($label);
         $this->setName($name);
         $this->hash = str_replace(".", "_", $name);
+    }
+    
+    public function setNumRows($numRows)
+    {
+        $this->numRows = $numRows;
+        return $this;
     }
 	
     public function getData()
@@ -79,7 +86,7 @@ class Grid extends Field
         $ret .= "</tr></table>";
 
         $ret .= "<div class='fapi-grid'><table width='100%'><tbody>$gauge";
-        for($i = 0; $i < 500; $i++)
+        for($i = 0; $i < $this->numRows; $i++)
         {
             $ret .= "<tr><td  class='fapi-grid-header'><center>" . ($i + 1) . "</center></td>";
             foreach($this->columns as $j => $column)

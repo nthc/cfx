@@ -295,6 +295,11 @@ class ModelController extends Controller
         {
             $this->table->addOperation("audit","History");
         }          
+        
+        if(User::getPermission($this->permissionPrefix."_can_view_notes"))
+        {
+            $this->table->addOperation("notes","Notes");
+        }          
     }
 
     /**
@@ -948,6 +953,48 @@ class ModelController extends Controller
         return $table->render();
         
     }
+    
+    public function notes($params)
+    {
+        if($_POST['note'] != '')
+        {
+            $model = Model::load('system.notes');
+            $data = array(
+                'note' => $_POST['note'],
+                'note_time' => time(),
+                'item_id' => $params[0],
+                'user_id' => $_SESSION['user_id'],
+                'item_type' => $this->model->package
+            );
+            $model->setData($data);
+            $model->save();
+            Application::redirect("{$this->urlPath}/notes/{$params[0]}");
+        }
+        
+        $notes = SQLDBDataStore::getMulti(
+            array(
+                'fields' => array(
+                    'system.notes.note',
+                    'system.notes.note_time',
+                    'system.users.first_name',
+                    'system.users.last_name'
+                )
+            )
+        );
+        
+        $this->label = "Notes on item";
+        $form = Element::create('Form')->add(
+            Element::create('TextArea', 'Note', 'note')
+        )->setRenderer('default');
+        
+        return $this->arbitraryTemplate(
+            'lib/controllers/notes.tpl', 
+            array(
+                'form' => $form->render(),
+                'notes' => $notes
+            )
+        );
+    }
 
     /**
      * Return a standard set of permissions which allows people within certain
@@ -965,7 +1012,10 @@ class ModelController extends Controller
             array("label"=>"Can delete", "name"=> $this->permissionPrefix . "_can_delete"),
             array("label"=>"Can view",   "name"=> $this->permissionPrefix . "_can_view"),
             array("label"=>"Can export", "name"=> $this->permissionPrefix . "_can_export"),
-            array("label"=>"Can import", "name"=> $this->permissionPrefix . "_can_import")
+            array("label"=>"Can import", "name"=> $this->permissionPrefix . "_can_import"),
+            array("label"=>"Can view audit trail", "name"=> $this->permissionPrefix . "_can_audit"),
+            array("label"=>"Can view notes", "name"=> $this->permissionPrefix . "_can_view_notes"),
+            array("label"=>"Can create notes", "name"=> $this->permissionPrefix . "_can_create_notes"),
         );
     }
 }
