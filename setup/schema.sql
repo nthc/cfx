@@ -182,3 +182,16 @@ CREATE TABLE system.api_keys
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE system.notes
+(
+  note_id serial NOT NULL,
+  note character varying(4000),
+  note_time timestamp without time zone NOT NULL,
+  item_id integer NOT NULL,
+  item_type character varying(1024) NOT NULL,
+  user_id integer NOT NULL,
+  CONSTRAINT notes_note_id_pk PRIMARY KEY (note_id),
+  CONSTRAINT notes_user_id_fk FOREIGN KEY (user_id)
+      REFERENCES common.users (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
