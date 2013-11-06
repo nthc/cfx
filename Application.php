@@ -266,4 +266,9 @@ class Application
     {
         self::$sideMenuHidden = true;
     }
+    
+    public static function showSideMenu()
+    {
+        self::$sideMenuHidden = false;
+    }
 }
