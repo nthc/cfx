@@ -1,91 +1,68 @@
 <?php
 
-require_once "Spreadsheet/Excel/Writer.php";
-
 class XLSReport extends Report
 {
     private $widthsSet;
     private $numColumns;
+    
+    public function __construct() 
+    {
+        add_include_path('lib/rapi/PHPExcel/Classes');
+    }
 
     public function output($file = null)
     {
     	ob_clean();
-        $spreadsheet = new Spreadsheet_Excel_Writer($file);
-        if($file == null) $spreadsheet->send("report.xls");
-        $worksheet =& $spreadsheet->addWorkSheet("Report");
-        $worksheet->setLandscape();
-        $worksheet->hideGridlines();
-        $worksheet->setPaper(9);
-        $worksheet->setMargins(0.25);
-        $worksheet->setFooter("Generated on ".date("jS F, Y @ g:i:s A")." by ".$_SESSION["user_lastname"]." ".$_SESSION["user_firstname"]);
-        $row = 0;
+        $spreadsheet = new PHPExcel($file);
+        
+        $worksheet = $spreadsheet->getActiveSheet();
+        $row = 1;
         foreach($this->contents as $content)
         {
             if(!is_object($content)) continue;
             switch($content->getType())
             {
                 case "text":
-                    $format = &$spreadsheet->addFormat();
-                    if($row!=0) $row++;
-                    $style = "padding:0px;margin:0px;";
-                    if(isset($content->style["font"])) $format->setFontFamily($content->style["font"]);
-                    if(isset($content->style["size"])) $format->setSize($content->style["size"]);
-                    if(isset($content->style["bold"])) $format->setBold(700);
-
-                    $worksheet->write($row,0,$content->getText(),$format);
+                    $worksheet->setCellValueByColumnAndRow(0, $row, $content->getText());
                     break;
 
                 case "table":
                     if($content->style["totalsBox"])
                     {
-                        $format = &$spreadsheet->addFormat();
-                        $format->setFontFamily("Helvetica");
-                        $format->setSize(12);
-                        $spreadsheet->setCustomColor(13,180,200,180);
-                        $format->setBorderColor(13);
-                        $format->setBottom(2);
-                        $format->setBold(700);
-
                         $totals = $content->getData();
                         for($i = 0; $i<$this->numColumns; $i++)
                         {
-                            $worksheet->write($row,$i,$totals[$i],$format);//,$format);
+                            $worksheet->setCellValueByColumnAndRow($row,$i,$totals[$i]);
                         }
                     }
                     else
                     {
 
-                        if(!$this->widthsSet && isset($content->data_params["widths"]))
+                        /*if(!$this->widthsSet && isset($content->data_params["widths"]))
                         {
                             foreach($content->data_params["widths"] as $i=>$width)
                             {
                                 $worksheet->setColumn($i, $i, $width * 1.5);
                             }
                             $this->widthsSet = true;
-                        }
+                        }*/
 
                         $headers = $content->getHeaders();
-                        @$format = &$spreadsheet->addFormat();
+                        /*@$format = &$spreadsheet->addFormat();
                         $format->setFontFamily("Helvetica");
                         $format->setSize(12);
                         $spreadsheet->setCustomColor(12,102,128,102);
                         $format->setFgColor(12);
                         $format->setColor("white");
-                        $format->setBold(700);
+                        $format->setBold(700);*/
 
                         $this->numColumns = count($headers);
 
                         foreach($headers as $col=>$header)
                         {
-                            $worksheet->write($row,$col,str_replace("\\n","\n",$header),$format);
+                            $worksheet->setCellValueByColumnAndRow($row,$col,str_replace("\\n","\n",$header));
                         }
 
-                        @$format = &$spreadsheet->addFormat();
-                        $format->setFontFamily("Helvetica");
-                        $format->setSize(12);
-                        $spreadsheet->setCustomColor(13,180,200,180);
-                        $format->setBorderColor(13);
-                        $format->setBorder(1);
 
                         foreach($content->getData() as $rowData)
                         {
@@ -96,16 +73,16 @@ class XLSReport extends Report
                                 switch($content->data_params["type"][$col])
                                 {
                                      case "number":
-                                         $field = $field === null || $field == "" ? "0" : Common::round($field, 0);
+                                         $field = $field === null || $field == "" ? "0" : round($field, 0);
                                          break;
                                      case "double":
-                                         $field = $field === null || $field == "" ? "0.00" : Common::round($field, 2);
+                                         $field = $field === null || $field == "" ? "0.00" : round($field, 2);
                                          break;
                                      case "right_align":
                                          //$align = "R";
                                          break;
                                  }
-                                $worksheet->write($row,$col,trim($field),$format);
+                                $worksheet->setCellValueByColumnAndRow($row,$col,trim($field));
                                 $col++;
                             }
                         }
@@ -114,7 +91,10 @@ class XLSReport extends Report
             }
             $row++;
         }
-        $spreadsheet->close();
+        
+        $writer = new PHPExcel_Writer_Excel2007($spreadsheet);
+        $writer->save('app/temp/report.xlsx');
+
     }
 }
 
