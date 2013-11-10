@@ -22,7 +22,7 @@ class TableContent extends ReportContent
                 'header:background' => array(200,200,200),
                 'header:text' => array(255,255,255),
                 'body:background' => array(255,255,255),
-                'body:stripe' => array(250, 250, 2250),
+                'body:stripe' => array(250, 250, 250),
                 'body:border' => array(200, 200, 200),
                 'body:text' => array(0,0,0)
             );                        

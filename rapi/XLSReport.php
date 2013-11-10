@@ -9,13 +9,24 @@ class XLSReport extends Report
     {
         add_include_path('lib/rapi/PHPExcel/Classes');
     }
+    
+    private function convertColor($color)
+    {
+        return dechex($color[0]) . dechex($color[1]) . dechex($color[2]);
+    }
 
     public function output($file = null)
     {
     	ob_clean();
         $spreadsheet = new PHPExcel($file);
+        $spreadsheet->getProperties()
+            ->setCreator('WYF PHP Framework')
+            ->setTitle('Report');
         
         $worksheet = $spreadsheet->getActiveSheet();
+        $worksheet->getHeaderFooter()->setEvenFooter("Generated on ".date("jS F, Y @ g:i:s A")." by ".$_SESSION["user_lastname"]." ".$_SESSION["user_firstname"]);
+        $worksheet->getHeaderFooter()->setOddFooter("Generated on ".date("jS F, Y @ g:i:s A")." by ".$_SESSION["user_lastname"]." ".$_SESSION["user_firstname"]);
+        
         $row = 1;
         foreach($this->contents as $content)
         {
@@ -24,6 +35,12 @@ class XLSReport extends Report
             {
                 case "text":
                     $worksheet->setCellValueByColumnAndRow(0, $row, $content->getText());
+                    $worksheet->getStyleByColumnAndRow(0, $row)
+                        ->getFont()
+                            ->setBold(true)
+                            ->setSize($content->style['size'])
+                            ->setName($content->style['font']);
+                    $worksheet->getRowDimension($row)->setRowHeight($content->style['size'] + $content->style['top_margin'] + $content->style['bottom_margin']);
                     break;
 
                 case "table":
@@ -32,7 +49,10 @@ class XLSReport extends Report
                         $totals = $content->getData();
                         for($i = 0; $i<$this->numColumns; $i++)
                         {
-                            $worksheet->setCellValueByColumnAndRow($row,$i,$totals[$i]);
+                            $worksheet->setCellValueByColumnAndRow($i,$row,$totals[$i]);
+                            $worksheet->getStyleByColumnAndRow($i, $row)
+                                ->getFont()
+                                ->setBold(true);
                         }
                     }
                     else
@@ -46,23 +66,23 @@ class XLSReport extends Report
                             }
                             $this->widthsSet = true;
                         }*/
+                        
+                        $headBg = $this->convertColor($content->style['header:background']);
+                        $headText = $this->convertColor($content->style['header:text']);
+                        $bodyStripe = $this->convertColor($content->style['body:stripe']);
 
                         $headers = $content->getHeaders();
-                        /*@$format = &$spreadsheet->addFormat();
-                        $format->setFontFamily("Helvetica");
-                        $format->setSize(12);
-                        $spreadsheet->setCustomColor(12,102,128,102);
-                        $format->setFgColor(12);
-                        $format->setColor("white");
-                        $format->setBold(700);*/
-
                         $this->numColumns = count($headers);
 
                         foreach($headers as $col=>$header)
                         {
-                            $worksheet->setCellValueByColumnAndRow($row,$col,str_replace("\\n","\n",$header));
+                            $worksheet->setCellValueByColumnAndRow($col,$row,str_replace("\\n","\n",$header));
+                            $worksheet->getStyleByColumnAndRow($col, $row)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+                            $worksheet->getStyleByColumnAndRow($col, $row)->getFill()->getStartColor()->setRGB($headBg);
+                            $worksheet->getStyleByColumnAndRow($col, $row)->getFont()->setBold(true)->getColor()->setRGB($headText);
                         }
 
+                        $fill = false;
 
                         foreach($content->getData() as $rowData)
                         {
@@ -82,9 +102,17 @@ class XLSReport extends Report
                                          //$align = "R";
                                          break;
                                  }
-                                $worksheet->setCellValueByColumnAndRow($row,$col,trim($field));
+                                $worksheet->setCellValueByColumnAndRow($col, $row, trim($field));
+                                if($fill)
+                                {
+                                    $worksheet->getStyleByColumnAndRow($col, $row)
+                                        ->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+                                    $worksheet->getStyleByColumnAndRow($col, $row)
+                                        ->getFill()->getStartColor()->setARGB($bodyStripe);
+                                }
                                 $col++;
                             }
+                            $fill = !$fill;
                         }
                     }
                     break;
@@ -94,7 +122,6 @@ class XLSReport extends Report
         
         $writer = new PHPExcel_Writer_Excel2007($spreadsheet);
         $writer->save('app/temp/report.xlsx');
-
     }
 }
 

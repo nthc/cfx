@@ -135,14 +135,14 @@ class HTMLReport extends Report
                         print "<tr>";
                         foreach($headers as $index => $header)
                         {
-                        	if($index == 0)
-                        	{
-                        		print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;'><b>Totals</b></td>";
-                        	}
-                        	else
-                        	{
+                            if($index == 0)
+                            {
+                                print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;'><b>Totals</b></td>";
+                            }
+                            else
+                            {
                                 print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;' align='right'><b>" . (is_numeric($totals[$index]) ? Common::currency($totals[$index]) : "") . "</b></td>";
-                        	}
+                            }
                         }
                         print "</tr>";
                     }
