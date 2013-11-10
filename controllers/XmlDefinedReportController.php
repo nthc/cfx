@@ -564,7 +564,7 @@ class XmlDefinedReportController extends ReportController
                             $totalTable->style["totalsBox"] = true;
                             foreach($total as $key => $value)
                             {
-                                if(is_numeric($value)) $total[$key] = Common::currency($value);
+                                if(is_numeric($value)) $total[$key] = number_format($value, 2, '.', ',');
                             }
                             $totalTable->setData($total);
                             $report->add($totalTable);
