@@ -148,6 +148,21 @@ class PDFDocument extends FPDF
         }
         
     }
+    
+    protected function setFillColorArray($color)
+    {
+        $this->setFillColor($color[0], $color[1], $color[2]);
+    }
+    
+    protected function setDrawColorArray($color)
+    {
+        $this->setDrawColor($color[0], $color[1], $color[2]);
+    }
+    
+    protected function setTextColorArray($color)
+    {
+        $this->setTextColor($color[0], $color[1], $color[2]);
+    }
 
     protected function tableHeader()
     {
@@ -159,17 +174,17 @@ class PDFDocument extends FPDF
             {
                 case "PLAIN":
                     $this->SetFillColor(255,255,255);
-                    $this->SetTextColor(0,0,0);
-                    $this->SetDrawColor(102,128,102);
+                    $this->SetTextColor($this->style['header:text']);
+                    $this->SetDrawColor($this->style['header:border']);
                     $fill = true;
                     $borders = 1;
                     $headingStyle = 'B';
                     break;
                     
                 default:
-                    $this->SetFillColor(102,128,102);
-                    $this->SetTextColor(255,255,255);
-                    $this->SetDrawColor(102,128,102);
+                    $this->SetFillColorArray($this->style['header:background']);
+                    $this->SetTextColorArray($this->style['header:text']);
+                    $this->SetDrawColorArray($this->style['header:border']);
                     $fill = true;
                     $borders = 1;
                     $headingStyle = 'B';
@@ -232,16 +247,14 @@ class PDFDocument extends FPDF
             {
                 $borders = 0;
             }
-            
-            //var_dump($totals[$i], $params);
-
+           
             $this->Cell($params["widths"][$i],$this->style["cell_height"],$totals[$i],$borders,0,$i==0?'L':'R');
         }
         $this->Ln();
 
         if($this->style["decoration"]===true)
         {
-            $this->SetDrawColor(102,128,102);
+            $this->SetDrawColorArray($this->style['body:border']);
             $this->Cell(array_sum($params["widths"]),0,'','T');
             $this->Ln(0.4);
             $this->Cell(array_sum($params["widths"]),0,'','T');
@@ -294,17 +307,17 @@ class PDFDocument extends FPDF
         
         $this->processingTable = true;
         
-        $this->SetFillColor(255,255,255);
-        $this->SetTextColor(0);
-        $this->SetFont
-        (    isset($this->style["font"])?$this->style["font"]:"Helvetica",
-        ($this->style["bold"]?"B":"").($this->style["underline"]?"U":"").($this->style["italics"]?"I":""),
-        isset($this->style["font_size"])?$this->style["font_size"]:8
+        $this->SetFillColorArray($this->style['body:background']);
+        $this->SetTextColorArray($this->style['body:text']);
+        $this->SetFont(    
+            isset($this->style["font"])?$this->style["font"]:"Helvetica",
+            ($this->style["bold"]?"B":"").($this->style["underline"]?"U":"").($this->style["italics"]?"I":""),
+            isset($this->style["font_size"])?$this->style["font_size"]:8
         );
 
         if($this->style["decoration"]===true)
         {
-            $this->SetDrawColor(180,200,180);
+            $this->SetDrawColorArray($this->style['body:border']);
             $fill = false;
             $border = 1;
         }
@@ -353,18 +366,18 @@ class PDFDocument extends FPDF
             if($this->style["decoration"]===true) $fill=!$fill;
             if($fill)
             {
-                $this->SetFillColor(204,255,204);
+                $this->SetFillColorArray($this->style['body:stripe']);
             }
             else
             {
-                $this->SetFillColor(255,255,255);
+                $this->SetFillColorArray($this->style['body:background']);
             }
             $this->Ln();
         }
 
         if($this->style["decoration"]===true)
         {
-            $this->SetDrawColor(102,128,102);
+            $this->SetDrawColorArray($this->style['body:border']);
             $this->Cell(array_sum($widths),0,'','T');
         }
 

@@ -170,12 +170,6 @@ abstract class Model implements ArrayAccess
         return array("model"=>$model_name, "field"=>$field_name);
     }
     
-    public function getOptionDescription($field, $option)
-    {
-        var_dump($this->description);
-        die();
-    }
-
     public function getLabels($fields = null, $key = false)
     {
         $labels = array();

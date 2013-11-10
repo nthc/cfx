@@ -413,8 +413,6 @@ abstract class ReportController extends Controller
 
         }while($this->reportDataIndex < count($this->reportData));
         
-        var_dump($accumulatedTotals);
-
         return $accumulatedTotals;        
     }
 

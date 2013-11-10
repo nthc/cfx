@@ -555,12 +555,6 @@ class XmlDefinedReportController extends ReportController
         
         $queries = $this->xml->xpath("/rapi:report/rapi:query");
         
-        foreach($queries as $query)
-        {
-            var_dump((string)$query);
-        }
-        
-        
         $tables = $this->xml->xpath("/rapi:report/rapi:table");
 
         /// Filters and sorting.

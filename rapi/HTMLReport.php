@@ -65,6 +65,14 @@ class HTMLReport extends Report
                 break;
 
             case "table":
+                $headerFill = implode(',', $content->style['header:background']);
+                $headerBorder = implode(',', $content->style['header:border']);
+                $headerText = implode(',', $content->style['header:text']);
+                $bodyFill = implode(',', $content->style['body:background']);
+                $bodyStripe = implode(',', $content->style['body:stripe']);
+                $bodyBorder = implode(',', $content->style['body:border']);
+                $bodyText = implode(',', $content->style['body:text']);
+                
                 if($content->style["totalsBox"])
                 {
                     $totals = $content->getData();
@@ -73,11 +81,11 @@ class HTMLReport extends Report
                     {
                         if($i == 0)
                         {
-                            print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;'><b>{$totals[$i]}</b></td>";
+                            print "<td style='padding:3px; padding-top:10px; border:1px solid rgb($bodyBorder);font-size:8pt;font-family:helvetica;'><b>{$totals[$i]}</b></td>";
                         }
                         else
                         {
-                            print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;' align='right'><b>" . (is_numeric($totals[$i]) ? Common::currency($totals[$i]) : "") . "</b></td>";
+                            print "<td style='padding:3px; padding-top:10px;border:1px solid rgb($bodyBorder);font-size:8pt;font-family:helvetica;' align='right'><b>" . (is_numeric($totals[$i]) ? number_format($totals[$i], 2, '.', ',') : "") . "</b></td>";
                         }
                     }
                     print "</tr>";
@@ -91,14 +99,14 @@ class HTMLReport extends Report
                     }
                     
                     
-                    print "<table style='border-collapse:collapse' width='100%'><thead style='background-color:rgb(102,128,102);color:white; font-size:8pt;font-weight:bold;'><tr>";
+                    print "<table style='border-collapse:collapse' width='100%'><thead style='background-color:rgb($headerFill);color:rgb($headerText); font-size:8pt;font-weight:bold;'><tr>";
                     $tableOpen = true;
                     $headers = $content->getHeaders();
                     $this->numColumns = count($headers);
                     foreach($headers as $key=>$header)
                     {
                         $headers[$key] = str_replace("\\n","<br/>",$header);
-                        print "<td style = 'padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica'>{$headers[$key]}</td>";
+                        print "<td style = 'padding:3px;border:1px solid rgb($headerBorder);font-size:8pt;font-family:helvetica'>{$headers[$key]}</td>";
                     }
                     
                     print "</tr></thead><tbody>";
@@ -108,12 +116,12 @@ class HTMLReport extends Report
                     
                     foreach($data as $row)
                     {
-                    	print "<tr " . ($fill ? "style='background-color:rgb(204,255,204)'" : "") . " >";
+                    	print "<tr " . ($fill ? "style='background-color:rgb($bodyStripe)'" : "") . " >";
                         foreach($headers as $i=>$header)
                         {
                         	$key = $keys[$i];
                             $row[$key] = str_replace("\n","<br/>",trim($row[$key]));
-                            print "<td style='padding:3px;border:1px solid rgb(180,200,180);font-size:8pt;font-family:helvetica;'" . 
+                            print "<td style='padding:3px;border:1px solid rgb($bodyBorder);font-size:8pt;font-family:helvetica;'" . 
                                 ($content->data_params["type"][$i] == 'number' || $content->data_params["type"][$i] == 'double' ? " align='right'":"") . 
                             ">{$row[$key]}</td>";
                         }

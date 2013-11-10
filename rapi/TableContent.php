@@ -4,11 +4,30 @@ class TableContent extends ReportContent
     protected $headers;
     protected $data;
     public $style;
+    
     public $data_params = null;
     private $totals = array();
     
     public function __construct($headers, $data, $data_params=null)
     {
+        // Define the default style for the tables
+        if(defined('DEFAULT_TABLE_STYLE'))
+        {
+            $this->style = json_decode(DEFAULT_TABLE_STYLE, true);
+        }
+        else 
+        {
+            $this->style = array(
+                'header:border' => array(200,200,200),
+                'header:background' => array(200,200,200),
+                'header:text' => array(255,255,255),
+                'body:background' => array(255,255,255),
+                'body:stripe' => array(250, 250, 2250),
+                'body:border' => array(200, 200, 200),
+                'body:text' => array(0,0,0)
+            );                        
+        }
+        
         $this->headers = $headers;
         if(isset($data_params["ignore"]))
         {
