@@ -129,7 +129,6 @@ class XmlDefinedReportController extends ReportController
                     $text->setText($reader->value);
                     $report->add($text);
                     break;
-
                 case "rapi:table":
                     $numConcatFields = 0;
                     $reader->moveToAttribute("name");
@@ -157,266 +156,218 @@ class XmlDefinedReportController extends ReportController
                     $keyOffset = 0;
                     foreach($fields as $key=>$field)
                     {                        
-                        if(count(explode(",",$field))==1)
+                        // Load the model for this field if it hasn't been
+                        // loaded already. I have a hunch that this check
+                        // is really not necessary since the model loader
+                        // sort of caches loaded models now.
+                        $modelInfo = Model::resolvePath((string)$field);
+                        if(array_search($modelInfo["model"],array_keys($models))===false)
                         {
-                            // Load the model for this field if it hasn't been
-                            // loaded already. I have a hunch that this check
-                            // is really not necessary since the model loader
-                            // sort of caches loaded models now.
-                            $modelInfo = Model::resolvePath((string)$field);
-                            if(array_search($modelInfo["model"],array_keys($models))===false)
+                            $models[$modelInfo["model"]] = Model::load($modelInfo["model"]);
+                        }
+
+                        $model = $models[$modelInfo["model"]];
+                        $fieldInfo = $model->getFields(array($modelInfo["field"]));
+                        $fieldInfo = $fieldInfo[0];
+                        $fieldInfos[(string)$field] = $fieldInfo;
+
+                        //Ignore fields which are not needed.
+                        if(isset($_POST[$name."_".$fieldInfo["name"]."_ignore"]))
+                        {
+                            $ignoredFields[] = $key;
+                        }
+
+                        if(isset($field["sort"]))
+                        {
+                            $sortField = "{$model->database}.{$fieldInfo["name"]}";
+                            $hardCodedSorting[] = array("field" => $sortField, "type" => $field["sort"]);
+                        }
+
+                        if(isset($field["labelsField"]))
+                        {
+                            $dynamicFields[] = (string)$field;
+                            $dynamicHeaders[] = (string)$field["labelsField"];
+                            $labelModelInfo = Model::resolvePath($field["labelsField"]);
+                            $headersModel = Model::load($labelModelInfo["model"]);
+                            $dynamicHeaderValues = $headersModel->get(array("fields"=>array($labelModelInfo["field"])),SQLDataBaseModel::MODE_ARRAY);
+
+                            foreach($dynamicHeaderValues as $headerValue)
                             {
-                                $models[$modelInfo["model"]] = Model::load($modelInfo["model"]);
-                            }
-
-                            $model = $models[$modelInfo["model"]];
-                            $fieldInfo = $model->getFields(array($modelInfo["field"]));
-                            $fieldInfo = $fieldInfo[0];
-                            $fieldInfos[(string)$field] = $fieldInfo;
-
-                            //Ignore fields which are not needed.
-                            if(isset($_POST[$name."_".$fieldInfo["name"]."_ignore"]))
-                            {
-                                $ignoredFields[] = $key;
-                            }
-
-                            if(isset($field["sort"]))
-                            {
-                                $sortField = "{$model->database}.{$fieldInfo["name"]}";
-                                $hardCodedSorting[] = array("field" => $sortField, "type" => $field["sort"]);
-                            }
-
-                            if(isset($field["labelsField"]))
-                            {
-                                $dynamicFields[] = (string)$field;
-                                $dynamicHeaders[] = (string)$field["labelsField"];
-                                $labelModelInfo = Model::resolvePath($field["labelsField"]);
-                                $headersModel = Model::load($labelModelInfo["model"]);
-                                $dynamicHeaderValues = $headersModel->get(array("fields"=>array($labelModelInfo["field"])),SQLDataBaseModel::MODE_ARRAY);
-
-                                foreach($dynamicHeaderValues as $headerValue)
+                                $tableHeaders[] = $headerValue[0];
+                                if($field["total"]=="true")
                                 {
-                                    $tableHeaders[] = $headerValue[0];
-                                    if($field["total"]=="true")
+                                    $dataParams["total"][] = true;//$key + $keyOffset;
+                                    $dataParams["type"][] = "double";
+                                }
+                                $keyOffset++;
+                            }
+
+                            $keyOffset--;
+                        }
+                        else
+                        {
+                            $tableHeaders[] = (string)$field["label"];
+                            switch($fieldInfo["type"])
+                            {
+                                case "integer":
+                                    $dataParams["type"][] = "number";
+                                    break;
+                                case "double":
+                                    $dataParams["type"][] = "double";
+                                    break;
+                                default:
+                                    $dataParams["type"][] = "";
+                            }
+                            $dataParams["total"][] = $field["total"]=="true"?true:false;
+                        }
+
+                        $fields[$key] = (string)$field;
+                        $value = $field["value"];
+                        $field = (string)$field;
+
+                        if(array_search($model->getKeyField(),$this->referencedFields)=== false || $fieldInfo["type"]=="double" || $fieldInfo["type"]=="date")
+                        {
+                            if($value != null)
+                            {
+                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='$value'";
+                                continue;
+                            }
+
+                            switch($fieldInfo["type"])
+                            {
+                                case "string":
+                                case "text":
+                                    if($_POST[$name."_".$fieldInfo["name"]."_value"] != "")
                                     {
-                                        $dataParams["total"][] = true;//$key + $keyOffset;
-                                        $dataParams["type"][] = "double";
+                                        switch($_POST[$name."_".$fieldInfo["name"]."_option"])
+                                        {
+                                            case "CONTAINS":
+                                                    $filterSummaries[] = "{$headers[$key]} containing {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
+                                                    $filters[] = $models[$modelInfo["model"]]->getSearch($models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"]),"{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}");
+                                                break;
+
+                                            case "EXACTLY";
+                                                $filterSummaries[] = "{$headers[$key]} being exactly {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"])."'";
+                                                break;
+                                        }
                                     }
-                                    $keyOffset++;
-                                }
+                                    break;
 
-                                $keyOffset--;
-                            }
-                            else
-                            {
-                                $tableHeaders[] = (string)$field["label"];
-                                switch($fieldInfo["type"])
-                                {
-                                    case "integer":
-                                        $dataParams["type"][] = "number";
-                                        break;
-                                    case "double":
-                                        $dataParams["type"][] = "double";
-                                        break;
-                                    default:
-                                        $dataParams["type"][] = "";
-                                }
-                                $dataParams["total"][] = $field["total"]=="true"?true:false;
-                            }
-
-                            $fields[$key] = (string)$field;
-                            $value = $field["value"];
-                            $field = (string)$field;
-
-                            if(array_search($model->getKeyField(),$this->referencedFields)=== false || $fieldInfo["type"]=="double" || $fieldInfo["type"]=="date")
-                            {
-                                if($value != null)
-                                {
-                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='$value'";
-                                    continue;
-                                }
-
-                                switch($fieldInfo["type"])
-                                {
-                                    case "string":
-                                    case "text":
-                                        if($_POST[$name."_".$fieldInfo["name"]."_value"] != "")
+                                case "integer":
+                                case "double":
+                                    if($_POST[$name."_".$fieldInfo["name"]."_start_value"] != "")
+                                    {
+                                        switch($_POST[$name."_".$fieldInfo["name"]."_option"])
                                         {
-                                            switch($_POST[$name."_".$fieldInfo["name"]."_option"])
-                                            {
-                                                case "CONTAINS":
-                                                        $filterSummaries[] = "{$headers[$key]} containing {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
-                                                        $filters[] = $models[$modelInfo["model"]]->getSearch($models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"]),"{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}");
-                                                    break;
+                                            case "EQUALS":
+                                                $filterSummaries[] = "{$headers[$key]} equals {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
+                                                break;
+                                            case "GREATER":
+                                                $filterSummaries[] = "{$headers[$key]} greater than {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>'".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
+                                                break;
+                                            case "LESS":
+                                                $filterSummaries[] = "{$headers[$key]} less than {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<'".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
+                                                break;
+                                            case "BETWEEN":
+                                                $filterSummaries[] = "{$headers[$key]} between {$_POST[$name."_".$fieldInfo["name"]."_start_value"]} and {$_POST[$name."_".$fieldInfo["name"]."_end_value"]}";
+                                                $filters[] = "({$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."' AND {$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_end_value"])."')";
+                                                break;
+                                        }
+                                    }
+                                    break;
 
-                                                case "EXACTLY";
-                                                    $filterSummaries[] = "{$headers[$key]} being exactly {$_POST[$name."_".$fieldInfo["name"]."_value"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_value"])."'";
-                                                    break;
+                                case "reference":
+                                    break;
+
+                                case "datetime":
+                                case "date":
+                                    if($_POST[$name."_".$fieldInfo["name"]."_start_date"] != "")
+                                    {
+                                        switch($_POST[$name."_".$fieldInfo["name"]."_option"])
+                                        {
+                                            case "EQUALS":
+                                                $filterSummaries[] = "{$headers[$key]} on {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
+                                                break;
+                                            case "GREATER":
+                                                $filterSummaries[] = "{$headers[$key]} after {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>'".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
+                                                break;
+                                            case "LESS":
+                                                $filterSummaries[] = "{$headers[$key]} before {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
+                                                $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<'".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
+                                                break;
+                                            case "BETWEEN":
+                                                $filterSummaries[] = "{$headers[$key]} from {$_POST[$name."_".$fieldInfo["name"]."_start_date"]} to {$_POST[$name."_".$fieldInfo["name"]."_end_date"]}";
+                                                $filters[] = "({$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."' AND {$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_end_date"]))."')";
+                                                break;
+                                        }
+                                    }
+                                    break;
+
+                                case "enum":
+                                    if(count($_POST[$name."_".$fieldInfo["name"]."_value"]) >= 1 && $_POST[$name."_".$fieldInfo["name"]."_value"][0] != ""/*$_POST[$name."_".$fieldInfo["name"]."_value"] != ""*/)
+                                    {
+                                        $m = $models[$modelInfo["model"]];
+                                        if($_POST[$name."_".$fieldInfo["name"]."_option"]=="INCLUDE")
+                                        {
+                                            $summary = array();
+                                            foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
+                                            {
+                                                $summary[] = $fieldInfo["options"][$value];
+                                            }
+                                            $filterSummaries[] = "{$headers[$key]} being ".implode(", ",$summary);
+
+                                            $condition = array();
+                                            foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
+                                            {
+                                                if($value!="") $condition[]="{$m->getDatabase()}.{$fieldInfo["name"]}='".$m->escape($value)."'";
                                             }
                                         }
-                                        break;
-
-                                    case "integer":
-                                    case "double":
-                                        if($_POST[$name."_".$fieldInfo["name"]."_start_value"] != "")
+                                        else if($_POST[$name."_".$fieldInfo["name"]."_option"]=="EXCLUDE")
                                         {
-                                            switch($_POST[$name."_".$fieldInfo["name"]."_option"])
+                                            $summary = array();
+                                            foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
                                             {
-                                                case "EQUALS":
-                                                    $filterSummaries[] = "{$headers[$key]} equals {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
-                                                    break;
-                                                case "GREATER":
-                                                    $filterSummaries[] = "{$headers[$key]} greater than {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>'".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
-                                                    break;
-                                                case "LESS":
-                                                    $filterSummaries[] = "{$headers[$key]} less than {$_POST[$name."_".$fieldInfo["name"]."_start_value"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<'".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."'";
-                                                    break;
-                                                case "BETWEEN":
-                                                    $filterSummaries[] = "{$headers[$key]} between {$_POST[$name."_".$fieldInfo["name"]."_start_value"]} and {$_POST[$name."_".$fieldInfo["name"]."_end_value"]}";
-                                                    $filters[] = "({$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_start_value"])."' AND {$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<='".$models[$modelInfo["model"]]->escape($_POST[$name."_".$fieldInfo["name"]."_end_value"])."')";
-                                                    break;
+                                                $summary[] = $fieldInfo["options"][$value];
                                             }
-                                        }
-                                        break;
-
-                                    case "reference":
-                                        break;
-
-                                    case "datetime":
-                                    case "date":
-                                        if($_POST[$name."_".$fieldInfo["name"]."_start_date"] != "")
-                                        {
-                                            switch($_POST[$name."_".$fieldInfo["name"]."_option"])
-                                            {
-                                                case "EQUALS":
-                                                    $filterSummaries[] = "{$headers[$key]} on {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
-                                                    break;
-                                                case "GREATER":
-                                                    $filterSummaries[] = "{$headers[$key]} after {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>'".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
-                                                    break;
-                                                case "LESS":
-                                                    $filterSummaries[] = "{$headers[$key]} before {$_POST[$name."_".$fieldInfo["name"]."_start_date"]}";
-                                                    $filters[] = "{$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<'".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."'";
-                                                    break;
-                                                case "BETWEEN":
-                                                    $filterSummaries[] = "{$headers[$key]} from {$_POST[$name."_".$fieldInfo["name"]."_start_date"]} to {$_POST[$name."_".$fieldInfo["name"]."_end_date"]}";
-                                                    $filters[] = "({$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}>='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_start_date"]))."' AND {$models[$modelInfo["model"]]->getDatabase()}.{$fieldInfo["name"]}<='".$models[$modelInfo["model"]]->escape(Common::stringToDatabaseDate($_POST[$name."_".$fieldInfo["name"]."_end_date"]))."')";
-                                                    break;
-                                            }
-                                        }
-                                        break;
-
-                                    case "enum":
-                                        if(count($_POST[$name."_".$fieldInfo["name"]."_value"]) >= 1 && $_POST[$name."_".$fieldInfo["name"]."_value"][0] != ""/*$_POST[$name."_".$fieldInfo["name"]."_value"] != ""*/)
-                                        {
-                                            $m = $models[$modelInfo["model"]];
-                                            if($_POST[$name."_".$fieldInfo["name"]."_option"]=="INCLUDE")
-                                            {
-                                                $summary = array();
-                                                foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
-                                                {
-                                                    $summary[] = $fieldInfo["options"][$value];
-                                                }
-                                                $filterSummaries[] = "{$headers[$key]} being ".implode(", ",$summary);
+                                            $filterSummaries[] = "{$headers[$key]} excluding ".implode(", ",$summary);
 
                                                 $condition = array();
                                                 foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
                                                 {
-                                                    if($value!="") $condition[]="{$m->getDatabase()}.{$fieldInfo["name"]}='".$m->escape($value)."'";
+                                                    if($value!="") $condition[]="{$m->getDatabase()}.{$fieldInfo["name"]}<>'".$m->escape($value)."'";
                                                 }
                                             }
-                                            else if($_POST[$name."_".$fieldInfo["name"]."_option"]=="EXCLUDE")
-                                            {
-                                                $summary = array();
-                                                foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
-                                                {
-                                                    $summary[] = $fieldInfo["options"][$value];
-                                                }
-                                                $filterSummaries[] = "{$headers[$key]} excluding ".implode(", ",$summary);
-
-                                                    $condition = array();
-                                                    foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
-                                                    {
-                                                        if($value!="") $condition[]="{$m->getDatabase()}.{$fieldInfo["name"]}<>'".$m->escape($value)."'";
-                                                    }
-                                                }
-                                            if(count($condition)>0) $filters[] = "(".implode(" OR ",$condition).")";
-                                        }
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                if($_POST[$name."_".$fieldInfo["name"]."_value"] != "")
-                                {
-                                    if($_POST[$name."_".$fieldInfo["name"]."_option"]=="IS_ANY_OF")
-                                    {
-                                        foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
-                                        {
-                                            if($value!="") $condition[]="{$model->getDatabase()}.{$fieldInfo["name"]}='".$model->escape($value)."'";
-                                        }
+                                        if(count($condition)>0) $filters[] = "(".implode(" OR ",$condition).")";
                                     }
-                                    else if($_POST[$name."_".$fieldInfo["name"]."_option"]=="IS_NONE_OF")
-                                    {
-                                        foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
-                                        {
-                                            if($value!="") $condition[]="{$model->getDatabase()}.{$fieldInfo["name"]}<>'".$model->escape($value)."'";
-                                        }
-                                    }
-                                    if(count($condition)>0) $filters[] = "(".implode(" OR ",$condition).")";
-                                }
+                                    break;
                             }
                         }
                         else
                         {
-                            if($_POST[$name."_concat_".$numConcatFields."_ignore"])
+                            if($_POST[$name."_".$fieldInfo["name"]."_value"] != "")
                             {
-                                $ignoredFields[] = $key;
-                            }
-                            $fields[$key] = (string)$field;
-                            $tableHeaders[] = (string)$field["label"];
-                            $dataParams["type"][]="";
-                            $dataParams["total"][] = false;
-                            
-                            $fieldArray = explode(",", (string)$field);
-                            $DBfieldList = array();
-
-                            foreach($fieldArray as $fieldArrayItem)
-                            {
-                                $modelInfo = Model::resolvePath($fieldArrayItem);
-                                if(array_search($modelInfo["model"],array_keys($models))===false)
+                                if($_POST[$name."_".$fieldInfo["name"]."_option"]=="IS_ANY_OF")
                                 {
-                                    $models[$modelInfo["model"]] = Model::load($modelInfo["model"]);
-                                }
-                                $DBfieldList[] = $models[$modelInfo["model"]]->getDatabase().".".$modelInfo["field"];
-                            }
-
-                            $fieldInfo = $models[$modelInfo["model"]]->datastore->concatenate($DBfieldList);
-                            $filterOption = $_POST[$name."_concat_".$numConcatFields."_option"];
-                            $filterValue = $_POST[$name."_concat_".$numConcatFields."_value"];
-
-                            if($filterValue != "")
-                            {
-                                if($filterOption=="EXACTLY")
-                                {
-                                    $filters[] = "$fieldInfo='".$models[$modelInfo["model"]]->escape($filterValue)."'";
-                                }
-                                else if($filterOption=="CONTAINS")
-                                {
-                                    //@todo Allow for different types of output either AND/OR
-                                    foreach(explode(" ",$filterValue) as $filter)
+                                    foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
                                     {
-                                        $filters[] = $models[$modelInfo["model"]]->getSearch($models[$modelInfo["model"]]->escape($filter),$fieldInfo);
+                                        if($value!="") $condition[]="{$model->getDatabase()}.{$fieldInfo["name"]}='".$model->escape($value)."'";
                                     }
                                 }
+                                else if($_POST[$name."_".$fieldInfo["name"]."_option"]=="IS_NONE_OF")
+                                {
+                                    foreach($_POST[$name."_".$fieldInfo["name"]."_value"] as $value)
+                                    {
+                                        if($value!="") $condition[]="{$model->getDatabase()}.{$fieldInfo["name"]}<>'".$model->escape($value)."'";
+                                    }
+                                }
+                                if(count($condition)>0) $filters[] = "(".implode(" OR ",$condition).")";
                             }
-                            $numConcatFields++;
                         }
                     }
 
@@ -442,7 +393,7 @@ class XmlDefinedReportController extends ReportController
 
                     if($tableConditions != "")
                     {
-                        $params["conditions"] = "({$params["conditions"]}) AND ($tableConditions)";
+                        $params["conditions"] = $parms['conditions'] . "($tableConditions)";
                     }
                     
                     if($_POST[$name."_sorting"] != "")
@@ -564,7 +515,7 @@ class XmlDefinedReportController extends ReportController
                             $totalTable->style["totalsBox"] = true;
                             foreach($total as $key => $value)
                             {
-                                if(is_numeric($value)) $total[$key] = number_format($value, 2, '.', ',');
+                                if(is_numeric($value)) $total[$key] = $value;
                             }
                             $totalTable->setData($total);
                             $report->add($totalTable);
@@ -581,6 +532,12 @@ class XmlDefinedReportController extends ReportController
     {
         return $params;
     }
+    
+    protected function describeQuery($query)
+    {
+        $query = str_replace(array("\n", "\r"), null, $reader->readString());
+        preg_match("/(SELECT )(?<fields>.*)(FROM)(?<tables>.*)(WHERE)(?<conditions>.*)/i", $query, $matches);        
+    }
 
     /**
      * Returns a form to be used to filter the report. This method analyses the
@@ -595,6 +552,15 @@ class XmlDefinedReportController extends ReportController
         
         $filters = array();
         $fieldInfos = array();
+        
+        $queries = $this->xml->xpath("/rapi:report/rapi:query");
+        
+        foreach($queries as $query)
+        {
+            var_dump((string)$query);
+        }
+        
+        
         $tables = $this->xml->xpath("/rapi:report/rapi:table");
 
         /// Filters and sorting.

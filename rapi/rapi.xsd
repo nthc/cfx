@@ -1,66 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/rapi" xmlns:rapi="http://www.example.org/rapi" elementFormDefault="qualified">
-<xs:element name="report" type="rapi:Report" />
-<xs:complexType name="Report" >
-	<xs:sequence>
+    <xs:element name="report" type="rapi:Report" />
+    <xs:complexType name="Report" >
+        <xs:sequence>
 	
-		<xs:element name="logo" minOccurs="0" maxOccurs="unbounded" >
-			<xs:complexType>
-				<xs:sequence>
-					<xs:element type="xs:string" name="address" minOccurs="0" maxOccurs="1" />
-				</xs:sequence>
-				<xs:attribute name="image" type="xs:string" />
-				<xs:attribute name="class" type="xs:string" />
-			</xs:complexType>
-		</xs:element>
+            <xs:element name="logo" minOccurs="0" maxOccurs="unbounded" >
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="address" minOccurs="0" maxOccurs="1" />
+                    </xs:sequence>
+                    <xs:attribute name="image" type="xs:string" />
+                    <xs:attribute name="class" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
 		
-		<xs:element name="text" minOccurs="0" maxOccurs="unbounded" >
-			<xs:complexType>
-				<xs:simpleContent>
-					<xs:extension base="xs:string">
-						<xs:attribute name="font" type="xs:string" />
-						<xs:attribute name="size" type="xs:integer" />
-						<xs:attribute name="bold" type="xs:boolean" />
-						<xs:attribute name="style" type="xs:string" />
-					</xs:extension>
-				</xs:simpleContent>
-			</xs:complexType>
-		</xs:element>		
+            <xs:element name="text" minOccurs="0" maxOccurs="unbounded" >
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="font" type="xs:string" />
+                            <xs:attribute name="size" type="xs:integer" />
+                            <xs:attribute name="bold" type="xs:boolean" />
+                            <xs:attribute name="style" type="xs:string" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="query">	
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="hidden" type="xs:string" />
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>                
+            </xs:element>
 		
-		<xs:element name="table" minOccurs="0" maxOccurs="unbounded" >
-			<xs:complexType>
-				<xs:sequence>
-					<xs:element name="fields" minOccurs="1" maxOccurs="1" >
-						<xs:complexType>
-    						<xs:sequence>
-								<xs:element name="field" minOccurs="0" maxOccurs="unbounded" >
-								<xs:complexType>
-    							<xs:simpleContent>
-    								<xs:extension base="xs:string">
-    									<xs:attribute name="label" type="xs:string" />
-    									<xs:attribute name="total" type="xs:boolean" default="false" />
-                                        <xs:attribute name="labelsField" type="xs:string" />
-                                        <xs:attribute name="sort" type="xs:string" />
-                                        <xs:attribute name="value" />
-                                        <xs:attribute name="hide" />
-                                        <xs:attribute name="max_size" type="xs:integer" />
-    								</xs:extension>
-    							</xs:simpleContent>
-    							</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="conditions" type="xs:string" />
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-				<xs:attribute name="name" type="xs:string" />
-				<xs:attribute name="conditions" type="xs:string" />
-			</xs:complexType>
-		</xs:element>
-	</xs:sequence>
-	<xs:attribute type="xs:string" name="name" />
-	<xs:attribute type="xs:string" name="baseModel" />
-	<xs:attribute type="xs:string" name="label" />
-	<xs:attribute type="xs:string" name="basePackage" />
-</xs:complexType>
+            <xs:element name="table" minOccurs="0" maxOccurs="unbounded" >
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="fields" minOccurs="1" maxOccurs="1" >
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="field" minOccurs="0" maxOccurs="unbounded" >
+                                        <xs:complexType>
+                                            <xs:simpleContent>
+                                                <xs:extension base="xs:string">
+                                                    <xs:attribute name="label" type="xs:string" />
+                                                    <xs:attribute name="total" type="xs:boolean" default="false" />
+                                                    <xs:attribute name="labelsField" type="xs:string" />
+                                                    <xs:attribute name="sort" type="xs:string" />
+                                                    <xs:attribute name="value" />
+                                                    <xs:attribute name="hide" />
+                                                    <xs:attribute name="max_size" type="xs:integer" />
+                                                </xs:extension>
+                                            </xs:simpleContent>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="conditions" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:string" />
+                    <xs:attribute name="conditions" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" />
+        <xs:attribute type="xs:string" name="baseModel" />
+        <xs:attribute type="xs:string" name="label" />
+        <xs:attribute type="xs:string" name="basePackage" />
+    </xs:complexType>
 </xs:schema>
