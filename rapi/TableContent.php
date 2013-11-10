@@ -103,10 +103,10 @@ class TableContent extends ReportContent
                     switch($this->data_params['type'][$i])
                     {
                         case 'double':
-                            $field = Common::round($field, 2);
+                            $field = round($field, 2);
                             break;
                         case 'number':
-                            $field = Common::round($field, 0);
+                            $field = round($field, 0);
                             break;
                     }
                     
