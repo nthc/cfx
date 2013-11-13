@@ -227,8 +227,9 @@ class ModelController extends Controller
             $this->toolbar = new Toolbar();
             $this->table = new MultiModelTable(Application::$prefix."/".str_replace(".","/",$this->urlBase)."/");
             $this->table->useAjax = true;
-        }        
-        $this->_showInMenu = $this->model->showInMenu=="false"?false:true;
+        }
+        
+        $this->_showInMenu = $this->model->showInMenu === "false" ? false : true;
         
         if(file_exists($this->localPath."/app.xml"))
         {
