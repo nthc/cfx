@@ -390,10 +390,10 @@ class XmlDefinedReportController extends ReportController
                         "report"            =>$report,
                         "headers"           =>$tableHeaders,
                     );
-
+                    
                     if($tableConditions != "")
                     {
-                        $params["conditions"] = $parms['conditions'] . "($tableConditions)";
+                        $params["conditions"] = $params['conditions'] . " AND ($tableConditions)";
                     }
                     
                     if($_POST[$name."_sorting"] != "")
