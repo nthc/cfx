@@ -2,7 +2,7 @@
 
 class SystemApiKeysModel extends ORMSQLDatabaseModel
 {
-    public $database = 'common.api_keys';
+    public $database = 'system.api_keys';
     
     public function preValidateHook() 
     {
