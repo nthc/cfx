@@ -177,8 +177,8 @@ class PDFDocument extends FPDF
             {
                 case "PLAIN":
                     $this->SetFillColor(255,255,255);
-                    $this->SetTextColor($this->style['header:text']);
-                    $this->SetDrawColor($this->style['header:border']);
+                    $this->SetTextColor(0,0,0);
+                    $this->SetDrawColorArray($this->style['header:border']);
                     $fill = true;
                     $borders = 1;
                     $headingStyle = 'B';
