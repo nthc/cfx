@@ -244,7 +244,7 @@ abstract class ReportController extends Controller
 
         $params["report"]->add($table);
         $total = $table->getTotals();
-
+        
         return $total;
     }
 

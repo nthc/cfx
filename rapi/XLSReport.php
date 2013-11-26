@@ -93,9 +93,11 @@ class XLSReport extends Report
                                 switch($content->data_params["type"][$col])
                                 {
                                      case "number":
+                                         $field = str_replace(",", "", $field);
                                          $field = $field === null || $field == "" ? "0" : round($field, 0);
                                          break;
                                      case "double":
+                                         $field = str_replace(",", "", $field);
                                          $field = $field === null || $field == "" ? "0.00" : round($field, 2);
                                          break;
                                      case "right_align":

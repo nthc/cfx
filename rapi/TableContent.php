@@ -129,7 +129,7 @@ class TableContent extends ReportContent
                             break;
                     }
                     
-                    $totals[$i] = bcadd($totals[$i], $field, 32);
+                    $totals[$i] += $field;
                 }
                 $i++;
             }
