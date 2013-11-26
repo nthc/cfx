@@ -1,4 +1,7 @@
 <?php
+
+require_once "fpdf/fpdf.php";
+
 class PDFDocument extends FPDF
 {
     protected $processingTable;
