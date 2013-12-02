@@ -13,7 +13,7 @@ class ButtonBar extends Container
     public $buttons = array();
     private $barName;
     
-    public function __construct($name)
+    public function __construct($name = null)
     {
         parent::__construct();
         $this->barName  = $name;
