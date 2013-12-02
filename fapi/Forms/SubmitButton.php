@@ -6,7 +6,7 @@ include_once "Field.php";
 //! \ingroup Forms
 class SubmitButton extends Button
 {
-    public function __construct($label="")
+    public function __construct($label="", $value = "")
     {
         parent::__construct($label);
     }
@@ -14,6 +14,7 @@ class SubmitButton extends Button
     public function render()
     {
         $this->setAttribute("type","submit");
+        return parent::render();
     }
 
     public function getType()

@@ -11,6 +11,21 @@ class ButtonBar extends Container
      * @var Array
      */
     public $buttons = array();
+    private $barName;
+    
+    public function __construct($name)
+    {
+        parent::__construct();
+        $this->barName  = $name;
+    }
+    
+    public function addSubmitButton($label)
+    {
+        $button = new SubmitButton($label);
+        $button->addAttribute('name', $this->barName);
+        $this->buttons[] = $button;
+        return $this;
+    }
 
     /**
      * Add a new button to this bar. This method creates a new instance of the
@@ -32,12 +47,9 @@ class ButtonBar extends Container
     public function render()
     {
         $ret = "";
-        if(Element::getShowfield())
+        foreach($this->buttons as $button)
         {
-            foreach($this->buttons as $button)
-            {
-                $ret .= $button->render(). " ";
-            }
+            $ret .= $button->render(). " ";
         }
         return $ret;
     }
