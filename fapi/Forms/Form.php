@@ -1,5 +1,4 @@
 <?php
-
 /**
  * \page fapi_page The Form API
  * The Form API is a simple API which makes it possible to define forms
