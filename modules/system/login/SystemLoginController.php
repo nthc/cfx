@@ -78,7 +78,7 @@ class SystemLoginController extends Controller
      * @param $form
      * @return unknown_type
      */
-    public static function change_password_callback($data, &$errors, &$form)
+    public static function change_password_callback($data, $errors, $form)
     {
         $home = Application::getLink("/");
         if ($data["password"] == $data["password2"])
@@ -110,7 +110,7 @@ class SystemLoginController extends Controller
      * @param $callback_pass
      * @return unknown_type
      */
-    public static function callback($data, &$form, $callback_pass)
+    public static function callback($data, $form, $callback_pass)
     {
         $user = Model::load("system.users");
         $userData = $user->get(
