@@ -733,6 +733,7 @@ class XmlDefinedReportController extends ReportController
             $groupingTable->add($grouping3,2,0);
 
             $container = new FieldSet($table["name"]);
+        $container->setId("{$table["name"]}_options");
             $container->add(
                 Element::create("FieldSet","Filters")->add($filters)->setId("table_{$table['name']}"),
                 Element::create("FieldSet","Sorting * Limiting")->add(

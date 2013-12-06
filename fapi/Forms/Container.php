@@ -21,6 +21,9 @@ abstract class Container extends Element
      * Data should not be stored anywhere.
      */
     const STORE_NONE = "none";
+    
+    const PREPEND = 'prepend';
+    const APPEND = 'append';
 
     /**
      * Variable which determines where data from the database should be stored.
@@ -131,14 +134,29 @@ abstract class Container extends Element
      * @return Container
      */
     public function add($e)
-    {
+    {        
+        $mode = 'append';
         //Check if the element has a parent. If it doesnt then add it
         //to this container. If it does throw an exception.
         foreach(func_get_args() as $element)
         {
+            if(is_string($element) && ($element == Container::PREPEND || $element == Container::APPEND))
+            {
+                $mode = $element;
+                continue;
+            }
+            
             if($element->parent==null)
             {
-                $this->elements[] = $element;
+                if($mode == Container::PREPEND)
+                {
+                    array_unshift ($this->elements, $element);
+                }
+                else if($mode == Container::APPEND)
+                {
+                    $this->elements[] = $element;
+                }
+                
                 $element->setMethod($this->getMethod());
                 $element->setShowField($this->getShowField());
                 $element->parent = $this;
