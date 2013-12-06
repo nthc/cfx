@@ -22,6 +22,7 @@ class Fieldset extends Container
     {
         $this->collapsible = $collapsible;
         $this->addCSSClass("collapsible");
+        return $this;
     }
 
     public function render()
