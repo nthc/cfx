@@ -201,6 +201,7 @@ class Application
             $t->assign('javascripts',Application::$javascripts);
             $t->assign('scripts',$t->fetch('javascripts.tpl'));
             $t->assign('title', Application::$title);
+            $t->assign('session', $_SESSION);
             $t->display(Application::$template);
         }
                 

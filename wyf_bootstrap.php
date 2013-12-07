@@ -52,9 +52,6 @@ add_include_path("lib/cache/");
 // Add the script which contains the third party libraries
 require "app/includes.php";
 
-// Bootstrap the application
-require SOFTWARE_HOME . "app/bootstrap.php";
-
 // Setup the global variables needed by the redirected packages
 global $redirectedPackage;
 global $packageSchema;
@@ -73,3 +70,6 @@ Cache::init($config['cache']['method']);
 define('CACHE_MODELS', $config['cache']['models']);
 define('CACHE_PREFIX', "");
 define('ENABLE_AUDIT_TRAILS', $config['audit_trails']);
+
+// Bootstrap the application
+require SOFTWARE_HOME . "app/bootstrap.php";
