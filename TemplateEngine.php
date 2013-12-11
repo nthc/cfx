@@ -41,7 +41,7 @@ class TemplateEngine extends Smarty
         $this->compile_dir = SOFTWARE_HOME . 'app/cache/template_compile';
         $this->config_dir = SOFTWARE_HOME . 'config/template/';
         $this->cache_dir = SOFTWARE_HOME . 'app/cache/template';
-        $this->caching = false;
+        $this->caching  = false;
         $this->assign('host',$_SERVER["HTTP_HOST"]);
     }
     

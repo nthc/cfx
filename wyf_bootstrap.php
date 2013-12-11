@@ -71,5 +71,3 @@ define('CACHE_MODELS', $config['cache']['models']);
 define('CACHE_PREFIX', "");
 define('ENABLE_AUDIT_TRAILS', $config['audit_trails']);
 
-// Bootstrap the application
-require SOFTWARE_HOME . "app/bootstrap.php";

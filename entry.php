@@ -119,6 +119,10 @@ if($cliMode === true)
         $_REQUEST[urldecode($termparts[0])] = urldecode($termparts[1]);
         $_GET[urldecode($termparts[0])] = urldecode($termparts[1]);
     }
+    
+    // Bootstrap the application
+    require SOFTWARE_HOME . "app/bootstrap.php";
+    
     if($output != "") ob_start();
     Application::render();
     if($output != "") file_put_contents($output, ob_get_clean());
@@ -208,13 +212,16 @@ else
     
     // Load the styleseets and the javascripts
     Application::addStylesheet("css/fapi.css", "lib/fapi/");
-    Application::addStylesheet("css/main.css");
     Application::addStylesheet("lib/js/kalendae/kalendae.css", '');
+    Application::addStylesheet("css/main.css");
     
     Application::addJavaScript(Application::getLink("/lib/fapi/js/fapi.js"));
     Application::addJavaScript(Application::getLink("/lib/js/jquery.js"));
     Application::addJavaScript(Application::getLink("/lib/js/kalendae/kalendae.js"));
     Application::addJavaScript(Application::getLink("/lib/js/json2.js"));
+    
+    // Bootstrap the application
+    require SOFTWARE_HOME . "app/bootstrap.php";    
     
     // Blast the HTML code to the browser!
     Application::$site_name = Application::$config['name'];
