@@ -53,7 +53,10 @@ class PDFDocument extends FPDF
         }
         elseif(is_array($paper))
         {
-            $this->twidth = $paper[0]-20;
+            if($orientation = "P")
+                $this->twidth = $paper[1]-20;
+            else
+                $this->twidth = $paper[0]-20;
         }
 
         $this->AddPage();
