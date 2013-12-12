@@ -123,9 +123,16 @@ class XLSReport extends Report
         }
         
         $writer = new PHPExcel_Writer_Excel2007($spreadsheet);
-        $file = "app/temp/" . uniqid() . "_report.xlsx";
-        $writer->save($file);
-        Application::redirect("/$file");
+        if($file == '')
+        {
+            $file = "app/temp/" . uniqid() . "_report.xlsx";
+            $writer->save($file);
+            Application::redirect("/$file");
+        }
+        else
+        {
+            $writer->save($file);
+        }
    }
 }
 
