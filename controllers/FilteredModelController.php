@@ -51,7 +51,7 @@ abstract class FilteredModelController extends ModelController
         {
             $this->filterFieldModel = Model::load($this->filterFieldModel);
         }
-        $this->selectionList->onchange = "updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', this.value)";
+        $this->selectionList->onchange = "wyf.updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', this.value)";
         $this->toolbar->add($this->selectionList);
     }
 
@@ -62,7 +62,7 @@ abstract class FilteredModelController extends ModelController
         {
             $ret .=
                 "<script type='text/javascript'>
-                    updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', '{$this->defaultValue}');
+                    wyf.updateFilter('{$this->table->name}', '{$this->filterFieldModel->database}.{$this->filterField}', '{$this->defaultValue}');
                     {$this->table->name}Search();
                 </script>";
         }
