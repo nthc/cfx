@@ -162,9 +162,12 @@ abstract class Field extends Element
     //!              itself.
     public function setData($data)
     {
-        if(array_search($this->getName(false),array_keys($data))!==false)
+        if(is_array($data))
         {
-            $this->setValue($data[$this->getName(false)]);
+            if(array_search($this->getName(false),array_keys($data))!==false)
+            {
+                $this->setValue($data[$this->getName(false)]);
+            }
         }
     }
 
