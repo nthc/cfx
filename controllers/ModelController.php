@@ -546,7 +546,7 @@ class ModelController extends Controller
      * @see ModelController::$callbackFunction
      * @return boolean
      */
-    public static function callback($data, $form, $c, $redirect=true, $id=null)
+    public static function callback($data, $form, $c, $redirect=true, &$id=null)
     { 
         switch($c["action"])
         {
