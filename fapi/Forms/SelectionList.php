@@ -103,7 +103,7 @@ class SelectionList extends Field
                     $ret .= "<optgroup label='Un Grouped'>";
                     foreach($this->options as $option)
                     {
-                        $ret .= "<option value='$option->value' ".($this->getValue()==$option->value?"selected='selected'":"").">$option->label</option>";
+                        $ret .= "<option value='$option->value' ".((string)$this->getValue()===(string)$option->value?"selected='selected'":"").">$option->label</option>";
                     }
                     $ret .= "</optgroup>";
                 }
@@ -113,7 +113,7 @@ class SelectionList extends Field
         {
             foreach($this->options as $option)
             {
-                $ret .= "<option value='$option->value' ".($this->getValue()==$option->value?"selected='selected'":"").">$option->label</option>";
+                $ret .= "<option value='$option->value' ".((string)$this->getValue()===(string)$option->value?"selected='selected'":"").">$option->label</option>";
             }
         }
         $ret .= "</select>";
