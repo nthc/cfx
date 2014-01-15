@@ -5,7 +5,7 @@
  * @author ekow
  * @ingroup Forms
  */
-class HTMLBox extends Element
+class HTMLBox extends Container
 {
     public $content;
     
@@ -24,16 +24,6 @@ class HTMLBox extends Element
     public function render()
     {
         return $this->content;
-    }
-    
-    public function getData()
-    {
-        return array();
-    }
-    
-    public function validate()
-    {
-        
     }
     
     public function hasLabel()
