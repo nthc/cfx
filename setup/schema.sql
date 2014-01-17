@@ -192,6 +192,6 @@ CREATE TABLE system.notes
   user_id integer NOT NULL,
   CONSTRAINT notes_note_id_pk PRIMARY KEY (note_id),
   CONSTRAINT notes_user_id_fk FOREIGN KEY (user_id)
-      REFERENCES common.users (user_id) MATCH SIMPLE
+      REFERENCES system.users (user_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
