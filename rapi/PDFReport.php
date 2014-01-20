@@ -144,14 +144,11 @@ class PDFReport extends Report
             
             case "logo":
                 $this->pdf->image($content->image,null,null,8,8);
-                //print $this->pdf->getY();
                 $this->pdf->sety($this->pdf->getY() - 8);
                 $this->pdf->SetFont("Times","B","18");
                 $this->pdf->cell(9);$this->pdf->cell(0,8,$content->title);
                 
                 $this->pdf->SetFont("Arial",null,7);
-                //print $this->pdf->getY();
-                //$this->pdf->sety(10);
                 foreach($content->address as $address)
                 {
                     $this->pdf->setx(($this->pdf->GetStringWidth($address)+10) * -1);
