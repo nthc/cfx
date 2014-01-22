@@ -310,3 +310,57 @@ margin:0px;
 {
 	border-collapse:collapse;
 }
+
+/************************ 
+TAB LAYOUT 
+*************************/ 
+ul.fapi-tab-list { 
+margin: 0px; 
+padding: 0px; 
+list-style: none; 
+cursor:pointer; 
+} 
+
+li.fapi-tab-selected { 
+background-color: #e0e0e0; 
+padding-top: 10px; 
+-moz-border-radius-topleft: 4px; 
+-moz-border-radius-topright: 4px; 
+-webkit-border-radius-topleft: 4px;	
+-webkit-border-radius-topright: 4px;	
+} 
+
+li.fapi-tab-unselected { 
+background-color: #a0a0a0; 
+-moz-border-radius-topleft: 4px; 
+-moz-border-radius-topright: 4px; 
+-webkit-border-radius-topleft: 4px;	
+-webkit-border-radius-topright: 4px; 
+background-image:url(../imgs/tabbg.gif); 
+} 
+
+ul.fapi-tab-list li { /*display:inline;*/ 
+float: left; 
+margin-right: 5px; 
+padding: 5px; 
+} 
+
+ul.fapi-tab-list li a { 
+text-decoration: none; 
+color: black; 
+font-weight: bold; 
+padding: 5px; 
+padding-left: 10px; 
+padding-right: 10px; 
+} 
+
+div.fapi-tab-unselected { 
+display: none; 
+} 
+
+div.fapi-tab { 
+background-color: #e0e0e0; 
+border:1px #404040; 
+clear: both; 
+padding: 10px; 
+} 
