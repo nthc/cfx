@@ -103,6 +103,8 @@ class Application
     
     public static $templateEngine;
     
+    public static $defaultRoute = "dashboard";
+    
     private static $sideMenuHidden = false;
     
     /**
@@ -165,7 +167,7 @@ class Application
         $t = Application::$templateEngine;
         if($_GET["q"]=="")
         {
-            $_GET["q"]= "dashboard";
+            $_GET["q"]= Application::$defaultRoute;
         }
         $path = explode("/",$_GET["q"]);
         Application::$template = "main.tpl";
