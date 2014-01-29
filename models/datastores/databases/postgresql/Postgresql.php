@@ -28,7 +28,7 @@ class Postgresql extends SQLDBDataStore
         }
     }
 
-    public function beginTransaction($external = true)
+    public function beginTransaction()
     {
         if(self::$nesting == 0)
         {
@@ -37,7 +37,7 @@ class Postgresql extends SQLDBDataStore
         self::$nesting++;
     }
 
-    public function endTransaction($external = true)
+    public function endTransaction()
     {
         self::$nesting--;
         if(self::$nesting == 0)
