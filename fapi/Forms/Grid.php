@@ -7,6 +7,7 @@ class Grid extends Field
     private $columnIds = array();
     private $hash;
     private $numRows = 500;
+    private $totals;
 
     public function __construct($label, $name)
     {
@@ -71,6 +72,8 @@ class Grid extends Field
     public function render()
     {
         $data = $this->getData();
+        
+        // Header Table
         $ret = "<table id='{$this->hash}' class='fapi-grid-header-table' width='100%'>";
         $ret .= "<tr><td id='header-0'></td>";
         $script = "$('#header-0').width($('#gauge-0').width());";
@@ -82,7 +85,6 @@ class Grid extends Field
             $script .= "$('#{$column->getName()}-header').width($('#{$column->getName()}-gauge').width());";
         }
         $gauge .= "</tr>";
-
         $ret .= "</tr></table>";
 
         $ret .= "<div class='fapi-grid'><table width='100%'><tbody>$gauge";
@@ -107,12 +109,49 @@ class Grid extends Field
             $ret .= "</tr>";
         }
         $ret .= "</tbody></table></div>";
-        $ret .= "<script type='text/javascript'>$script</script>";
+        
+        // Footer Table
+        $ret .= "<table id='{$this->hash}' class='fapi-grid-footer-table' width='100%'>";
+        $ret .= "<tr><td id='footer-0'></td>";
+        $script .= "$('#footer-0').width($('#gauge-0').width());";
+        $gauge = "<tr><td id='gauge-0'></td>";
+        foreach($this->columns as $column)
+        {
+            $ret .= "<td class='fapi-grid-footer'  id='{$column->getName()}-footer'></td>";
+            $gauge .= "<td id='{$column->getName()}-gauge'></td>";
+            $script .= "$('#{$column->getName()}-footer').width($('#{$column->getName()}-gauge').width());";
+        }
+        $gauge .= "</tr>";
+
+        $ret .= "</tr></table>";
+        
+        $ret .= "<script type='text/javascript'>"
+                . "$script"
+                . "var totals = JSON.parse('".json_encode($this->totals)."');"
+                . "var numRows = {$this->numRows};"
+                . "function computeTotals(){"
+                    . "for(column in totals){"
+                        . "if(totals[column]){"
+                            . "var total = 0;"
+                            . "for(var i = 0; i < numRows; i++){"
+                                . "var number = $('#' + column + i).val();"
+                                . "if(!isNaN(parseInt(number))) total += parseInt(number);"
+                            . "}"
+                            . "$('#'+column+'-footer').html(total);"
+                        . "}"
+                    . "}"
+                . "}"
+                . "</script>";
         return $ret;
     }
 
-    public function addColumn($column)
+    public function addColumn($column, $totals = false)
     {
+        $this->totals[$column->getName()] = $totals;
+        if($totals)
+        {
+            $column->addAttribute("onchange", "computeTotals()");
+        }
         $this->rawColumnNames[] = $column->getName();
         $this->columnNames[] = str_replace(".","_",$this->getName()) . "_" . $column->getName();
         $this->columnIds[] = $column->getId() . "%%index%%";

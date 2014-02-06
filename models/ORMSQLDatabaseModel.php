@@ -10,9 +10,15 @@ class ORMSQLDatabaseModel extends SQLDatabaseModel
     public $types = array();
     public $options = array();
     public $values = array();
+    
+    /**
+     * @deprecated
+     * @var array
+     */
     public $validators = array();
     public $keys = array();
     public $unique = array();
+    public $required = array();
     
     public function __construct($package, $name)
     {
@@ -81,6 +87,11 @@ class ORMSQLDatabaseModel extends SQLDatabaseModel
             if(array_search($name, $this->unique) !== false)
             {
                 $field['unique'] = true;
+            }
+            
+            if(array_search($name, $this->required) !== false)
+            {
+                $field['required'] = true;
             }
 
             if(isset($this->references[$name]))

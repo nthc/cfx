@@ -305,10 +305,13 @@ background-color:#DCECAE;
 padding:5px;
 margin:0px;
 }
+.fapi-grid-footer{
+    font-weight:bold;
+}
 
 .fapi-grid-header-table
 {
-	border-collapse:collapse;
+    border-collapse:collapse;
 }
 
 /************************ 
