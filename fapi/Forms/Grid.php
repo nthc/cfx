@@ -135,7 +135,7 @@ class Grid extends Field
                             . "var total = 0;"
                             . "for(var i = 0; i < numRows; i++){"
                                 . "var number = $('#' + column + i).val();"
-                                . "if(!isNaN(parseInt(number))) total += parseInt(number);"
+                                . "if(!isNaN(parseDouble(number))) total += parseDouble(number);"
                             . "}"
                             . "$('#'+column+'-footer').html(total);"
                         . "}"

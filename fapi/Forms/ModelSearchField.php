@@ -81,7 +81,7 @@ class ModelSearchField extends Field
         $name = $this->getName();
         $hidden = new HiddenField($name,$this->getValue());
         $id = $this->getId();
-        $hidden->addAttribute("id", $id);
+        $hidden->addAttribute("id", $id);        
         $ret = $hidden->render();
                 
         if($this->storedFieldSet === false)
