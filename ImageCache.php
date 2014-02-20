@@ -91,7 +91,7 @@ class ImageCache
     }
 
     /**
-     * Caches an image and stores it in <tt>/app/cache/images/XXXXXX.cachew.XXX.jpeg</tt>.
+     * Caches an image and stores it in <tt>/app/temp/XXXXXX.cachew.XXX.jpeg</tt>.
      * This function gives preference to the width of the image. It would always
      * guarantee that the width of the outputed cached image is equal to the
      * width passed to the function.
@@ -104,7 +104,7 @@ class ImageCache
     {
         if(!is_file($file)) return;
         $uuid = md5($file);
-        $src = "/app/cache/images/$uuid.cachew.$width.jpeg";
+        $src = "/app/temp/$uuid.cachew.$width.jpeg";
         if(!is_file($src) || (filectime($file)>filectime($src)))
         {
             ImageCache::resize_image($file,SOFTWARE_HOME . $src,$width, 0,$tag);
@@ -113,7 +113,7 @@ class ImageCache
     }
 
     /**
-     * Caches an image and stores it in <tt>/app/cache/images/XXXXXX.cacheh.XXX.jpeg</tt>.
+     * Caches an image and stores it in <tt>/app/temp/XXXXXX.cacheh.XXX.jpeg</tt>.
      * This function gives preference to the width of the image. It would always
      * guarantee that the height of the outputed cached image is equal to the
      * height passed to the function.
@@ -126,7 +126,7 @@ class ImageCache
     {
         if(!is_file($file)) return;
         $uuid = md5($file);
-        $src = "/app/cache/images/$uuid.cacheh.$height.jpeg";
+        $src = "/app/temp/$uuid.cacheh.$height.jpeg";
         if(!is_file($src) || (filectime($file)>filectime($src)))
         {
             ImageCache::resize_image($file,SOFTWARE_HOME . $src,0, $height);
@@ -148,7 +148,7 @@ class ImageCache
     {
         if(!is_file($file)) return;
         $uuid = md5($file);
-        $src = SOFTWARE_HOME . "app/cache/images/$uuid.thumb.$width.$height.jpeg";
+        $src = SOFTWARE_HOME . "app/temp/$uuid.thumb.$width.$height.jpeg";
 
         if(!is_file($src) || (filectime($file)>filectime($src)))
         {
@@ -160,21 +160,21 @@ class ImageCache
 
             if($width>$height)
             {
-                ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",$width,0);
-                ImageCache::crop_image(SOFTWARE_HOME . "app/cache/images/$tempImage",$src,$width,$height,$head);
+                ImageCache::resize_image($file,SOFTWARE_HOME . "app/temp/$tempImage",$width,0);
+                ImageCache::crop_image(SOFTWARE_HOME . "app/temp/$tempImage",$src,$width,$height,$head);
             }
             else if($height>$width)
             {
-                ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",$height,0);
-                ImageCache::crop_image(SOFTWARE_HOME . "app/cache/images/$tempImage",$src,$width,$height,$head);
+                ImageCache::resize_image($file,SOFTWARE_HOME . "app/temp/$tempImage",$height,0);
+                ImageCache::crop_image(SOFTWARE_HOME . "app/temp/$tempImage",$src,$width,$height,$head);
             }
             else
             {
-                if($i_width>$i_height) ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",0,$height);
-                else ImageCache::resize_image($file,SOFTWARE_HOME . "app/cache/images/$tempImage",$width,0);
-                ImageCache::crop_image(SOFTWARE_HOME . "app/cache/images/$tempImage",$src,$width,$height,$head);
+                if($i_width>$i_height) ImageCache::resize_image($file,SOFTWARE_HOME . "app/temp/$tempImage",0,$height);
+                else ImageCache::resize_image($file,SOFTWARE_HOME . "app/temp/$tempImage",$width,0);
+                ImageCache::crop_image(SOFTWARE_HOME . "app/temp/$tempImage",$src,$width,$height,$head);
             }
-            unlink(SOFTWARE_HOME . "app/cache/images/$tempImage");
+            unlink(SOFTWARE_HOME . "app/temp/$tempImage");
         }
         return $src;
     }
