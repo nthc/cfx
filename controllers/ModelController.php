@@ -1012,6 +1012,10 @@ class ModelController extends Controller
                     'system.notes.note_time',
                     'system.users.first_name',
                     'system.users.last_name'
+                ),
+                'conditions' => Model::condition(array(
+                        'item_type' => $this->model->package
+                    )
                 )
             )
         );
