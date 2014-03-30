@@ -252,7 +252,7 @@ class ModelController extends Controller
                 $this->toolbar->addLinkButton("New",$this->name . "/add");
                 if(Application::$config['raw_mode']) 
                 {
-                    $this->toolbar->addLinkButton("New",$this->name . "/add_raw");
+                    $this->toolbar->addLinkButton("New Raw",$this->name . "/add_raw");
                 }
             }
         }
