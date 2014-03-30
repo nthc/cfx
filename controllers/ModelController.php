@@ -250,10 +250,6 @@ class ModelController extends Controller
             if(User::getPermission($this->permissionPrefix . "_can_add") || $this->forceAddOperation)
             {
                 $this->toolbar->addLinkButton("New",$this->name . "/add");
-                if(Application::$config['raw_mode']) 
-                {
-                    $this->toolbar->addLinkButton("New Raw",$this->name . "/add_raw");
-                }
             }
         }
 
@@ -280,10 +276,6 @@ class ModelController extends Controller
             if(User::getPermission($this->permissionPrefix."_can_edit") || $this->forceEditOperation)
             {
                 $this->table->addOperation("edit","Edit");
-                if(Application::$config['raw_mode']) 
-                {
-                    $this->table->addOperation("edit_raw","Raw Edit");
-                }                
             }
         }
         
@@ -514,44 +506,6 @@ class ModelController extends Controller
         return $form;
     }
     
-    public function add_raw()
-    {
-    	if(!User::getPermission($this->permissionPrefix."_can_add")) return;
-        if(!Application::$config['raw_mode']) return;
-        $form = $this->createDefaultForm();
-        $this->label = "New ".$this->label;
-        $form->setCallback($this->callbackMethod,
-            array(
-                "action"=>"add",
-                "instance"=>$this,
-                "success_message"=>"Added new ".$this->model->name,
-                "form"=>$form
-            )
-        );
-        return $form->render();       
-    }
-    
-    public function edit_raw()
-    {
-    	if(!User::getPermission($this->permissionPrefix."_can_edit")) return;
-        if(!Application::$config['raw_mode']) return;
-        $form = $this->createDefaultForm();
-        $form->setData($this->getModelData($params[0]), $this->model->getKeyField(), $params[0]);
-        $this->label = "Edit ".$this->label;
-        $form->setCallback(
-            $this->callbackMethod,
-            array(
-                "action"=>"edit",
-                "instance"=>$this,
-                "success_message"=>"Edited ".$this->model->name,
-                "key_field"=>$this->model->getKeyField(),
-                "key_value"=>$params[0],
-                "form"=>$form
-            )
-        );
-        return $form->render();        
-    }
-
     /**
      * Controller action method for adding new items to the model database.
      * @return String
