@@ -250,6 +250,10 @@ class ModelController extends Controller
             if(User::getPermission($this->permissionPrefix . "_can_add") || $this->forceAddOperation)
             {
                 $this->toolbar->addLinkButton("New",$this->name . "/add");
+                if(Application::$config['raw_mode']) 
+                {
+                    $this->toolbar->addLinkButton("New",$this->name . "/add_raw");
+                }
             }
         }
 
@@ -276,6 +280,10 @@ class ModelController extends Controller
             if(User::getPermission($this->permissionPrefix."_can_edit") || $this->forceEditOperation)
             {
                 $this->table->addOperation("edit","Edit");
+                if(Application::$config['raw_mode']) 
+                {
+                    $this->table->addOperation("edit_raw","Raw Edit");
+                }                
             }
         }
         
@@ -377,6 +385,93 @@ class ModelController extends Controller
         }
         return $return;
     }
+    
+    private function createDefaultForm()
+    {
+        // Generate a form automatically
+        $fieldNames = array();
+        $fields = $this->model->getFields();
+
+        $form = new Form();
+        $form->setModel($this->model);
+        $names = array_keys($fields);
+
+        for($i=0; $i<count($fields); $i++)
+        {
+            $field = $fields[$names[$i]];
+            if($field['key'] == 'primary') continue;
+
+            if($fieldNames[$i]["renderer"]=="")
+            {
+                if($field["reference"]=="")
+                {
+                    switch($field["type"])
+                    {
+                        case "boolean":
+                            $element = new Checkbox($field["label"],$field["name"],$field["description"],1);
+                            break;
+
+                        case "enum":
+                            $element = new SelectionList($field["label"],$field["name"]);
+                            foreach($field["options"] as $value => $option)
+                            {
+                                $element->addOption($option, $value."");
+                            }
+                            break;
+
+                        case "date":
+                        case "datetime":
+                            $element = new DateField($field["label"], $field["name"]);
+                            break;
+
+                        case "integer":
+                        case "double":
+                            $element = new TextField($field["label"],$field["name"],$field["description"]);
+                            $element->setAsNumeric();
+                            break;
+
+                        case "textarea":
+                            $element = new TextArea($field["label"],$field["name"],$field["description"]);
+                            break;
+
+                        default:
+                            $element = new TextField($field["label"],$field["name"],$field["description"]);
+                            break;
+                    }
+                }
+                else
+                {
+                    $element = new ModelField($field["reference"],$field["referenceValue"]);
+                }
+
+                foreach($field["validators"] as $validator)
+                {
+                    switch($validator["type"])
+                    {
+                        case "required":
+                            $element->setRequired(true);
+                            break;
+                        case "unique":
+                            $element->setUnique(true);
+                            break;
+                        case "regexp":
+                            $element->setRegexp((string)$validator["parameter"]);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                $renderer = (string)$fieldNames[$i]["renderer"];
+                $element = new $renderer();
+            }
+            $form->add($element);
+        }
+
+        $form->addAttribute("style","width:50%");
+        $form->useAjax(true, false);
+        return $form;
+    }
 
     /**
      * Returns the form that this controller uses to manipulate the data stored
@@ -414,90 +509,47 @@ class ModelController extends Controller
         }
         else
         {
-            // Generate a form automatically
-            $fieldNames = array();
-            $fields = $this->model->getFields();
-
-            $form = new Form();
-            $form->setModel($this->model);
-            $names = array_keys($fields);
-
-            for($i=0; $i<count($fields); $i++)
-            {
-                $field = $fields[$names[$i]];
-                if($field['key'] == 'primary') continue;
-                
-                if($fieldNames[$i]["renderer"]=="")
-                {
-                    if($field["reference"]=="")
-                    {
-                        switch($field["type"])
-                        {
-                            case "boolean":
-                                $element = new Checkbox($field["label"],$field["name"],$field["description"],1);
-                                break;
-
-                            case "enum":
-                                $element = new SelectionList($field["label"],$field["name"]);
-                                foreach($field["options"] as $value => $option)
-                                {
-                                    $element->addOption($option, $value."");
-                                }
-                                break;
-
-                            case "date":
-                            case "datetime":
-                                $element = new DateField($field["label"], $field["name"]);
-                                break;
-
-                            case "integer":
-                            case "double":
-                                $element = new TextField($field["label"],$field["name"],$field["description"]);
-                                $element->setAsNumeric();
-                                break;
-
-                            case "textarea":
-                                $element = new TextArea($field["label"],$field["name"],$field["description"]);
-                                break;
-
-                            default:
-                                $element = new TextField($field["label"],$field["name"],$field["description"]);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        $element = new ModelField($field["reference"],$field["referenceValue"]);
-                    }
-
-                    foreach($field["validators"] as $validator)
-                    {
-                        switch($validator["type"])
-                        {
-                            case "required":
-                                $element->setRequired(true);
-                                break;
-                            case "unique":
-                                $element->setUnique(true);
-                                break;
-                            case "regexp":
-                                $element->setRegexp((string)$validator["parameter"]);
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    $renderer = (string)$fieldNames[$i]["renderer"];
-                    $element = new $renderer();
-                }
-                $form->add($element);
-            }
-
-            $form->addAttribute("style","width:50%");
-            $form->useAjax(true, false);
+            $form = $this->createDefaultForm();
         }
         return $form;
+    }
+    
+    public function add_raw()
+    {
+    	if(!User::getPermission($this->permissionPrefix."_can_add")) return;
+        if(!Application::$config['raw_mode']) return;
+        $form = $this->createDefaultForm();
+        $this->label = "New ".$this->label;
+        $form->setCallback($this->callbackMethod,
+            array(
+                "action"=>"add",
+                "instance"=>$this,
+                "success_message"=>"Added new ".$this->model->name,
+                "form"=>$form
+            )
+        );
+        return $form->render();       
+    }
+    
+    public function edit_raw()
+    {
+    	if(!User::getPermission($this->permissionPrefix."_can_edit")) return;
+        if(!Application::$config['raw_mode']) return;
+        $form = $this->createDefaultForm();
+        $form->setData($this->getModelData($params[0]), $this->model->getKeyField(), $params[0]);
+        $this->label = "Edit ".$this->label;
+        $form->setCallback(
+            $this->callbackMethod,
+            array(
+                "action"=>"edit",
+                "instance"=>$this,
+                "success_message"=>"Edited ".$this->model->name,
+                "key_field"=>$this->model->getKeyField(),
+                "key_value"=>$params[0],
+                "form"=>$form
+            )
+        );
+        return $form->render();        
     }
 
     /**
@@ -506,6 +558,7 @@ class ModelController extends Controller
      */
     public function add()
     {
+    	if(!User::getPermission($this->permissionPrefix."_can_add")) return;
         if($this->apiMode === true)
         {
             $return = $this->model->setData($_REQUEST);
@@ -661,7 +714,7 @@ class ModelController extends Controller
                 "form"=>$form
             )
         );
-        return $form->render(); //ModelController::frameText(400,$form->render());
+        return $form->render();
     }
 
     /**
