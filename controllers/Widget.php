@@ -48,7 +48,7 @@ abstract class Widget
         $rendered = $object->render();
         if($rendered !== false) 
         {
-            return "<div class='big-allround-shadow widget'><h2>{$object->label}</h2><div class='widget-content'>" . $rendered . "</div></div>";
+            return "<div class='widget'><h2>{$object->label}</h2><div class='widget-content'>" . $rendered . "</div></div>";
         }
         else
         {
