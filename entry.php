@@ -152,6 +152,10 @@ else
         Application::addJavaScript(Application::getLink("/lib/js/wyf.js"));
         
         $t->assign('username', $_SESSION["user_name"]);
+        $t->assign('firstname', $_SESSION['user_firstname']);
+        $t->assign('lastname', $_SESSION['user_lastname']);
+        //var_dump($_SESSION);
+        
         if (isset($_GET["notification"]))
         {
             $t->assign('notification', "<div id='notification'>" . $_GET["notification"] . "</div>");
@@ -168,20 +172,23 @@ else
         }
     
         $top_menu_items = explode("/", $_GET["q"]);
-        for($i = 0; $i < count($top_menu_items); $i++)
+        if($top_menu_items[0] != '')
         {
-            $item = $top_menu_items[$i];
-            $link .= "/" . $item;
-            while(is_numeric($top_menu_items[$i + 1]))
+            for($i = 0; $i < count($top_menu_items); $i++)
             {
-                $link .= "/" . $top_menu_items[$i + 1];
-                $i++;
+                $item = $top_menu_items[$i];
+                $link .= "/" . $item;
+                while(is_numeric($top_menu_items[$i + 1]))
+                {
+                    $link .= "/" . $top_menu_items[$i + 1];
+                    $i++;
+                }
+                $item = str_replace("_", " ", $item);
+                $item = ucwords($item);
+                $top_menu .= "<a href='".Application::getLink($link)."'><span>$item</span></a>";
             }
-            $item = str_replace("_", " ", $item);
-            $item = ucwords($item);
-            $top_menu .= " <a href='".Application::getLink($link)."'><span>$item</span></a>";
+            $t->assign('top_menu', $top_menu);
         }
-        $t->assign('top_menu', $top_menu);
     }
     
     // Log the route into the audit trail if it is enabled
