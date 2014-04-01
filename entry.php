@@ -50,6 +50,9 @@ $authExcludedPaths = array(
     "system/login",
 );
 
+// Can be overridden in the app bootstrap
+$fapiStyleSheet = false;
+
 $t = new TemplateEngine();
 Application::$templateEngine = $t;
 
@@ -218,17 +221,26 @@ else
     }
     
     // Load the styleseets and the javascripts
-    Application::addStylesheet("css/fapi.css", "lib/fapi/");
-    Application::addStylesheet("lib/js/kalendae/kalendae.css", '');
-    Application::addStylesheet("css/main.css");
+    // Bootstrap the application
+    require SOFTWARE_HOME . "app/bootstrap.php";    
+    
+    if($fapiStyleSheet === false)
+    {
+        Application::preAddStylesheet("css/fapi.css", "lib/fapi/");
+    }
+    else
+    {
+        Application::preAddStylesheet($fapiStyleSheet);
+    }
+    
+    Application::preAddStylesheet("kalendae/kalendae.css", 'lib/js/');
+    Application::preAddStylesheet("css/main.css");
     
     Application::addJavaScript(Application::getLink("/lib/fapi/js/fapi.js"));
     Application::addJavaScript(Application::getLink("/lib/js/jquery.js"));
     Application::addJavaScript(Application::getLink("/lib/js/kalendae/kalendae.js"));
     Application::addJavaScript(Application::getLink("/lib/js/json2.js"));
     
-    // Bootstrap the application
-    require SOFTWARE_HOME . "app/bootstrap.php";    
     
     // Blast the HTML code to the browser!
     Application::$site_name = Application::$config['name'];

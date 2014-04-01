@@ -115,7 +115,19 @@ class Application
      */
     public static function addStylesheet($href, $pathPrefix = false, $media="all")
     {
-        Application::$stylesheets[] = array("href"=>($pathPrefix === false ? "app/themes/" . Application::$config['theme'] . "/" : $pathPrefix) . $href,"media"=>$media);
+        Application::$stylesheets[] = self::prepareStylesheetEntry($href, $pathPrefix, $media);
+    }
+    
+    public static function preAddStylesheet($href, $pathPrefix = false, $media="all")
+    {
+        array_unshift(Application::$stylesheets, self::prepareStylesheetEntry($href, $pathPrefix, $media));
+    }
+    
+    private static function prepareStylesheetEntry($href, $pathPrefix, $media)
+    {
+        return array(
+            "href"=>($pathPrefix === false ? "app/themes/" . Application::$config['theme'] . "/" : $pathPrefix) . $href,"media"=>$media
+        );
     }
 
     /**
