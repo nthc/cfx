@@ -195,6 +195,10 @@ function expand(id)
         function()
         {
             document.cookie = id+"="+$("#"+id).css("display");
+            if(typeof menuExpanded === 'function')
+            {
+                menuExpanded();
+            }
         }
     );
 }
