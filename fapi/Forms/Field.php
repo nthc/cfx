@@ -94,6 +94,11 @@ abstract class Field extends Element
     {
         return $this->value;
     }
+    
+    public function setWithDisplayValue($value)
+    {
+        $this->value = $value;
+    }
 
     /**
      * Sets the required status of the field.

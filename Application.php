@@ -97,6 +97,10 @@ class Application
      */
     public static $cli = false;
     
+    /**
+     * 
+     * @var type 
+     */
     public static $cliOutput = "";
     
     public static $config;

@@ -75,10 +75,13 @@ class ORMSQLDatabaseModel extends SQLDatabaseModel
 
             if(isset($this->keys[$name]))
             {
+                // Reset any existing keys
                 foreach($this->fields as $tempName => $tempField)
                 {
                     if($tempField["key"] == $this->keys[$name])
+                    {
                         unset($this->fields[$tempName]['key']);
+                    }
                 }
                 $this->fields[$name]["key"] = $this->keys[$name];
                 $this->fields[$name]["validators"] = array();

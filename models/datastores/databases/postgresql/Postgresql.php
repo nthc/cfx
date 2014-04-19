@@ -672,7 +672,7 @@ class Postgresql extends SQLDBDataStore
         {
             $fields[0]['key'] = 'primary';
         }
-
+        
         return $fields;
     }
 }

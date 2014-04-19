@@ -98,6 +98,11 @@ class Checkbox extends Field
     {
         return $this->getValue()==$this->checkedValue?"Yes":"No";
     }
+    
+    public function setWithDisplayValue($value) 
+    {
+        $this->setValue($value == 'Yes' ? $this->checkedValue : null);
+    }
 
     public function getRequired()
     {

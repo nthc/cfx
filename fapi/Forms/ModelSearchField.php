@@ -130,6 +130,25 @@ class ModelSearchField extends Field
         $ret .= "<div class='fapi-popup' id='{$id}_search_area'></div>";
         return $ret;
     }
+    
+    public function setWithDisplayValue($value) 
+    {
+        $conditions = array();
+        foreach($this->searchFields as $searchField)
+        {
+            $conditions[] = "{$searchField} = '{$value}'";
+        }
+        $conditions = implode(" OR ", $conditions);
+        
+        $item = $this->model->get(
+            array(
+                'fields' => array($this->getName()),
+                'conditions' => $conditions
+            )
+        );
+        
+        $this->setValue($item[0][$this->getName()]);
+    }
 
     public function getDisplayValue()
     {

@@ -21,6 +21,8 @@ class RelationshipField extends Field
     protected $subModelPathInfo;
     protected $mainModel;
     protected $subModel;
+    protected $mainModelField;
+    protected $subModelField;
 
     /**
      * Creates a new relationship field.
@@ -35,6 +37,8 @@ class RelationshipField extends Field
         $this->mainSelectionList = new SelectionList();
         $this->subSelectionList = new SelectionList();
         $this->setName($name);
+        $this->mainModelField = $mainModelPath;
+        $this->subModelField = $subModelPath;
 
         //$subSelectionList = new SelectionList();
         $mainModelPathInfo = Model::resolvePath($mainModelPath);
@@ -69,13 +73,51 @@ class RelationshipField extends Field
         $this->subSelectionList->setName($name); 
         return $this;
     }
+    
+    public function setWithDisplayValue($value) 
+    {
+        $parts = explode("//", $value);
+        $mainId = $this->mainModel->getKeyField();
+        
+        $mainField = Model::resolvePath($this->mainModelField);
+        $mainField = $mainField['field'];
+        
+        $subField = Model::resolvePath($this->subModelField);
+        $subField = $subField['field'];
+        
+        $possibleMainItem = reset($this->mainModel->getWithField2("trim($mainField)", trim($parts[0])));
+        if($possibleMainItem === false)
+        {
+            parent::setValue(null);
+            return;
+        }
+        
+        $possibleSubItem = reset($this->subModel->get(
+            array(
+                    'conditions' => "$mainId = $possibleMainItem[$mainId] and trim($subField) = '" . trim($this->mainModel->escape($parts[1])) . "'"
+                )
+            , Model::MODE_ASSOC, false, false
+        ));
+        
+        parent::setValue($possibleSubItem[$this->getName()]);
+    }
 
     public function getDisplayValue()
     {
         $value = $this->getValue();
         if($value=="") return;
-        $mainValue = $this->subModel->get(array("conditions"=>"{$this->subModel->getKeyField()}={$value}"),Model::MODE_ARRAY);
-        return $mainValue[0][1].", ".$mainValue[0][2];
+        
+        $data = reset(SQLDBDataStore::getMulti(
+            array(
+                'fields' => array(
+                    $this->mainModelField,
+                    $this->subModelField
+                ),
+                'conditions' => "{$this->name} = '{$value}'"
+            )
+        ));
+        
+        return array_shift($data) ." // ". array_shift($data);
     }
 
     public function render()

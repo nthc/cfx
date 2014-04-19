@@ -702,6 +702,15 @@ class ModelController extends Controller
      */
     public function export($params)
     {
+        $fields = $this->getForm()->getFields();
+        $fieldNames = array();
+        $headers = array();
+        foreach($fields as $field)
+        {
+            $fieldNames[] = $field->getName();
+            $headers[] = $field->getLabel();
+        }
+        
     	switch($params[0])
         {
             case "pdf":
@@ -724,7 +733,7 @@ class ModelController extends Controller
                 {
                     $report = new CSVReport();
                     $report->setDownloadFileName("{$this->model->name}_template.csv");
-                    $table = new TableContent($this->model->getLabels(),array());
+                    $table = new TableContent($headers, array());
                     $report->add($table);
                     $report->output();
                     die();
@@ -739,13 +748,19 @@ class ModelController extends Controller
         $title = new TextContent($this->label);
         $title->style["size"] = 12;
         $title->style["bold"] = true;
-
-        $headers = $this->model->getLabels();
-
-        $fieldNames = $this->model->getFieldNames();
-        array_shift($fieldNames);
+        
+        $this->model->setQueryResolve(false);
         $data = $this->model->get(array("fields"=>$fieldNames));
-        //$data = $this->model->formatData();
+        
+        foreach($data as $j => $row)
+        {
+            for($i = 0; $i < count($row); $i++)
+            {
+                $fields[$i]->setValue($row[$fieldNames[$i]]);
+                $data[$j][$fieldNames[$i]] = strip_tags($fields[$i]->getDisplayValue());
+            }
+        }
+        
         $table = new TableContent($headers,$data);
         $table->style["decoration"] = true;
 
@@ -756,52 +771,37 @@ class ModelController extends Controller
     
     private function doImport()
     {
-        $uploadfile = "app/uploads/" . uniqid() . "_data";
-        $cleared = move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);        
-        
+        $uploadfile = "app/temp/" . uniqid() . "_data";
+        $cleared = move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);                
         if (!$cleared) die("Failed to upload file");
             
         $file = fopen($uploadfile,"r");
         $headers = fgetcsv($file);
         $model = $this->model;
-        $fieldInfo = $model->getFields();
+        $formFields = $this->getForm()->getFields();
+        $fileFields = array();
         
-        foreach($fieldInfo as $key => $field)
+        foreach($formFields as $field)
         {
-            if($field['key'] == 'primary')
+            $index = array_search($field->getLabel(), $headers);
+            if($index !== false)
             {
-                unset($fieldInfo[$key]);
+                $fileFields[] = $field;
             }
         }
-        $fields = array_keys($fieldInfo);
-        $primary_key = $model->getKeyField("primary");
+        
+        $primary_key = $model->getKeyField();
         $secondary_key = $model->getKeyField("secondary");
         $tertiary_key = $model->getKeyField("tertiary");
         $hasErrors = false;
-
-        foreach($model->getLabels() as $i => $label)
-        {
-            if(strtolower($label)!=strtolower($headers[$i]))
-            {
-                $hasErrors = true;
-                $formatErrors .=  "<li>Invalid file format ($label and {$headers[$i]} do not match)</li>";
-            }
-        }
         
-        if($hasErrors)
-        {
-            echo "<ol>$formatErrors</ol>";
-            return;
-        }
-
         if($secondary_key == null)
         {
             print "<div id='information'><h4>Warning</h4>  This model has no secondary keys so imported data may overlap</div>";
         }
 
-
         $out = "<table class='data-table'>";
-        $out .= "<thead><tr><td>".implode("</td><td>",$headers)."</td></tr></thead>";
+        $out .= "<thead><tr><td>Save Status</td><td>".implode("</td><td>",$headers)."</td></tr></thead>";
         $out .= "<tbody>";
         $line = 1;
         $status = "<h3>Successfully Imported</h3>";
@@ -813,14 +813,20 @@ class ModelController extends Controller
             $data = fgetcsv($file);
             $model_data = array();
             $errors = array();
-            if(count($data)<count($headers)) break;
+            $hasValues = false;
+            
+            if(!is_array($data)) continue;
 
             foreach($data as $i => $value)
             {
-                $model_data[$fields[$i]] = $value;
-            }                
-            $display_data = $model_data;
-
+                if(trim($value) !== '') $hasValues = true;
+                $formFields[$i]->setWithDisplayValue($value);
+                $display_data[$fileFields[$i]->getName()] = $value;
+                $model_data[$fileFields[$i]->getName()] = $formFields[$i]->getValue();
+            }
+            
+            if(!$hasValues) continue;
+            
             if($secondary_key!=null && count($errors==false))
             {
                 $temp_data = $model->getWithField($secondary_key,$model_data[$secondary_key]);
@@ -831,28 +837,32 @@ class ModelController extends Controller
                         $model_data[$primary_key] = $temp_data[0][$primary_key];
                         $model_data[$tertiary_key] = $temp_data[0][$tertiary_key];
                     }
-                    $validated = $model->setResolvableData($model_data,$secondary_key,$model_data[$secondary_key]);
-                    if($validated===true) $model->update($secondary_key,$model_data[$secondary_key]);
+                                        
+                    $validated = $model->setData($model_data,$primary_key,$temp_data[0][$primary_key]);
+                    if($validated===true) $model->update($primary_key,$temp_data[0][$primary_key]);
+                    $saveStatus = 'Updated';
                 }
                 else
                 {
-                    $validated = $model->setResolvableData($model_data);
+                    $validated = $model->setData($model_data);
                     if($validated===true) $model->save();
+                    $saveStatus = 'Added';
                 }
             }
             else
             {
-                $validated = $model->setResolvableData($model_data);
+                $validated = $model->setData($model_data);
                 if($validated===true) $model->save();
+                $saveStatus = 'Added';
             }
 
             if($validated===true)
             {
-                $out .= "<tr><td>".implode("</td><td>",$display_data)."</td></tr>";
+                $out .= "<tr><td>$saveStatus</td><td>".implode("</td><td>",$display_data)."</td></tr>";
             }
             else
             {
-                $out .= "<tr style='border:1px solid red'>";
+                $out .= "<tr style='border:1px solid red'><td>Error</td>";
                 foreach($display_data as $field=>$value)
                 {
                     $out .= "<td>$value";
@@ -887,7 +897,7 @@ class ModelController extends Controller
         }
         else
         {
-            print $status.$out;
+            print "$status<div style='overflow:auto; height:400px; border:1px solid #909090'>$out</div>";
         }
         die();
     }

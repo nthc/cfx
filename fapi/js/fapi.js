@@ -176,14 +176,14 @@ function fapiStartUpload(field, form, script, func, showFieldAfterUpload)
     window.frames[tempId].name = tempId;
 
     var callback =
-            function()
-            {
-                removeEvent(document.getElementById(tempId), "load", callback);
-                callback_data = document.getElementById(tempId).contentDocument.body.innerHTML;
-                remove(document.getElementById(tempId));
-                remove(document.getElementById(field.id + "_upload_notify"));
-                eval(func);
-            }
+        function()
+        {
+            removeEvent(document.getElementById(tempId), "load", callback);
+            callback_data = document.getElementById(tempId).contentDocument.body.innerHTML;
+            remove(document.getElementById(tempId));
+            remove(document.getElementById(field.id + "_upload_notify"));
+            eval(func);
+        };
     addEvent(document.getElementById(tempId), "load", callback);
 
     //properties of form

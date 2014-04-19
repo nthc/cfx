@@ -1,25 +1,5 @@
 <?php
 /**
- * An item that can be added to a selection list.
- */
-class SelectionListItem
-{
-    public $label;
-    public $value;
-
-    public function __construct($label="", $value="")
-    {
-        $this->label = $label;
-        $this->value = $value;
-    }
-
-    public function __tostring()
-    {
-        return $this->label;
-    }
-}
-
-/**
  * Renders a selection list 
  */
 class SelectionList extends Field
@@ -58,11 +38,11 @@ class SelectionList extends Field
         if($group != null)
         {
             $this->hasGroups = true;
-            $this->groupedOptions[$group][] = new SelectionListItem($label, $value);
+            $this->groupedOptions[$group][$value] = $label ; //[] = new SelectionListItem($label, $value);
         }
         else
         {
-            $this->options[] = new SelectionListItem($label, $value);
+            $this->options[$value] = $label; // new SelectionListItem($label, $value);
         }
         return $this;
     }
@@ -93,17 +73,17 @@ class SelectionList extends Field
             foreach($this->groupedOptions as $group => $options)
             {
                 $ret .= "<optgroup label='$group'>";
-                foreach($options as $option)
+                foreach($options as $value => $label)
                 {
-                    $ret .= "<option value='$option->value' ".($this->getValue()==$option->value?"selected='selected'":"").">$option->label</option>";
+                    $ret .= "<option value='$value' ".($this->getValue()==$value?"selected='selected'":"").">$label</option>";
                 }
                 $ret .= "</optgroup>";
                 if(count($this->options))
                 {
                     $ret .= "<optgroup label='Un Grouped'>";
-                    foreach($this->options as $option)
+                    foreach($this->options as $value => $label)
                     {
-                        $ret .= "<option value='$option->value' ".((string)$this->getValue()===(string)$option->value?"selected='selected'":"").">$option->label</option>";
+                        $ret .= "<option value='$value' ".((string)$this->getValue()===(string)$value?"selected='selected'":"").">$label</option>";
                     }
                     $ret .= "</optgroup>";
                 }
@@ -111,9 +91,9 @@ class SelectionList extends Field
         }
         else
         {
-            foreach($this->options as $option)
+            foreach($this->options as $value => $label)
             {
-                $ret .= "<option value='$option->value' ".((string)$this->getValue()===(string)$option->value?"selected='selected'":"").">$option->label</option>";
+                $ret .= "<option value='$value' ".((string)$this->getValue()===(string)$value?"selected='selected'":"").">$label</option>";
             }
         }
         $ret .= "</select>";
@@ -123,15 +103,35 @@ class SelectionList extends Field
 
     public function getDisplayValue()
     {
-        foreach($this->options as $option)
+        foreach($this->options as $value => $label)
         {
-            if($option->value == $this->getValue())
+            if($value == $this->getValue())
             {
-                return $option->label;
+                return $label;
             }
         }
         return $this->value;
     }
+    
+    public function setWithDisplayValue($displayValue) 
+    {
+        $value  = $this->getValueWithLabel($displayValue);
+        if($value !== false)
+            $this->setValue($value);
+        else
+            $this->setValue (null);
+    }
+    
+    public function getLabelWithValue($value)
+    {
+        return $this->options[$value];
+    }
+    
+    public function getValueWithLabel($label)
+    {
+        return array_search($label, $this->options);
+    }
+    
 
     public function hasOptions()
     {
@@ -147,12 +147,7 @@ class SelectionList extends Field
 
     public function getOptions()
     {
-        $options = array();
-        foreach($this->options as $option)
-        {
-            $options += array($option->value=>$option->label);
-        }
-        return $options;
+        return $this->options;
     }
 }
-?>
+

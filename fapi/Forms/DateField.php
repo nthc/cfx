@@ -16,8 +16,13 @@ class DateField extends TextField
 
     public function getDisplayValue()
     {
-        $format = $this->hasTime ? "jS F, Y H:i:s" : "jS F, Y";
+        $format = $this->hasTime ? "d/m/Y H:i:s" : "d/m/Y";
         return $this->getValue()!==""?date($format ,(int)$this->getValue()):"";
+    }
+    
+    public function setWithDisplayValue($value) 
+    {
+        $this->setValue($value);
     }
 
     public function render()
