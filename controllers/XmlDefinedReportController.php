@@ -601,7 +601,7 @@ class XmlDefinedReportController extends ReportController
                     $fields[$key] = (string)$field;
 
                     $sortingField->addOption(str_replace("\\n"," ",$fieldInfo["label"]),$model->getDatabase().".".$fieldInfo["name"]);
-                    $grouping1->addOption(str_replace("\\n"," ",$field["label"]), $field);
+                    $grouping1->addOption(str_replace("\\n"," ",$field["label"]), (string)$field);
 
                     if(array_search($model->getKeyField(),$this->referencedFields)=== false || $fieldInfo["type"]=="double" || $fieldInfo["type"] == "date")
                     {
