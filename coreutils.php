@@ -33,7 +33,7 @@ function add_include_path($path, $addBase = true)
     set_include_path(($addBase ? SOFTWARE_HOME : "") .$path . PATH_SEPARATOR . get_include_path());
 }
 
-function __autoload($class)
+function autoloader($class)
 {
     if((@include_once $class.".php") === false)
     {
@@ -91,3 +91,5 @@ function get_property($array, $property)
 {
     return isset($array[$property]) ? $array[$property] : null;
 }
+
+spl_autoload_register('autoloader');
