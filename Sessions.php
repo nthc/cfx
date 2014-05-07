@@ -32,7 +32,8 @@ class Sessions
                     Db::escape($data), 
                     time() + $this->lifespan, 
                     $this->lifespan
-                )
+                ), 
+                'main'
             );
         }
         else
@@ -56,8 +57,8 @@ class Sessions
     {
         if(Application::$config['custom_sessions'])
         {
-            Db::query(sprintf("DELETE FROM system.sessions WHERE user_id = %d", $userId));
-            Db::query(sprintf("UPDATE system.sessions SET user_id = %d WHERE id = '%s'", $userId, self::getHandler()->getId()));
+            Db::query(sprintf("DELETE FROM system.sessions WHERE user_id = %d", $userId), 'main');
+            Db::query(sprintf("UPDATE system.sessions SET user_id = %d WHERE id = '%s'", $userId, self::getHandler()->getId()), 'main');
         }
     }
     
@@ -66,12 +67,13 @@ class Sessions
         $this->id = $sessionId;
         $result = reset(
             Db::query(
-                sprintf("SELECT data, lifespan, expires FROM system.sessions WHERE id = '%s'", $sessionId, time())
+                sprintf("SELECT data, lifespan, expires FROM system.sessions WHERE id = '%s'", $sessionId, time()),
+                'main'
             )
         );
         if($result['expires'] <= time())
         {
-            Db::query(sprintf("DELETE FROM system.sessions WHERE id = '%s'", $sessionId));
+            Db::query(sprintf("DELETE FROM system.sessions WHERE id = '%s'", $sessionId), 'main');
             $this->new = true;
             return '';
         }
@@ -94,13 +96,13 @@ class Sessions
     
     public function destroy($sessionId)
     {
-        Db::query(sprintf("DELETE FROM system.sessions WHERE id = '%s'", $sessionId));
+        Db::query(sprintf("DELETE FROM system.sessions WHERE id = '%s'", $sessionId), 'main');
         return true;        
     }
     
     public function gc($lifetime)
     {
-        Db::query(sprintf("DELETE FROM system.sessions WHERE expiry < %d", time()));
+        Db::query(sprintf("DELETE FROM system.sessions WHERE expiry < %d", time()), 'main');
         return true;
     }
     

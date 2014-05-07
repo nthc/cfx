@@ -585,6 +585,7 @@ abstract class Model implements ArrayAccess
         }
         else
         {
+            var_dump('Hello!', ENABLE_AUDIT_TRAILS, $this->disableAuditTrails);
             if(ENABLE_AUDIT_TRAILS === true  && $this->disableAuditTrails === false)
             {
                 SystemAuditTrailModel::log(
