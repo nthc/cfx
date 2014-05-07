@@ -42,7 +42,8 @@ class Sessions
                 sprintf(
                     "UPDATE system.sessions SET data = '%s', expires = %d WHERE id = '%s'",
                     db::escape($data), time() + $this->lifespan, $sessionId
-                )
+                ),
+                'main'
             );
         }
         return true;
