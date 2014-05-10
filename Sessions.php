@@ -2,7 +2,7 @@
 class Sessions
 {
     private $new = false;
-    private $lifespan = 600;
+    private $lifespan = 900;
     private $id;
     private static $handler = false;
     
@@ -80,6 +80,7 @@ class Sessions
         }
         else if(count($result) == 0)
         {
+            Db::query(sprintf("DELETE FROM system.sessions WHERE id = '%s'", $sessionId), 'main');
             $this->new = true;
             return '';
         }
