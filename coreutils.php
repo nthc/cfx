@@ -39,7 +39,7 @@ function autoloader($class)
     {
         if((@include_once str_replace("_", "/", $class) . '.php') === false)
         {
-            throw new Exception("Failed to load class $class");
+            
         }
     }
 }
