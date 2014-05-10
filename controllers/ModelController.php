@@ -1031,7 +1031,8 @@ class ModelController extends Controller
                     'system.users.last_name'
                 ),
                 'conditions' => Model::condition(array(
-                        'item_type' => $this->model->package
+                        'item_type' => $this->model->package,
+                        'item_id' => $params[0]
                     )
                 )
             )
