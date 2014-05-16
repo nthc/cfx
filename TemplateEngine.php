@@ -58,4 +58,13 @@ class TemplateEngine extends Smarty
         $t->assign($data);
         return $t->fetch("file:/" . getcwd() . "/$template");
     }
+    
+    public static function renderString($template, $data)
+    {
+        $file = "app/temp/" . uniqid() . ".tpl";
+        file_put_contents($file, $template);
+        $rendered = self::render($file, $data);
+        unlink($file);
+        return $rendered; 
+   }
 }

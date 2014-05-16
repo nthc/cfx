@@ -2,7 +2,7 @@
 class Sessions
 {
     private $new = false;
-    private $lifespan = 900;
+    private $lifespan = 1800;
     private $id;
     private static $handler = false;
     
