@@ -84,7 +84,7 @@ class Table
                 {
                     $params = "align='right'";
                 }
-                $table .= "<td $params >$value</td>";
+                $table .= "<td $params >" . strip_tags($value) . "</td>";
             }
             
             if($this->operations!=null)
