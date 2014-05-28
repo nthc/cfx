@@ -12,6 +12,7 @@ class HTMLReport extends Report
 
     public function output($file = null)
     {
+        if($file != null) ob_start();
         if($this->htmlHeaders)
         {
             header('Content-type: text/html');
@@ -153,7 +154,14 @@ class HTMLReport extends Report
                 break;
             }
         }
-
-        die();
+        if($file != null) 
+        {
+            $output = ob_get_clean();
+            file_put_contents($file, $output);
+        }
+        else 
+        {
+            die();
+        }
     }
 }
