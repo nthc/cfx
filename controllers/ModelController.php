@@ -987,6 +987,13 @@ class ModelController extends Controller
     public function notes($params)
     {
         $noteAttachments = Model::load('system.note_attachments');
+        
+        if($params[1] == 'delete')
+        {
+            $model = Model::load('system.notes');
+            $model->delete('note_id', $params[2]);
+            Application::redirect("{$this->path}/notes/{$params[0]}");
+        }
             
         if(isset($_POST['is_form_sent']))
         {
@@ -1063,7 +1070,9 @@ class ModelController extends Controller
             'lib/controllers/notes.tpl', 
             array(
                 'form' => $form->render(),
-                'notes' => $notes
+                'notes' => $notes,
+                'route' => $this->path,
+                'id' => $params[0]
             )
         );
     }

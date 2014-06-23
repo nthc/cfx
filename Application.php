@@ -37,6 +37,8 @@ class Application
 {
     const TYPE_MODULE = "type_module";
     const TYPE_MODEL = "type_model";
+    
+    public static $notes = array();
 
     /**
      * Initial or default template used for laying out the page.
@@ -220,6 +222,9 @@ class Application
             $t->assign('scripts',$t->fetch('javascripts.tpl'));
             $t->assign('title', Application::$title);
             $t->assign('session', $_SESSION);
+            $t->assign('info', 
+                array_merge((is_array($_SESSION['notes']) ? $_SESSION['notes'] : array()), self::$notes)
+            );
             $t->display(Application::$template);
         }
                 

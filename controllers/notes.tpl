@@ -13,6 +13,7 @@
         <ul>
         </div>
     {/if}    
+    <p><a style='font-size:smaller; color:#d0d0d0' href='{$route}/notes/{$id}/delete/{$notes[i].note_id}'>Delete this note</a></p>
 </div>
 {/section}
 {$form}
