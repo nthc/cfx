@@ -520,10 +520,10 @@ class Postgresql extends SQLDBDataStore
             $query .= " OFFSET {$params["offset"]}";
         }
 
-        if(isset($params['dont_join'])){
+        /*if(isset($params['dont_join'])){
             print $query . '<br/>';
             die();
-        }
+        }*/
         
         $data = $other_model->datastore->query($query,$mode);
 
