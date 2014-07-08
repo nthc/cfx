@@ -427,7 +427,9 @@ class Postgresql extends SQLDBDataStore
         {
             $tableList[] = $model->getDatabase();
         }
+        
         $joinConditions = array();
+        
         foreach($models as $model)
         {
             foreach($models as $other_model)
@@ -439,7 +441,6 @@ class Postgresql extends SQLDBDataStore
                 if(is_array($params['dont_join']))
                 {
                     if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
-                    if(array_search("{$other_model->package},{$model->package}", $params['dont_join']) !== false) continue;
                 }
                 
                 if($model->hasField($other_model->getKeyField()))
@@ -519,6 +520,11 @@ class Postgresql extends SQLDBDataStore
             $query .= " OFFSET {$params["offset"]}";
         }
 
+        if(isset($params['dont_join'])){
+            print $query . '<br/>';
+            die();
+        }
+        
         $data = $other_model->datastore->query($query,$mode);
 
         if($params["moreInfo"] === true)
