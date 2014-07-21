@@ -827,7 +827,7 @@ class ModelController extends Controller
             
             if(!$hasValues) continue;
             
-            if($secondary_key!=null && count($errors==false))
+            if($secondary_key!=null && $model_data[$secondary_key] != '')
             {
                 $temp_data = $model->getWithField($secondary_key,$model_data[$secondary_key]);
                 if(count($temp_data)>0) 
