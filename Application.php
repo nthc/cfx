@@ -30,7 +30,6 @@
  * can consider this class as the main controller since it is the main point of
  * call during class loading.
  * 
- * @package wyf.core
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  */
 class Application

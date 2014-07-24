@@ -268,6 +268,13 @@ abstract class SQLDBDataStore extends DataStore
         return SQLDBDataStore(SQLDBDataStore::$multiQueryCache[$key]);
     }
 
+    /**
+     * 
+     * 
+     * @param type $params
+     * @param type $mode
+     * @return type
+     */
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
         $method = new ReflectionMethod(SQLDBDataStore::$activeDriverClass, "getMulti");

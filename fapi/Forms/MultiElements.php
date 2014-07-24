@@ -5,7 +5,6 @@
  * a single form to collect multiple data. These different data can be stored
  * into different models.
  *
- * @todo Work on displaying errors if a multi form fails to validate
  * @author james
  * @ingroup Forms
  */

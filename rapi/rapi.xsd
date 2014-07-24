@@ -63,6 +63,21 @@
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
+                    <xs:sequence>
+                        <xs:element name="dont_join" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="pair" minOccurs="1" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:simpleContent>
+                                                <xs:extension base="xs:string" />
+                                            </xs:simpleContent>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
                     <xs:attribute name="name" type="xs:string" />
                     <xs:attribute name="conditions" type="xs:string" />
                 </xs:complexType>

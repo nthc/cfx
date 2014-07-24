@@ -323,6 +323,7 @@ class Postgresql extends SQLDBDataStore
         return $ret;
     }
     
+    
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
         //Load all models
@@ -429,22 +430,23 @@ class Postgresql extends SQLDBDataStore
         }
         
         $joinConditions = array();
+        $hasDontJoin = is_array($params['dont_join']);
         
         foreach($models as $model)
         {
             foreach($models as $other_model)
             {
                 // skip if the models are the same
-                if($model->name == $other_model->name) continue;
-                
-                // skip explicitly selected models
-                if(is_array($params['dont_join']))
-                {
-                    if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
-                }
-                
+                if($model->name == $other_model->name) continue;            
+                                
                 if($model->hasField($other_model->getKeyField()))
                 {
+                    // skip explicitly selected models
+                    if($hasDontJoin)
+                    {
+                        if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
+                        if(array_search("{$model->package}.{$other_model->getKeyField()},{$other_model->package}.{$other_model->getKeyField()}", $params['dont_join'])) continue;
+                    }
                     $joinConditions[] = "{$model->getDatabase()}.{$other_model->getKeyField()}={$other_model->getDatabase()}.{$other_model->getKeyField()}";
                 }
             }
