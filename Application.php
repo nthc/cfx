@@ -24,29 +24,43 @@
  */
 
 /**
- * Main class for managing the page. The whole application runs through this class.
- * It contains mainly a list of static methods which are called through the
- * entire lifetime of a request to the application. In certain respects you
- * can consider this class as the main controller since it is the main point of
- * call during class loading.
+ * A class which provides utilities for the running application. This class 
+ * provides the final stage of the applications execution process. It is
+ * responsible for loading the controllers and their associated views. While
+ * controller methods are running, they can also use this class to alter some 
+ * aspects of the view (like setting the title of the web page or adding a 
+ * directive to load a javascript).
  * 
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  */
 class Application
 {
+    /**
+     * Specifies that the current controller running was loaded from a 
+     * Controller class.
+     */
     const TYPE_MODULE = "type_module";
+    
+    /**
+     * Specifies that the current controller running was loaded from a 
+     * Model class.
+     */
     const TYPE_MODEL = "type_model";
     
+    /**
+     * The notes that are currently displayed on the top of the rendered page.
+     * @var $notes Array
+     */
     public static $notes = array();
 
     /**
-     * Initial or default template used for laying out the page.
+     * Initial or default template used for laying out the pages.
      * @var string
      */
     public static $template;
 
     /**
-     * The title of the page for this given request
+     * The title of the page for this given request.
      * @var string
      */
     public static $title;
@@ -59,14 +73,18 @@ class Application
 
     /**
      * An array containing all the stylesheets which would be used for styling
-     * the current layout.
+     * the current layout. Stylesheets can be added through the 
+     * Application::addStylesheet method.
+     * 
      * @var array
      */
     private static $stylesheets = array();
 
     /**
      * An array containing all the javascripts which would be loaded for the
-     * current request.
+     * current request. Javascripts can be added through the 
+     * Application::addJavascript method.
+     * 
      * @var array
      */
     private static $javascripts = array();
@@ -74,7 +92,9 @@ class Application
     /**
      * A prefix to all the pages of the application. This property can be set if
      * the application is running through a sub directory of the web server's
-     * root directory.
+     * root directory. This can be set through the config.php of the running
+     * application.
+     * 
      * @var string
      */
     public static $prefix;
@@ -82,18 +102,19 @@ class Application
     /**
      * An array which lists all the menus currentlu being used in the
      * application.
+     * 
      * @var array
      */
     public static $menus = array();
 
     /**
-     * The path of the packages
+     * The path of the packages.
      * @var unknown_type
      */
     public static  $packagesPath;
     
     /**
-     * Returns true when applicaiton is in CLI mode and false otherwise.
+     * Set to true when applicaiton is in CLI mode and false otherwise.
      * @var type 
      */
     public static $cli = false;
@@ -104,6 +125,10 @@ class Application
      */
     public static $cliOutput = "";
     
+    /**
+     * The current
+     * @var array
+     */
     public static $config;
     
     public static $templateEngine;

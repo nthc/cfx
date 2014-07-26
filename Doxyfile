@@ -831,7 +831,9 @@ RECURSIVE              = YES
 
 EXCLUDE                = rapi/fpdf \
                          rapi/PHPExcel \
-                         smarty
+                         smarty \
+                         js \
+                         docs
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
@@ -901,7 +903,7 @@ IMAGE_PATH             =
 # code is scanned, but not when the output code is generated. If lines are added
 # or removed, the anchors will not be placed correctly.
 
-INPUT_FILTER           = 
+INPUT_FILTER           = "php doxygen_input_filter.php"
 
 # The FILTER_PATTERNS tag can be used to specify filters on a per file pattern
 # basis. Doxygen will compare the file name with each pattern and apply the
