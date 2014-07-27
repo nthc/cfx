@@ -1,14 +1,29 @@
 <?php
 /**
- * A special field for accepting dates from the user. This field ensures
- * that the date entered is a valid date.
- * @author ekow
+ * A special field for accepting dates from the user. Although this field uses a javascript
+ * pop-up to allow a much more interactive way for capturing dates from the 
+ * user, users can also type in their dates. If dates are entered in a wrong
+ * format, an internal validation ensures that the user is prompted. The date
+ * field can optionally capture and display time information along with the
+ * date. The format accepted by this field is 'd/m/y h:m:s'.
+ * 
+ * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  * @ingroup Forms
  */
 class DateField extends TextField
 {
-    public $hasTime = false;
+    /**
+     * A flag which determines whether this field has time data attached or not.
+     * @var boolean
+     */
+    protected $hasTime = false;
 
+    /**
+     * Creates a new DateField
+     * @param type $label The label for the date field
+     * @param type $name The name of the field
+     * @param type $description A brief description of the field
+     */
     public function __construct($label="",$name="",$description="")
     {
         parent::__construct($label,$name,$description);
@@ -50,6 +65,11 @@ class DateField extends TextField
         return $decompose[0] * 3600 + $decompose[1] * 60 + $decompose[2];
     }
 
+    /**
+     * Set the hasTime flag.
+     * @param type $value
+     * @return DateField
+     */
     public function setHasTime($value)
     {
         $this->hasTime = $value;

@@ -124,7 +124,8 @@ class PDFDocument extends FPDF
     public function attributeBox($data, $style)
     {
         $fontSize = $style["size"] == null ? 10 : $style["size"];
-        $this->SetFont("Helvetica","B",$fontSize);
+        $font = $style['font'] == null ? 'Helvetica' : $style['font'];
+        $this->SetFont($font,"B",$fontSize);
         $maxWidth = 0;
         $maxValWidth = 0;
         foreach($data as $dat)
@@ -147,9 +148,9 @@ class PDFDocument extends FPDF
         foreach($data as $dat)
         {
             $this->Cell($maxWidth,$fontSize *1.4*0.353,$dat[0]);
-            $this->SetFont("Helvetica","",$fontSize);
+            $this->SetFont($font,"",$fontSize);
             $this->Cell($maxValWidth,$fontSize *1.4*0.353,$dat[1], 0, 0, $style['align']);
-            $this->SetFont("Helvetica","B",$fontSize);
+            $this->SetFont($font,"B",$fontSize);
             $this->Ln();
         }
         

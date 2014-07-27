@@ -1,7 +1,7 @@
 <?php
 /**
- * A special field for accepting dates from the user. This field ensures
- * that the date entered is a valid date.
+ * A special form of the DateField class which doesn't have any javascript
+ * assistance. It only requires users to enter the date in plain text.
  * @author ekow
  * @ingroup Forms
  */
@@ -9,7 +9,7 @@ class DateField2 extends TextField
 {
     public $hasTime = false;
 
-public function getDisplayValue()
+    public function getDisplayValue()
     {
         $format = $this->hasTime ? "jS F, Y H:i:s" : "jS F, Y";
         return $this->getValue()!==""?date($format ,(int)$this->getValue()):"";

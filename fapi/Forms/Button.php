@@ -5,6 +5,10 @@
  */
 class Button extends Field
 {
+    /**
+     * Create a new button.
+     * @param type $label The label for the form
+     */
     public function __construct($label="")
     {
         $this->setLabel($label);
