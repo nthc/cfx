@@ -1,8 +1,6 @@
 <?php
 /**
- * A simple button which can be displayed on forms. This button does not store
- * any values for the form and it also does not submit the form. It is normally
- * intended for use through JavaScripts.
+ * A simple button which can be displayed on forms.
  * @ingroup Forms
  */
 class Button extends Field
@@ -29,4 +27,3 @@ class Button extends Field
         return __CLASS__;
     }
 }
-?>

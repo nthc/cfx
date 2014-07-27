@@ -2,21 +2,23 @@
 /**
  * The Attribute class is used for storing and rendering HTML attributes.
  * @ingroup Forms
+ * @todo rewrite this class to make it cleaner
  */
 class Attribute
 {
-	/**
-	 * 
-	 */
-	public $enabled = true;
+    /**
+     * Flag to determine whether the attribute should be rendered or not.
+     * @var boolean
+     */
+    public $enabled = true;
 	
     /**
-     * The attribute.
+     * A cached version of the attribute string.
      */
-    protected $attribute;
+    private $attribute;
 
     /**
-     * The value to be attached to the value.
+     * The value to be attached to the attribute key.
      */
     protected $value;
 

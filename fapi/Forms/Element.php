@@ -80,15 +80,6 @@ abstract class Element
     //! The parent element which contains this element.
     protected $parent = null;
 
-    //! Sets up the name encryption. If this value is set to true, all
-    //! the form element names which are output to HTML would be
-    //! encrypted so that the structure of the internal database is not
-    //! exposed in any way.
-    protected $nameEncryption = false;
-
-    //! The encryption key if some form of key based encryption is used.
-    protected $nameEncryptionKey;
-
     //! A value which determines whether this field is to be used in
     //! constructing database queries
     protected $storable = true;
@@ -150,14 +141,7 @@ abstract class Element
      */
     public function getName($encrypt=true)
     {
-        if($this->getNameEncryption() && $encrypt)
-        {
-            return md5($this->name);
-        }
-        else
-        {
-            return $this->name;
-        }
+        return $this->name;
     }
 
     //! Sets the label which is attached to this element.
@@ -353,30 +337,6 @@ abstract class Element
     public function getShowField()
     {
         return $this->showfield;
-    }
-
-    //! Sets whether the form names should be encrypted. If this method
-    //! is called with a parameter true, all the names that are rendered
-    //! in the HTML code are encrypted so that the database internals
-    //! are not exposed in anyway to the end users.
-    public function setNameEncryption($nameEncryption)
-    {
-        $this->nameEncryption = $nameEncryption;
-    }
-
-    public function setNameEncryptionKey($nameEncryptionKey)
-    {
-        $this->nameEncryptionKey = $nameEncryptionKey;
-    }
-
-    public function getNameEncryption()
-    {
-        return $this->nameEncryption;
-    }
-
-    public function getNameEncryptionKey()
-    {
-        return $this->nameEncryptionKey;
     }
 
     public function getForeing()

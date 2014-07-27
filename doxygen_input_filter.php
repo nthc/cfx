@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 $file = fopen($argv[1], 'r');
 global $pendingVariableType;
 $pendingVariableType = false;
@@ -7,8 +9,8 @@ $pendingVariableType = false;
 function replace_lines($matches)
 {
     global $pendingVariableType;
-    fputs(STDERR, print_r($matches, true));
-    return "{$matches['protection']} {$matches['static']} {$pendingVariableType}";
+    fputs(STDERR, "{$matches['protection']} {$matches['static']} {$pendingVariableType} {$matches['function']} \n");
+    return "{$matches['protection']} {$matches['static']} {$pendingVariableType} {$matches['function']} ";
 }
 
 while(!feof($file))

@@ -2,8 +2,7 @@
 /**
  * A special container which lays out its form elements in columns. The elements
  * are evenly packed into the columns. The ColumnContainer class is an extension
- * of the TableLayout class which has one row but different columns based on the
- * number of columns the container is supposed to have.
+ * of the TableLayout class with has one but different columns.
  *
  * @author jainooson@gmail.com
  * @ingroup Forms
@@ -61,4 +60,4 @@ class ColumnContainer extends TableLayout
         return parent::render();
     }
 }
-?>
+

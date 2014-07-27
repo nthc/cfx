@@ -113,7 +113,6 @@ if($cliMode === true)
     $_SESSION["user_id"] = $user[0]["user_id"];
     $_SESSION["logged_in"] = true;
     Application::$cli = true;
-    Application::$cliOutput = $output;
     
     $_GET = array();
     $_POST = array();
@@ -259,6 +258,6 @@ else
     
     
     // Blast the HTML code to the browser!
-    Application::$site_name = Application::$config['name'];
+    Application::setSiteName(Application::$config['name']);
     Application::render();
 }

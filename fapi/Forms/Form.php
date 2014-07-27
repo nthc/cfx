@@ -104,15 +104,6 @@
  */
 
 /**
- * The form api used for the generation of forms in much of the system.
- * @defgroup Forms
- * @see \link fapi_page \endlink
- */
-
-include_once ("Container.php");
-include_once ("HiddenField.php");
-
-/**
  * The Form class is the main Container for all forms. This form class renders
  * HTML forms. This class is mostly extended to create new forms. In some rare 
  * cases it is directly used and the other
@@ -123,6 +114,7 @@ include_once ("HiddenField.php");
  * 
  * @warning When extending the Form class please be sure to call the parent constructor.
  * 
+ * Example login form by extending the Form class.
  * @code
  * class LoginForm extends Form
  * {
@@ -136,7 +128,8 @@ include_once ("HiddenField.php");
  * $form = new LoginForm();
  * echo $form->render();
  * @endcode
- * 
+ *
+ * Example login form from the base form api classes.
  * @code
  * $form = new Form();
  * $form->add(
@@ -299,7 +292,7 @@ class Form extends Container
         if($this->isFormSent())
         {
             $data = $this->getData();
-            $validated = $this->validate() * ($this->validatorCallback==""?1:$this->executeCallback($this->validatorCallback,$data,$this,$this->validatorCallbackData));
+            $validated = $this->validatorCallback==""?1:$this->executeCallback($this->validatorCallback,$data,$this,$this->validatorCallbackData);
             if($validated==1)
             {
                 $this->executeCallback($this->callback,$data,$this,$this->callbackData);

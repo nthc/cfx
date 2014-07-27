@@ -22,10 +22,8 @@ class RadioGroup extends Field
         if($button->getType()=="RadioButton")
         {
             $button->setName($this->getName(false));
-            $button->setNameEncryption($this->getNameEncryption());
-            $button->setNameEncryptionKey($this->getNameEncryptionKey());
             $button->setId($this->getId());
-            array_push($this->buttons, $button);
+            $this->buttons[] = $button;
         }
         else
         {
@@ -68,24 +66,6 @@ class RadioGroup extends Field
             $this->setValue($_GET[$this->getName()]);
         }
         return array($this->getName(false) => $this->getValue());
-    }
-
-    public function setNameEncryption($nameEncryption)
-    {
-        Element::setNameEncryption($nameEncryption);
-        foreach($this->buttons as $element)
-        {
-            $element->setNameEncryption($nameEncryption);
-        }
-    }
-
-    public function setNameEncryptionKey($nameEncryptionKey)
-    {
-        Element::setNameEncryptionKey($nameEncryptionKey);
-        foreach($this->buttons as $element)
-        {
-            $element->setNameEncryptionKey($nameEncryptionKey);
-        }
     }
 
     public function setValue($value)

@@ -38,38 +38,52 @@ class Application
     /**
      * Specifies that the current controller running was loaded from a 
      * Controller class.
+     * @var string
      */
     const TYPE_MODULE = "type_module";
     
     /**
      * Specifies that the current controller running was loaded from a 
      * Model class.
+     * @var string
      */
     const TYPE_MODEL = "type_model";
     
     /**
      * The notes that are currently displayed on the top of the rendered page.
-     * @var $notes Array
+     * @var Array
      */
-    public static $notes = array();
+    private static $notes = array();
 
     /**
-     * Initial or default template used for laying out the pages.
+     * Initial or default template used for laying out the pages. The template
+     * used can be chaged by altering the value of this variable during
+     * the execution of the controller.
+     * 
      * @var string
      */
     public static $template;
 
     /**
-     * The title of the page for this given request.
+     * The title of the page for this given request. Although the title of the page
+     * can be changed during the execution of your controller action by altering
+     * the value of this property, you should use the Application::setTitle() method
+     * for this purpose. 
+     * 
      * @var string
+     * @see Application::setTitle
      */
-    public static $title;
+    private static $title;
 
     /**
-     * The name of the application
+     * The name of the application. The value of this variable is normally used
+     * during the rendering of the title of the application into the title 
+     * tag of the HTML output. The default value from this variable is always
+     * read from the config.php file.
+     * 
      * @var string
      */
-    public static $site_name;
+    private static $siteName;
 
     /**
      * An array containing all the stylesheets which would be used for styling
@@ -77,6 +91,7 @@ class Application
      * Application::addStylesheet method.
      * 
      * @var array
+     * @see Application::addStylesheet.
      */
     private static $stylesheets = array();
 
@@ -100,59 +115,103 @@ class Application
     public static $prefix;
 
     /**
-     * An array which lists all the menus currentlu being used in the
-     * application.
+     * Contains the current menu tree for the menu loaded into the side bar.
+     * This variable is usually populated based on the roles currently attached
+     * to the user.
      * 
      * @var array
      */
     public static $menus = array();
 
     /**
-     * The path of the packages.
-     * @var unknown_type
+     * The filesystem path to the loaction of the application's modules. By 
+     * default, modules are store in the app/modules directory.
+     * 
+     * @var string.
      */
     public static  $packagesPath;
     
     /**
      * Set to true when applicaiton is in CLI mode and false otherwise.
-     * @var type 
+     * 
+     * @var boolean
      */
     public static $cli = false;
     
     /**
+     * Contains the output that is generated when the application is executed
+     * throuh the command line interface.
      * 
-     * @var type 
+     * @var string
      */
     public static $cliOutput = "";
     
     /**
-     * The current
+     * The current configuration map. Modifying this value during runtime has
+     * no effect.
      * @var array
      */
     public static $config;
     
+    /**
+     * An instance of the template engine which would be used to render
+     * the controller at the very last stage of the execution. You can use this
+     * instance to do any rendering you want during the execution of your
+     * controller. Using this prevents the loading of multiple instances of
+     * the template engine.
+     * 
+     * @var Smarty
+     */
     public static $templateEngine;
     
+    /**
+     * The default controller route that should be loaded when the request is
+     * empty. You can think of this as your default or index page.
+     * @var string
+     */
     public static $defaultRoute = "dashboard";
     
+    /**
+     * The flag which indicates whether the side menu is visible or not.
+     * @var boolean
+     */
     private static $sideMenuHidden = false;
     
     /**
-     * A method to add a stylesheet to the list of stylesheets
+     * Adds a stylesheet to the list of stylesheets. This method adds
+     * the stylesheets at the bottom of the list.
      *
      * @param string $href A path to the stylesheet
      * @param string $media The media of the stylesheet. Defaults to all.
+     * @param string $pathPrefix An optional prefix to add to the path.
      */
     public static function addStylesheet($href, $pathPrefix = false, $media="all")
     {
         Application::$stylesheets[] = self::prepareStylesheetEntry($href, $pathPrefix, $media);
     }
     
+    /**
+     * Adds a stylesheet to the list of stylesheets. This method adds the 
+     * stylesheets to the top of the list.
+     * 
+     * @param string $href A path to the stylesheet
+     * @param string $media The media of the stylesheet. Defaults to all.
+     * @param string $pathPrefix An optional prefix to add to the path.
+     */
     public static function preAddStylesheet($href, $pathPrefix = false, $media="all")
     {
         array_unshift(Application::$stylesheets, self::prepareStylesheetEntry($href, $pathPrefix, $media));
     }
     
+    /**
+     * Format the stylesheet entry and make it a little bit more appropriate
+     * for rendering.
+     * 
+     * @param string $href A path to the stylesheet
+     * @param string $media The media of the stylesheet. Defaults to all.
+     * @param string $pathPrefix An optional prefix to add to the path.
+     * @return Array. A structured array describing the array.
+     */ 
     private static function prepareStylesheetEntry($href, $pathPrefix, $media)
     {
         return array(
@@ -161,8 +220,8 @@ class Application
     }
 
     /**
-     * This method returns a link. It is useful because it prefixes all the
-     * links with the appropriate prefixes.
+     * This method returns a link to a resource within your WYF app. This method
+     * adds any prefixes the application requires.
      *
      * @param string $path
      * @return string
@@ -192,17 +251,18 @@ class Application
     {
         if($title=="")
         {
-            Application::$title = Application::$site_name;
+            Application::$title = Application::$siteName;
         }
         else
         {
-            Application::$title = $title . " | ". Application::$site_name;
+            Application::$title = $title . " | ". Application::$siteName;
         }
     }
 
     /**
-     * Outputs the application. This calls all the template files and outputs the
-     * final application in HTML.
+     * Outputs the application. This method is the final stage in the application
+     * lifecyle which calls all the template files and outputs the
+     * final application in HTML. 
      */
     public static function render()
     {
@@ -305,18 +365,43 @@ class Application
         return $ret;
     }
 
+    /**
+     * A utility method which converts a string to lowecase while converting
+     * all spaces to underscores.
+     * 
+     * @param string $name The string to be converted/
+     * @return string A lowercase string with all spaces as underscores.
+     */
     public static function labelize($name)
     {
         return ucwords(str_replace("_", " ", $name));
     }
     
+    /**
+     * Sets a flag in the template which prevents the rendering of the side menu.
+     * Please note that this method would only work if the template being used
+     * to render your app supports hiding side menus.
+     */
     public static function hideSideMenu()
     {
         self::$sideMenuHidden = true;
     }
     
+    /**
+     * Unsets a flag in the template which prevents the rendering of the side menu.
+     * Please note that this method would only work if the template being used
+     * to render your app supports hiding side menus.
+     */    
     public static function showSideMenu()
     {
         self::$sideMenuHidden = false;
+    }
+    
+    /**
+     * 
+     */
+    public static function setSiteName($siteName)
+    {
+        self::$siteName = $siteName;
     }
 }

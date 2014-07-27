@@ -1,8 +1,11 @@
 <?php
 /**
- * A simple container for containing form elements. This container does
- * not expose itself to styling by default but styling can be added
- * by adding a css class through the attributes interface.
+ * A simple container for form elements. This container does
+ * not expose itself to styling by default as such custom styling can be added
+ * through CSS classes. You could use this controller to render form elements
+ * in special cases where you do not want them to appear in form tags when
+ * rendered.
+ * 
  * @ingroup Forms
  */
 class BoxContainer extends Container

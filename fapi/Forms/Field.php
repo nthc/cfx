@@ -195,42 +195,13 @@ abstract class Field extends Element
 
         //Perform the required validation. Generate an error if this
         //field is empty.
-        if($this->getRequired() && $this->getValue() === "" )//&& $_POST[$this->getName($this->nameEncryption)] === "")
+        if($this->getRequired() && $this->getValue() === "" )
         {
             //throw new Exception();
             $this->error = true;
             array_push($this->errors,$this->getLabel()." is required.");
             return false;
         }
-
-        //Perform the unique validation. Query the database and find out
-        // if any other value exists in the database which is the same
-        // as what has been entered.
-        /*if($this->parent->getDatabaseTable()!="" && $this->unique)
-        {
-            $schema = $this->parent->getDatabaseSchema();
-            $table = $this->parent->getDatabaseTable();
-            $name = $this->getName(false);
-            $value = $this->getValue();
-            $primary_key_field = $this->parent->getPrimaryKeyField();
-            $primary_key_value = $this->parent->getPrimaryKeyValue();
-
-            $query = "SELECT ".($primary_key_field!=""?$primary_key_field.",":"")."$name FROM ".($schema!=""?$schema.".":"")."$table WHERE $name='$value'";
-            $result = $db->query($query);
-
-            if($result->num_rows>0)
-            {
-                //die($query);
-                $row = $result->fetch_assoc();
-                if($primary_key_field!="" && $row[$primary_key_field]==$primary_key_value)
-                {
-                    return true;
-                }
-                $this->error = true;
-                array_push($this->errors,"This field must be unique. There is already a {$this->getLabel()}, $value in the database.");
-                return false;
-            }
-        }*/
 
         // Call the custom validation function.
         $validationFunc = $this->validationFunc;
