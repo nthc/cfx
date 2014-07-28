@@ -30,13 +30,14 @@
  * your application. They are stored in modules and they contain methods which
  * are called from the url. Parameters to the methods are also passed through the
  * URL. If no method is specified, the Controller:getContents() method is called.
- * The methods called by the controllers are expected to generate HTML output
- * which should be directly displayed to the screen.
+ * The methods called by the controllers are expected to either generate HTML output
+ * which should be directly embeded into the app or they can return an array containing
+ * data and a path to an appropriate smarty template to be used for the rendering
+ * of the output.
  *
- * All the controllers you build must extend this class end implement
+ * All the controllers you build must extend this class.
  *
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
- * @package wyf.controllers
  *
  */
 class Controller
@@ -378,9 +379,9 @@ class Controller
     /**
      * Returns an array description to be used for rendering the smarty template.
      * 
-     * @deprecated
      * @param string   $template
      * @param array    $data
+     * @deprecated Do not use in new code
      */
     public function getTemplateDescription($template,$data)
     {
@@ -389,9 +390,22 @@ class Controller
     
     /**
      * Returns an array description to be used for rendering the smarty template.
+     * This method expects the template file to exist in the same directory
+     * as the controller class. Also note that when specifying the name of the
+     * template file the .tpl extension should not be specified. For exampple to
+     * load a template called send_mail.tpl from a particular controller...
      * 
-     * @param string $template
-     * @param array $data
+     * @code
+     * ..
+     * $this->template('send_mail', $mailData);
+     * ..
+     * @endcode
+     * 
+     * @param string $template The name of the template file which exists in the
+     *      same directory as the controller. The file name must have a .tpl
+     *      extension which should not be specified.
+     * @param array $data A structured array which contains the data to be
+     *      sent to the view.
      */
     public function template($template, $data)
     {
@@ -401,6 +415,12 @@ class Controller
         );
     }
     
+    /**
+     * 
+     * @param type $arbitraryTemplate
+     * @param type $data
+     * @return type
+     */
     public function arbitraryTemplate($arbitraryTemplate, $data)
     {
         return array(
@@ -425,7 +445,29 @@ class Controller
     }
     
     /**
-     * Returns the name of the class.
+     * Returns the name of the controller class. This method is very useful when
+     * specifying callbacks from a Form to a static method in a controller.
+     * 
+     * @code
+     * class SomeController extends Controller
+     * {
+     *     public function someFormAction()
+     *     {
+     *         $form = new Form();
+     *         $form->add(
+     *             Element::create('TextField', 'Username', 'username'),
+     *             Element::create('PasswordField', 'Password', 'password')
+     *         );
+     *         $form->setCallback($this->getClassName() . '::doLogin', null);
+     *     }
+     * 
+     *     public static function doLogin($data, &$form, $callback)
+     *     {
+     *         // Use this for the login logic
+     *     }
+     * }
+     * @endcode
+     * 
      * @return
      */
     public function getClassName()

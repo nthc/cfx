@@ -24,8 +24,7 @@
  */
 
 /**
- * An abstract caching class. Defines all the methods needed to cache classes
- * based on base caching methods.
+ * The base class for all Cache class implementations. 
  * 
  * @author ekowabaka
  * @package wyf.caching
@@ -40,7 +39,8 @@ abstract class Cache
     private static $object;
     
     /**
-     * Initialize the cache.
+     * Initialize the caching engine.
+     * 
      * @param $method The name of the caching backend to use.
      */
     public static function init($method)
