@@ -385,7 +385,6 @@ class ModelController extends Controller
         $fields = $this->model->getFields();
 
         $form = new Form();
-        $form->setModel($this->model);
         $names = array_keys($fields);
 
         for($i=0; $i<count($fields); $i++)
@@ -497,7 +496,6 @@ class ModelController extends Controller
             include_once $this->localPath."/".$this->name."Form.php";
             $formclass = $this->name."Form";
             $form = new $formclass();
-            $form->setModel($this->model);
         }
         else
         {
