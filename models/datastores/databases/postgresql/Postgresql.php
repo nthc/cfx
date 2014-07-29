@@ -439,13 +439,13 @@ class Postgresql extends SQLDBDataStore
                 // skip if the models are the same
                 if($model->name == $other_model->name) continue;            
                                 
-                if($model->hasField($other_model->getKeyField()))
+                if($model->hasField($other_model->getKeyField()) && $hasDontJoin)
                 {
                     // skip explicitly selected models
                     if($hasDontJoin)
                     {
                         if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
-                        if(array_search("{$model->package}.{$other_model->getKeyField()},{$other_model->package}.{$other_model->getKeyField()}", $params['dont_join'])) continue;
+                        if(array_search("{$model->package}.{$other_model->getKeyField()},{$other_model->package}.{$other_model->getKeyField()}", $params['dont_join']) !== false) continue;
                     }
                     $joinConditions[] = "{$model->getDatabase()}.{$other_model->getKeyField()}={$other_model->getDatabase()}.{$other_model->getKeyField()}";
                 }
@@ -521,11 +521,6 @@ class Postgresql extends SQLDBDataStore
         {
             $query .= " OFFSET {$params["offset"]}";
         }
-
-        /*if(isset($params['dont_join'])){
-            print $query . '<br/>';
-            die();
-        }*/
         
         $data = $other_model->datastore->query($query,$mode);
 
