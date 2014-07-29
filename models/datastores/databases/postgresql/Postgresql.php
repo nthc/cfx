@@ -439,9 +439,8 @@ class Postgresql extends SQLDBDataStore
                 // skip if the models are the same
                 if($model->name == $other_model->name) continue;            
                                 
-                if($model->hasField($other_model->getKeyField()) && $hasDontJoin)
+                if($model->hasField($other_model->getKeyField()))
                 {
-                    // skip explicitly selected models
                     if($hasDontJoin)
                     {
                         if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
