@@ -90,11 +90,24 @@ abstract class DataStore
     public abstract function get($params=null,$mode=Model::MODE_ASSOC,$explicit_relations=false,$resolve=true);
     
     /**
-     * Saves the data stored temporarily in the datastore object.
+     * Saves the data stored temporarily in the datastore object. 
      */
     public abstract function save();
+    
+    /**
+     * Update the data in the database with the data stored temporarily in the
+     * datastore object.
+     */
     public abstract function update($field,$value);
+    
+    /**
+     * Delete data from the datastore.
+     */
     public abstract function delete($field,$value=null);
+    
+    /**
+     * Describe the tables and the details under the datastore.
+     */
     public abstract function describe();
     
     public function getKeyField($type="primary")

@@ -27,8 +27,8 @@
  * A database access class. This class allows the application to access
  * the postgresql database directly without going through the framework.
  * Through this class connections could be established with multiple databases.
- * 
- * @package wyf.core
+ * The framework uses this class under the hood to perform its database
+ * access too.
  */
 class Db
 {
