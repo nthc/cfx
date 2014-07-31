@@ -4,6 +4,15 @@
 
 var wyf =
 {
+    getMulti : function(params, callback)
+    {
+        $.getJSON('/system/api/get_multi?params=' + escape(JSON.stringify(params)),
+            function(response){
+                if(typeof callback === 'function') callback(response);
+            }
+        );
+    },
+    
     openWindow : function(location)
     {
         window.open(location);
@@ -187,7 +196,7 @@ var wyf =
 			
         }
     }
-}
+};
 
 function expand(id)
 {
