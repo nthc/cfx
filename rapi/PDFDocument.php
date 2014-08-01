@@ -360,7 +360,18 @@ class PDFDocument extends FPDF
                         break;
                 }
     
-                $this->Cell($widths[$i],$this->style["cell_height"],str_replace("\n"," ",$field),$border,0,$align,true);
+                if($params['wrap_cell'] === true)
+                {
+                    $this->WrapCell(
+                        $widths[$i],$this->style['cell_height'], 
+                        $field,$border,0,$align,true
+                    );
+                }
+                else
+                {
+                    $this->Cell($widths[$i],$this->style["cell_height"],str_replace("\n"," ",$field),$border,0,$align,true);                    
+                }
+                
                 if(is_array($params['total']))
                 {
                     if(array_search($i,$params["total"])!==false)
