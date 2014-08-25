@@ -465,6 +465,10 @@ class Postgresql extends SQLDBDataStore
         {
             $query .= "SUM(" . implode("), SUM(", $rawFields) . ") FROM " . implode(", ", array_unique($tableList));   
         }
+        else if($params["max"] === true)
+        {
+            $query .= "MAX(" . implode("), MAX(", $rawFields) . ") FROM " . implode(", ", array_unique($tableList));
+        }
         else
         {
             $query.=($params["resolve"] === false ? implode(",",$rawFields) : implode(",",$fieldList))." FROM ".implode(",",array_unique($tableList));
