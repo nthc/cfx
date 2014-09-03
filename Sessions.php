@@ -38,6 +38,11 @@ class Sessions
         }
         else
         {
+            if($_GET['no_extend']==true)
+            {
+                return true;
+            }
+            else{
             Db::query(
                 sprintf(
                     "UPDATE system.sessions SET data = '%s', expires = %d WHERE id = '%s'",
@@ -45,6 +50,7 @@ class Sessions
                 ),
                 'main'
             );
+            }
         }
         return true;
     }
