@@ -88,7 +88,8 @@ class TableLayout extends Container
         }
         else
         {
-            $ret = "<table class='".$this->getCSSClasses()."' ".($this->getId()!=""?"id='".$this->getId()."'":"")." >";
+            $attributes = $this->getAttributes();
+            $ret = "<table $attributes class='".$this->getCSSClasses()."' ".($this->getId()!=""?"id='".$this->getId()."'":"")." >";
             for($row=0; $row<$this->num_rows; $row++)
             {
                 $ret .= "<tr>";

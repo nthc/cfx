@@ -24,8 +24,8 @@ function default_renderer_element($element, $showfields=true)
     {
         return $element->render();
     }
-
-    $ret .= "<div class='fapi-element-div' ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'").">";
+    $attributes = $element->getAttributes(Element::SCOPE_WRAPPER);
+    $ret .= "<div $attributes class='fapi-element-div' ".($element->getId()==""?"":"id='".$element->getId()."_wrapper'").">";
 
     if($element->getType()=="Field" && $element->getLabel()!="")
     {
