@@ -235,6 +235,13 @@ class ModelController extends Controller
         {
             $this->app = simplexml_load_file($this->localPath."/app.xml");
         }
+        
+        if($_SESSION['read_only'] === 't')
+        {
+            $this->hasAddOperation = false;
+            $this->hasEditOperation = false;
+            $this->hasDeleteOperation = false;
+        }
     }
     
     /**
@@ -511,6 +518,7 @@ class ModelController extends Controller
     public function add()
     {
     	if(!User::getPermission($this->permissionPrefix."_can_add")) return;
+    	if(!$this->hasAddOperation) return;
         if($this->apiMode === true)
         {
             $return = $this->model->setData($_REQUEST);
@@ -652,6 +660,8 @@ class ModelController extends Controller
     public function edit($params)
     {
     	if(!User::getPermission($this->permissionPrefix."_can_edit")) return;
+    	if(!$this->hasEditOperation) return;
+        
         $form = $this->getForm();
         $form->setData($this->getModelData($params[0]), $this->model->getKeyField(), $params[0]);
         $this->label = "Edit ".$this->label;
@@ -941,6 +951,7 @@ class ModelController extends Controller
      */
     public function delete($params)
     {
+    	if(!$this->hasDeleteOperation) return;        
     	if(User::getPermission($this->permissionPrefix."_can_delete"))
     	{
             $data = $this->model->getWithField($this->model->getKeyField(),$params[0]);
