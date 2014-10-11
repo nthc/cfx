@@ -51,24 +51,29 @@ class Db
      */
     private static $lastInstance;
     
-    public static function escape($string, $instance = null)
+    public static function escape($string, $connection = null)
     {
-        if($instance === null) $instance = Db::$lastInstance;
-        if($instance == null)
+        $quoted = self::getCachedInstance(self::resolveConnection($connection))->quote($string);
+        return substr($quoted, 1, strlen($quoted) - 2);
+    }
+    
+    private static function resolveConnection($requested, $default = false)
+    {
+        if($requested == null)
         {
-            return pg_escape_string($string);
+            return $default === false ? Db::$lastInstance : $default;
         }
         else
         {
-            return pg_escape_string(Db::$instances[$instance], $string);
+            return $requested;
         }
-    }
+    }    
     
     public static function rawQuery($query, $instance = null)
     {
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
-        $result = pg_query($instance, $query);
+        $result = $instance->query($query);
         return $result;
     }
     
@@ -76,29 +81,18 @@ class Db
     {
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
-        $result = pg_query($instance, $query);
+        $result = $instance->query($query);
         self::$lastQuery = $query;
                 
-        if($result === false)
-        {
-
-            Db::$error = pg_errormessage($instance);
-            return false;
-        }        
-        else if(pg_num_rows($result) > 0)
+        if($result->rowCount() > 0)
         {
             if($mode == Db::MODE_ARRAY)
             {
-                $rows = array();
-                while($row = pg_fetch_array($result, null, PGSQL_NUM))
-                {
-                    $rows[] = $row;
-                }
-                return $rows;
+                return $result->fetchAll(PDO::FETCH_NUM);
             }
             else
             {
-                return pg_fetch_all($result);
+                return $result->fetchAll(PDO::FETCH_ASSOC);
             }
         }
         else
@@ -164,7 +158,6 @@ class Db
         }
         else if(is_array($db))
         {
-            // When connecting from outside the framework
             $index = json_encode($db);
             $database[$index] = $db;
             $db = $index;
@@ -174,9 +167,7 @@ class Db
             throw new Exception('Invalid configuration parameters passed');
         }
         
-        unset(Db::$instances[$db]);
-        
-        while(!is_resource(Db::$instances[$db]))
+        while(!is_object(Db::$instances[$db]))
         {
             $db_host = $database[$db]["host"];
             $db_port = $database[$db]["port"];
@@ -184,7 +175,7 @@ class Db
             $db_user = $database[$db]["user"];
             $db_password = $database[$db]["password"];
             
-            Db::$instances[$db] = pg_connect("host=$db_host port=$db_port dbname=$db_name user=$db_user password=$db_password");
+            Db::$instances[$db] = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name;user=$db_user;password=$db_password");
             
             if(!Db::$instances[$db]) 
             {
@@ -202,7 +193,7 @@ class Db
         return Db::$instances[$db];
     }
     
-    public function getLastQuery()
+    public static function getLastQuery()
     {
         return self::$lastQuery;
     }

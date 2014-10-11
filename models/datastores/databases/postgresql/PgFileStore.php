@@ -33,26 +33,26 @@ class PgFileStore extends postgresql
     {
         $model = PgFileStore::getModel();
         $data = $model->getWithField("object_id", $oid);
-        return pg_unescape_bytea($data[0]["data"]);
+        return stream_get_contents($data[0]['data']);
+        
+        //$data[0]["data"];
     }
 
     public static function getFile($oid) 
     {
         $model = PgFileStore::getModel();
         $data = $model->getWithField("object_id", $oid);
-        $file = '/tmp/' + uniqid();
-        file_put_contents($file, pg_unescape_bytea($data[0]["data"]));
-        $fd = fopen($file, 'r');
-        return $fd;
+        return $data[0]['data'];
     }
 
     public static function getFilePath($oid, $postfix = "picture.jpg") 
     {
-        $file = 'app/temp/' . $oid . "_$postfix";
+        $filePath = 'app/temp/' . $oid . "_$postfix";
         $model = PgFileStore::getModel();
         $data = $model->getWithField("object_id", $oid);
-        file_put_contents($file, pg_unescape_bytea($data[0]["data"]));
-        return $file;
+        $file = fopen($filePath, 'w');
+        stream_copy_to_stream($data[0]['data'], $file);
+        return $filePath;
     }
 
     public static function deleteFile($oid) 

@@ -12,22 +12,6 @@ class Postgresql extends SQLDBDataStore
     private static $namesSeen = array();
     private static $nesting = 0;
 
-    public function __construct()
-    {
-        if(!is_resource(self::$_conn))
-        {
-            self::$_conn = Db::get();
-        }
-    }
-    
-    public function __wakeup()
-    {
-        if(!is_resource(self::$_conn))
-        {
-            self::$_conn = Db::get();
-        }
-    }
-
     public function beginTransaction()
     {
         if(self::$nesting == 0)
