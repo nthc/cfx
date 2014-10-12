@@ -492,7 +492,7 @@ abstract class Model implements ArrayAccess
         
         if(is_string($params["fields"]))
         {
-        	$params["fields"] = explode(",", $params["fields"]);
+            $params["fields"] = explode(",", $params["fields"]);
         }
 
         $data = $this->datastore->get(

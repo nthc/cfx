@@ -277,29 +277,95 @@ abstract class SQLDBDataStore extends DataStore
      */
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
-        $method = new ReflectionMethod(SQLDBDataStore::$activeDriverClass, "getMulti");
-        return $method->invokeArgs(null, func_get_args());
+        $results = false;
+        if(self::isCacheable($params))
+        {
+            $results = self::executeCachedQuery($params, $mode);
+        }
+        
+        if($results === false)
+        {
+            $method = new ReflectionMethod(SQLDBDataStore::$activeDriverClass, "getMulti");
+            $results = $method->invokeArgs(null, func_get_args());           
+        }
+        
+        return $results;
     }
     
     public static function log($query)
     {
-    	switch (SQLDBDataStore::$logMode)
-    	{
-    		case "print":
-    			print $query . "\n";
-    			break;
-    		case "file":
-    		    Logger::setPath("app/logs/sql.log");
-    			Logger::log($query);
-    			break;
-    		
-    	}
+        if(SQLDBDataStore::$logQueries) 
+        {
+            switch (SQLDBDataStore::$logMode)
+            {
+                case "print":
+                    print $query . "\n";
+                    break;
+                case "file":
+                    Logger::setPath("app/logs/sql.log");
+                    Logger::log($query);
+                    break;
+            }
+        }
+    }
+    
+    private static function isCacheable($params)
+    {
+        return isset($params['filter']) || isset($params['cache_key']) || (!isset($params['filter']) && !isset($params['conditions']));
+    }
+    
+    private static function getQueryKey($params)
+    {
+        if(isset($params['cache_key']))
+        {
+            return $params['cache_key'];
+        }
+        else
+        {
+            return md5(serialize($params['fields']) . $params['filter']) . "_query";
+        }
+    }
+    
+    private static function executeCachedQuery(&$params, $mode)
+    {
+        $results = false;
+        $queryKey = self::getQueryKey($params);
+        if(Cache::exists($queryKey))
+        {
+            $query = Cache::get($queryKey);
+            $results = Db::boundQuery($query, Db::$defaultDatabase, $params['bind'], $mode, $queryKey);
+        }
+        else
+        {
+            if(isset($params['filter']))
+            {
+                $params['filter'] = FilterCompiler::compile($params['filter']);
+            }
+            $params['cache_key'] = $queryKey;
+        }        
+        return $results;
+    }
+    
+    public function get($params = null, $mode = Model::MODE_ASSOC, $explicit_relations = false, $resolve = true)
+    {
+        $results = false;
+        if(self::isCacheable($params))
+        {
+            $results = self::executeCachedQuery($params, $mode);
+        }
+        
+        if($results === false)
+        {
+            $results = $this->localGet($params, $mode, $explicit_relations, $resolve);
+        }
+        return $results;
     }
     
     public abstract function createSequence($name);
     public abstract function dropSequence($name);
     public abstract function getSequenceNextValue($name);
-
+    
+    protected abstract function localGet($params = null, $mode = Model::MODE_ASSOC, $explicit_relations = false, $resolve = true);
     protected abstract function beginTransaction();
     protected abstract function endTransaction();
     protected abstract function query($query,$mode=SQLDatabaseModel::MODE_ARRAY);

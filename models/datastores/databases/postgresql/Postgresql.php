@@ -30,12 +30,13 @@ class Postgresql extends SQLDBDataStore
         }
     }
 
-    public function get($params=null,$mode=model::MODE_ASSOC, $explicit_relations=false,$resolve=true)
+    protected function localGet($params=null,$mode=model::MODE_ASSOC, $explicit_relations=false,$resolve=true)
     {
         $fields = isset($params["fields"]) ? $params["fields"] : null;
         $conditions = isset($params["conditions"]) ? $params["conditions"] : null;
+        $conditions = isset($params['filter']) ? $params['filter'] : $conditions;
+        $bindData = $params['bind'];
         $rows = array();
-        $joined = null;
         $sorting = null;
 
         if($resolve)
@@ -110,7 +111,12 @@ class Postgresql extends SQLDBDataStore
             $query .= " OFFSET {$params["offset"]}";    
         }
         
-        $rows = $this->query($query,$mode);
+        
+        $rows = $this->query($query,$mode,$bindData,$params['cache_key']);
+        if(isset($params['cache_key']))
+        {
+            Cache::add($params['cache_key'], $query);
+        }
         
         // Retrieve all explicitly related data
         if($explicit_relations)
@@ -145,14 +151,21 @@ class Postgresql extends SQLDBDataStore
         return count($fields)>1 ? "TRIM(".implode(" || ' ' || ",$fields).")":$fields[0];
     }
 
-    public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC)
+    public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC, $bind = null, $key = false)
     {
-        //$connection = Db::getCachedInstance();
         $rows = array();
-        if(SQLDBDataStore::$logQueries) SQLDBDataStore::log($query);
-        if(mb_detect_encoding($query) != 'UTF-8') $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
+        SQLDBDataStore::log($query);
+        $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
         SQLDBDataStore::$lastQuery = $query;
-        $rows = Db::query($query, Db::$defaultDatabase, $mode);
+        
+        if(is_array($bind))
+        {
+            $rows = Db::boundQuery($query, Db::$defaultDatabase, $bind, $mode, $key);
+        }
+        else
+        {
+            $rows = Db::query($query, Db::$defaultDatabase, $mode);
+        }
         
         if($rows === false)
         {
@@ -441,6 +454,7 @@ class Postgresql extends SQLDBDataStore
             
         }
         
+        // Apply any special modifiers to the fields
         if($params["count"] === true || $params["enumerate"] === true)
         {
             $query .= ' COUNT(*) as "count" FROM ' . implode(', ',array_unique($tableList));
@@ -456,6 +470,11 @@ class Postgresql extends SQLDBDataStore
         else
         {
             $query.=($params["resolve"] === false ? implode(",",$rawFields) : implode(",",$fieldList))." FROM ".implode(",",array_unique($tableList));
+        }
+        
+        // Replace any conditions with filters
+        if(isset($params['filter'])){
+            $params['conditions'] = $params['filter'];
         }
         
         if(count($joinConditions)>0)
@@ -509,7 +528,7 @@ class Postgresql extends SQLDBDataStore
             $query .= " OFFSET {$params["offset"]}";
         }
         
-        $data = $other_model->datastore->query($query,$mode);
+        $data = $other_model->datastore->query($query,$mode, $params['bind'], $params['cache_key']);
 
         if($params["moreInfo"] === true)
         {

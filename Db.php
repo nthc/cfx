@@ -50,6 +50,7 @@ class Db
      * @var type 
      */
     private static $lastInstance;
+    private static $statements;
     
     public static function escape($string, $connection = null)
     {
@@ -76,6 +77,32 @@ class Db
         $result = $instance->query($query);
         return $result;
     }
+    
+    public function boundQuery($query, $db, $bindData, $mode = null, $key = null)
+    {
+        if($db === null) $db = Db::$lastInstance;
+        
+        if(is_string($key) && isset(Db::$statements[$key]))
+        {
+            $statement = Db::$statements[$key];
+        }
+        else
+        {
+            $instance = Db::getCachedInstance($db);        
+            $statement = $instance->prepare($query);            
+            Db::$statements[$key] = $statement;
+        }
+        
+        $statement->execute($bindData);
+        if($mode == Db::MODE_ARRAY)
+        {
+            return $statement->fetchAll(PDO::FETCH_NUM);
+        }
+        else
+        {
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }    
     
     public static function query($query, $instance = null, $mode = null)
     {
@@ -104,15 +131,7 @@ class Db
     public static function close($db = null)
     {
         $db = $db == null ? Db::$defaultDatabase : $db;
-        if(is_resource(Db::$instances[$db])) 
-        {
-            pg_close(Db::$instances[$db]);
-            unset(Db::$instances[$db]);
-        }
-        else
-        {
-            Db::$instances = null;
-        }
+        Db::$instances[$db] = null;
         
     }
     
@@ -176,7 +195,8 @@ class Db
             $db_password = $database[$db]["password"];
             
             Db::$instances[$db] = new PDO("pgsql:host=$db_host;port=$db_port;dbname=$db_name;user=$db_user;password=$db_password");
-            
+            Db::$instances[$db]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
             if(!Db::$instances[$db]) 
             {
                 if($atAllCost)
