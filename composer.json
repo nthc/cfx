@@ -9,6 +9,23 @@
         }
     ],
     "require": {
-
-    }
+        "smarty/smarty" : "3.1.19",
+        "phpoffice/phpexcel": "1.8.0",
+        "itbz/fpdf" : "1.7.*"        
+    },
+    "include-path" : [
+        "./",
+        "core/model_controller",
+        "core/model_controller/jobs",
+        "controllers",
+        "fapi/Forms",
+        "toolbar",
+        "tapi",
+        "rapi",
+        "user",
+        "models",
+        "models/datastores",
+        "models/datastores/databases/postgresql",
+        "cache/"
+    ]
 }
