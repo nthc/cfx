@@ -13,7 +13,7 @@ class Table
     
     public function __construct($prefix,$headers=null, $data=null, $operations=null,$headerParams=null)
     {
-        if(class_exists("Application")) Application::addStyleSheet("css/tapi.css", "lib/tapi/");
+        if(class_exists("Application")) Application::addStyleSheet("/tapi.css", Application::getWyfHome('tapi/css'));
         $this->prefix = $prefix;
         $this->headers = $headers;
         $this->data = $data;

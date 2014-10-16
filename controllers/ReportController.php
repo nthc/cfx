@@ -76,6 +76,7 @@ abstract class ReportController extends Controller
         switch(isset($_POST["report_format"])?$_POST["report_format"]:"pdf")
         {
             case "pdf":
+                xdebug_start_trace('trace');
                 $report = new PDFReport(
                     isset($_POST["page_orientation"]) ? 
                         $_POST["page_orientation"] : 
@@ -432,7 +433,7 @@ abstract class ReportController extends Controller
             "script"=>$this->script,
             "filters"=>$form->render()
         );
-        return array("template"=>"file:".getcwd()."/lib/controllers/reports.tpl","data"=>$data);
+        return $this->arbitraryTemplate(Application::getWyfHome("controllers/reports.tpl"), $data);
     }
 
     /**

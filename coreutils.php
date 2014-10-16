@@ -35,13 +35,7 @@ function add_include_path($path, $addBase = true)
 
 function autoloader($class)
 {
-    if((@include_once $class.".php") === false)
-    {
-        if((@include_once str_replace("_", "/", $class) . '.php') === false)
-        {
-            
-        }
-    }
+    include_once $class.".php";
 }
 
 /**
@@ -67,13 +61,13 @@ function array_splic(&$input, $start, $length=0, $replacement=null)
     // optional arguments
     if($replacement!==null)
     {
-        array_Splice($keys,$start,$length,$rKeys);
-        array_Splice($values,$start,$length,$rValues);
+        array_splice($keys,$start,$length,$rKeys);
+        array_splice($values,$start,$length,$rValues);
     }
     else
     {
-        array_Splice($keys,$start,$length);
-        array_Splice($values,$start,$length);
+        array_splice($keys,$start,$length);
+        array_splice($values,$start,$length);
     }
 
     $input=array_Combine($keys,$values);

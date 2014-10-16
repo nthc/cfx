@@ -404,4 +404,9 @@ class Application
     {
         self::$siteName = $siteName;
     }
+    
+    public static function getWyfHome($path = '')
+    {
+        return substr(__DIR__, strlen(getcwd()) + 1) . "/$path";
+    }    
 }

@@ -23,8 +23,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-include SOFTWARE_HOME . "lib/smarty/libs/Smarty.class.php";
-
 /**
  * A simple wrapper class for smarty. This class provides the boilerplate code
  * for initialising the template engine for use in the WYF framework.
