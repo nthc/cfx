@@ -38,7 +38,7 @@ define("SOFTWARE_HOME", $config['home']);
 
 
 // Setup the default include paths of the framework
-add_include_path("lib");
+/*add_include_path("lib");
 add_include_path("lib/controllers");
 add_include_path("lib/fapi/Forms");
 add_include_path("lib/toolbar");
@@ -47,7 +47,7 @@ add_include_path("lib/rapi");
 add_include_path("lib/user");
 add_include_path("lib/models");
 add_include_path("lib/models/datastores");
-add_include_path("lib/cache/");
+add_include_path("lib/cache/");*/
 
 // Add the script which contains the third party libraries
 require "app/includes.php";

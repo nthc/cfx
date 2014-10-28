@@ -9,8 +9,8 @@ class FilterCompiler
         'equals' => '\=',
         'bind_param' => '\?|:[a-z][a-z0-9\_]+',
         'between' => 'between\b',
+        'in' => 'in',
         'like' => 'like\b',
-        'in' => 'in\b',
         'is' => 'is\b',
         'and' => 'and\b',
         'not' => 'not\b',
@@ -23,13 +23,15 @@ class FilterCompiler
         'add' => '\+',
         'subtract' => '\-',
         'multiply' => '\*',
+        'function' => '[a-zA-Z][a-zA-Z0-9\_]*\s*\(',
         'identifier' => '[a-zA-Z][a-zA-Z0-9\.\_]*\b',
         'obracket' => '\(',
         'cbracket' => '\)',
+        'comma' => ','
     );
     
     private static $operators = array(
-        array('between', 'or' /*'in', 'like'*/),
+        array('between', 'or', 'in'/*, 'like'*/),
         array('and'),
         array('not'),
         array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is'),
@@ -81,11 +83,64 @@ class FilterCompiler
         return "$left AND $right";
     }
     
+    private static function parseIn()
+    {
+        $expression = "(";
+        self::match('obracket');
+        self::getToken();
+        
+        do{
+            $expression .= self::parseExpression();
+            if(self::$lookahead === 'comma')
+            {
+                $expression .= ',';
+                self::getToken();
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+        while(true);
+        
+        self::match('cbracket');
+        
+        self::getToken();
+        
+        $expression .= ')';
+        return $expression;
+    }
+
+    private static function parseFunctionParams()
+    {
+        $parameters = '';
+        $size = 0;
+        do{
+            $size++;
+            $parameters = self::parseExpression();
+            if(self::$token == 'comma')
+            {
+                self::getToken();
+            }
+            else if(self::$token == 'cbracket')
+            {
+                break;
+            }
+        }
+        while($size < 0);
+    }
+    
     private static function parseFactor()
     {
         $return = null;
         switch(self::$lookahead)
         {
+            case 'function':
+                $name = self::$token;
+                self::getToken();
+                $parameters = self::parseFunctionParams();
+                break;
             case 'identifier':
             case 'bind_param':
                 $return = self::$token;
@@ -109,6 +164,7 @@ class FilterCompiler
         switch($opr)
         {
             case 'between': return self::parseBetween();
+            case 'in': return self::parseIn();
             default: return self::parseExpression($level);
         }
     }
