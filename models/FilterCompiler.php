@@ -8,8 +8,9 @@ class FilterCompiler
     private static $tokens = array(
         'equals' => '\=',
         'bind_param' => '\?|:[a-z][a-z0-9\_]+',
+        'number' => '[0-9]+',
         'between' => 'between\b',
-        'in' => 'in',
+        'in' => 'in\b',
         'like' => 'like\b',
         'is' => 'is\b',
         'and' => 'and\b',
@@ -24,7 +25,7 @@ class FilterCompiler
         'subtract' => '\-',
         'multiply' => '\*',
         'function' => '[a-zA-Z][a-zA-Z0-9\_]*\s*\(',
-        'identifier' => '[a-zA-Z][a-zA-Z0-9\.\_]*\b',
+        'identifier' => '[a-zA-Z][a-zA-Z0-9\.\_\:]*\b',
         'obracket' => '\(',
         'cbracket' => '\)',
         'comma' => ','
@@ -118,17 +119,24 @@ class FilterCompiler
         $size = 0;
         do{
             $size++;
-            $parameters = self::parseExpression();
-            if(self::$token == 'comma')
+            $parameters .= self::parseExpression();
+            if(self::$lookahead == 'comma')
             {
                 self::getToken();
+                $parameters .= ", ";
             }
-            else if(self::$token == 'cbracket')
+            else if(self::$lookahead == 'cbracket')
+            {
+                self::getToken();
+                break;
+            }
+            else
             {
                 break;
             }
         }
-        while($size < 0);
+        while($size < 100);
+        return $parameters;
     }
     
     private static function parseFactor()
@@ -140,9 +148,11 @@ class FilterCompiler
                 $name = self::$token;
                 self::getToken();
                 $parameters = self::parseFunctionParams();
+                $return = "$name($parameters)";
                 break;
             case 'identifier':
             case 'bind_param':
+            case 'number':
                 $return = self::$token;
                 self::getToken();
                 break;
@@ -152,8 +162,6 @@ class FilterCompiler
                 $return = self::renderExpression($expression);
                 self::getToken();
                 break;
-            /*default:
-                throw new Exception("Unexpected " . self::$token);*/
         }
         
         return $return;
@@ -216,6 +224,11 @@ class FilterCompiler
                 self::$token = $matches[0];
                 break;
             }
+        }
+        
+        if(self::$token === false && strlen(self::$filter) > 0)
+        {
+            throw new Exception("Unexpected " . self::$filter[0]);
         }
     }
     
