@@ -311,7 +311,8 @@ abstract class SQLDBDataStore extends DataStore
     
     private static function isCacheable($params)
     {
-        return isset($params['filter']) || isset($params['cache_key']) || (!isset($params['filter']) && !isset($params['conditions']));
+        return count($params) > 0 && !isset($params['conditions']);
+        //return $params['filter'] != '' || $params['cache_key'] != '' || (!$params['filter'] != '' && !$params['conditions'] != '');
     }
     
     private static function getQueryKey($params)
@@ -322,7 +323,7 @@ abstract class SQLDBDataStore extends DataStore
         }
         else
         {
-            return md5(serialize($params['fields']) . $params['filter']) . "_query";
+            return md5(serialize($params)) . "_query";
         }
     }
     
