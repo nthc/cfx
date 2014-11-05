@@ -36,19 +36,6 @@ include "coreutils.php";
 require "app/config.php";
 define("SOFTWARE_HOME", $config['home']);
 
-
-// Setup the default include paths of the framework
-/*add_include_path("lib");
-add_include_path("lib/controllers");
-add_include_path("lib/fapi/Forms");
-add_include_path("lib/toolbar");
-add_include_path("lib/tapi");
-add_include_path("lib/rapi");
-add_include_path("lib/user");
-add_include_path("lib/models");
-add_include_path("lib/models/datastores");
-add_include_path("lib/cache/");*/
-
 // Add the script which contains the third party libraries
 require "app/includes.php";
 
@@ -59,7 +46,8 @@ global $packageSchema;
 // Setup the database driver and other boilerplate stuff 
 $dbDriver = $config['db'][$selected]['driver'];
 $dbDriverClass = Application::camelize($dbDriver);
-add_include_path("lib/models/datastores/databases/$dbDriver");
+add_include_path(Application::getWyfHome("models/datastores/databases/$dbDriver"));
+
 Db::$defaultDatabase = $selected;
 SQLDBDataStore::$activeDriverClass = $dbDriverClass;
 

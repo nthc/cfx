@@ -246,7 +246,7 @@ create_file($home . 'app/includes.php', "<?php\n");
 create_file($home . 'app/bootstrap.php', "<?php\n");
 
 // Try to initialize the wyf framework.
-require "lib/wyf_bootstrap.php";
+require "vendor/ekowabaka/wyf/wyf_bootstrap.php";
 
 echo "\nSetting up the database ...\n";
 

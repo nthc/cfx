@@ -76,7 +76,6 @@ abstract class ReportController extends Controller
         switch(isset($_POST["report_format"])?$_POST["report_format"]:"pdf")
         {
             case "pdf":
-                xdebug_start_trace('trace');
                 $report = new PDFReport(
                     isset($_POST["page_orientation"]) ? 
                         $_POST["page_orientation"] : 
