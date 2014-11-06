@@ -1076,7 +1076,7 @@ class ModelController extends Controller
         )->setRenderer('default');
         
         return $this->arbitraryTemplate(
-            'lib/controllers/notes.tpl', 
+            Application::getWyfHome('controllers/notes.tpl'), 
             array(
                 'form' => $form->render(),
                 'notes' => $notes,
