@@ -20,7 +20,7 @@ class PDFDocument extends fpdf\FPDF_EXTENDED
     const ORIENTATION_PORTRAIT = "P";
     const ORIENTATION_LANDSCAPE = "L";
 
-    public function __construct($orientation = "L", $paper = "A4")
+    public function __construct($orientation = "L", $paper = "A4", $skipPage = false)
     {
         parent::__construct(10, $orientation, "mm", $paper);
 
@@ -58,7 +58,10 @@ class PDFDocument extends fpdf\FPDF_EXTENDED
                 $this->twidth = $paper[0] - 20;
         }
 
-        $this->AddPage();
+        if($skipPage === false)
+        {
+            $this->AddPage();
+        }
         $this->SetFont('Helvetica', null, 8);
         $this->SetAutoPageBreak(true, 15);
     }
