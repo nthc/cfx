@@ -78,7 +78,7 @@ class Db
         return $result;
     }
     
-    public function boundQuery($query, $db, $bindData, $mode = null, $key = null)
+    public static function boundQuery($query, $db, $bindData, $mode = null, $key = null)
     {
         if($db === null) $db = Db::$lastInstance;
         
