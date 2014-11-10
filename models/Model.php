@@ -422,7 +422,9 @@ abstract class Model implements ArrayAccess
         if($this->validationPassed === false)
         {
             $validated = $this->validate();
-        if($validated !== true) throw new ModelException("Failed to validate the model [{$this->package}] " . json_encode($validated), $validated);
+            if($validated !== true) {
+                throw new ModelException("Failed to validate the model [{$this->package}] " . json_encode($validated), $validated);
+            }
         }
         
         $this->datastore->beginTransaction();
@@ -737,7 +739,7 @@ abstract class Model implements ArrayAccess
 
     public function validatorRequired($name,$parameters)
     {
-        if((string)$this->datastore->data[$name]!=='')
+        if($this->datastore->data[$name]!=='')
         {
             return true;
         }

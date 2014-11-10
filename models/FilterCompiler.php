@@ -32,11 +32,12 @@ class FilterCompiler
     );
     
     private static $operators = array(
-        array('between', 'or', 'in'/*, 'like'*/),
+        array('between', 'or' /*, 'like'*/),
         array('and'),
         array('not'),
         array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is'),
         array('add', 'subtract'),
+        array('in'),
         array('multiply')
     );
     
@@ -49,7 +50,8 @@ class FilterCompiler
         {
             throw new Exception("Unexpected " . self::$token);
         }
-        return self::renderExpression($expression);
+        $parsed = self::renderExpression($expression);
+        return $parsed;
     }
     
     private static function renderExpression($expression)

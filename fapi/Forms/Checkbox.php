@@ -129,7 +129,10 @@ class Checkbox extends Field
     
     public function setValue($value)
     {
-        if($value == 't') $value = '1';
+        if($value === true) 
+        {
+            $value = '1';
+        }
         parent::setValue($value);
         return $this;
     }
