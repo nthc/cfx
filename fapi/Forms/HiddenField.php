@@ -12,6 +12,22 @@ class HiddenField extends Field
     {
         parent::__construct($name, $value);
     }
+    
+    public function setValue($value)
+    {
+        if($value === false)
+        {
+            parent::setValue('0');
+        }
+        else if($value === true)
+        {
+            parent::setValue('1');
+        }
+        else
+        {
+            parent::setValue($value);
+        }
+    }
 
     public function render()
     {
