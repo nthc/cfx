@@ -202,7 +202,7 @@ class Postgresql extends SQLDBDataStore
                   case "boolean":
                       if(is_string($value))
                       {
-                          $this->formattedData[$field] = ($value == 'f' || $value == 'false' || $value=='0' || $value == null) ? 'FALSE' : 'TRUE';
+                          $this->formattedData[$field] = ($value === false || $value == 'false' || $value=='0' || $value == null) ? 'FALSE' : 'TRUE';
                       }
                       else
                       {

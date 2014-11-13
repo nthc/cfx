@@ -17,15 +17,15 @@ class HiddenField extends Field
     {
         if($value === false)
         {
-            parent::setValue('0');
+            return parent::setValue('0');
         }
         else if($value === true)
         {
-            parent::setValue('1');
+            return parent::setValue('1');
         }
         else
         {
-            parent::setValue($value);
+            return parent::setValue($value);
         }
     }
 

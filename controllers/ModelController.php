@@ -236,7 +236,7 @@ class ModelController extends Controller
             $this->app = simplexml_load_file($this->localPath."/app.xml");
         }
         
-        if($_SESSION['read_only'] === 't')
+        if($_SESSION['read_only'] === true)
         {
             $this->hasAddOperation = false;
             $this->hasEditOperation = false;

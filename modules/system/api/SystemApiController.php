@@ -28,7 +28,7 @@ class SystemApiController extends Controller
             }
             try{
                 @$apiKey = reset(Model::load('system.api_keys')->setQueryResolve(false)->getWithField2('key', $_REQUEST['__api_key']));
-                if($apiKey['active'] == 't')
+                if($apiKey['active'] === true)
                 {
                     $signature = sha1($aggregatedKey . $apiKey['secret']);
                     if($signature == $_GET['__api_signature'])
