@@ -108,7 +108,13 @@ class Db
     {
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
-        $result = $instance->query($query);
+        try{
+            $result = $instance->query($query);
+        }
+        catch(PDOException $e)
+        {
+            throw new Exception("Error executing query [$query]. PDO says: {$e->getMessage()}");
+        }
         self::$lastQuery = $query;
                 
         if($result->rowCount() > 0)
