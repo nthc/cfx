@@ -937,11 +937,12 @@ class ModelController extends Controller
         $form->setShowSubmit(false);
 
         $data["form"] = $form->render();
-        return array
+        return $this->arbitraryTemplate(Application::getWyfHome('controllers/import.tpl'), $data);
+        /*return array
         (
             "template"=>"file:".getcwd()."/lib/controllers/import.tpl",
             "data"=>$data
-        );
+        );*/
     }
 
     /**
