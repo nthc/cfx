@@ -292,7 +292,7 @@ abstract class SQLDBDataStore extends DataStore
         return $results;
     }
     
-    public static function log($query)
+    public static function log($query, $bind)
     {
         if(SQLDBDataStore::$logQueries) 
         {
@@ -303,7 +303,7 @@ abstract class SQLDBDataStore extends DataStore
                     break;
                 case "file":
                     Logger::setPath("app/logs/sql.log");
-                    Logger::log($query);
+                    Logger::log($query . " BIND:" . json_encode($bind));
                     break;
             }
         }
@@ -370,7 +370,7 @@ abstract class SQLDBDataStore extends DataStore
     protected abstract function localGet($params = null, $mode = Model::MODE_ASSOC, $explicit_relations = false, $resolve = true);
     protected abstract function beginTransaction();
     protected abstract function endTransaction();
-    protected abstract function query($query,$mode=SQLDatabaseModel::MODE_ARRAY);
+    protected abstract function query($query,$mode=SQLDatabaseModel::MODE_ARRAY, $bind = null, $key = FALSE);
     public abstract function concatenate($fields);
     public abstract function formatField($field,$value,$alias = true,$functions=null,$uniqueNames=false,$excludeNumbers = false);
     public abstract function escape($string);
