@@ -48,7 +48,7 @@ class FilterCompiler
         $expression = self::parseExpression();
         if(self::$token !== false)
         {
-            throw new Exception("Unexpected " . self::$token);
+            throw new Exception("Unexpected '" . self::$token . "' in filter [$filter]");
         }
         $parsed = self::renderExpression($expression);
         return $parsed;
@@ -230,7 +230,7 @@ class FilterCompiler
         
         if(self::$token === false && strlen(self::$filter) > 0)
         {
-            throw new Exception("Unexpected " . self::$filter[0]);
+            throw new Exception("Unexpected character [" . self::$filter[0] . "] begining " . self::$filter . ".");
         }
     }
     
