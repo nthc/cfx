@@ -162,9 +162,12 @@ class Db
     /**
      * Returns an instance of a named database. All the database configurations
      * are stored in the app/config.php
+     * 
      * @param string $db The tag of the database in the config file
-     * @param boolean $atAllCost When set to true this function will block till a valid db is found.
-     * @return resource
+     * @param boolean $atAllCost When set to true this function will block till 
+     *              a valid db is found.
+     * 
+     * @return \PDO
      */
     public static function get($db = null, $atAllCost = false)
     {

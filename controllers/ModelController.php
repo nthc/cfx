@@ -568,6 +568,8 @@ class ModelController extends Controller
             if($return===true)
             {
                 $id = $c["instance"]->model->save();
+                var_dump($id);
+                die();
                 User::log($c["success_message"],$data);
                 if($redirect)
                 {

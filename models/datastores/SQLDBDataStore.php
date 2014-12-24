@@ -105,12 +105,12 @@ abstract class SQLDBDataStore extends DataStore
 
         $fields = implode(",",$fields);
         $query = "INSERT INTO $this->database ($fields) VALUES ";
-        $query .= "(".implode(",",$values).")";
+        $query .= "(?".   str_repeat(',?', count($values) - 1).")";
 
 
         $this->beginTransaction();
 
-        $this->query($query);
+        $this->query($query, null, $values);
 
         
         if($this->formattedData[$this->getKeyField()]=="")
