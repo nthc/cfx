@@ -192,46 +192,22 @@ class Postgresql extends SQLDBDataStore
             }
             else if($value === "" || $value === null)
             {
-                $this->formattedData[$field] = "null";
+                $this->formattedData[$field] = null;
             }
             else
             {
                switch($fields[$field]["type"])
-               {
-                  
-                  case "boolean":
-                      if(is_string($value))
-                      {
-                          $this->formattedData[$field] = ($value === false || $value == 'false' || $value=='0' || $value == null) ? 'FALSE' : 'TRUE';
-                      }
-                      else
-                      {
-                          $this->formattedData[$field] = $value == true ? 'TRUE' : 'FALSE';
-                      }
-                      break;
-                   
-                  case "number":
-                  case "double":
-                  case "integer":
-                  case "reference":
-                      $this->formattedData[$field] = is_numeric($value) ? $value : $this->escape($value);
-                      break;
-                  
+               {  
                   case "datetime":
-                      $this->formattedData[$field] = $value == "" ? "null" : sprintf("'%s'", date("Y-m-d H:i:s",$value));
+                      $this->formattedData[$field] = $value == "" ? "null" : date("Y-m-d H:i:s",$value);
                       break;
                     
                   case "date":
                       $this->formattedData[$field] = 
-                      $value == "" ? "null" : sprintf("'%s'", date("Y-m-d",$value));
-                      break;
-                      
-                  case "binary":
-                      $this->formattedData[$field] = 
-                      $value == "" ? null : sprintf("decode('%s', 'hex')", bin2hex($value));
+                      $value == "" ? "null" : date("Y-m-d",$value);
                       break;
                   default:
-                      $this->formattedData[$field] = sprintf("'%s'", $this->escape($value));
+                      $this->formattedData[$field] = $value;
                 }
             }
         }        

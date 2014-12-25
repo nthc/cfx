@@ -142,9 +142,10 @@ abstract class SQLDBDataStore extends DataStore
      * 
      * @see lib/models/model#update($field, $value)
      */
-    public function update($key_field,$key_value)
+    public function update($keyField,$keyValue)
     {
-        $fields = array(); // array_keys($this->data);
+        $fields = array(); 
+        $bind = array();
         $relatedData = array();
         $assignments = array();
         
@@ -157,12 +158,13 @@ abstract class SQLDBDataStore extends DataStore
             else
             {
                 $fields[] = $field;
-                $assignments[] = "$field = ".($value === "" ? "NULL" : $value);
+                $assignments[] = "$field = ?"; 
+                $bind[] = $value;
             }
         }
 
-        $description = "Updated item";
-        $before = $this->query("SELECT * FROM {$this->database} WHERE $key_field='$key_value'");
+        $query = "SELECT * FROM {$this->database} WHERE $keyField = ?";
+        $before = $this->query($query, null, array($keyValue), md5($query));
         $changes = $this->data;
         foreach($changes as $key => $value)
         {
@@ -172,34 +174,35 @@ abstract class SQLDBDataStore extends DataStore
             }
         }
 
-        $query = "UPDATE {$this->database} SET ".implode(",",$assignments)." WHERE $key_field='$key_value'";
-        $this->query($query);
+        $bind[] = $keyValue;
+        $query = "UPDATE {$this->database} SET ".implode(",",$assignments)." WHERE $keyField = ?";
+        $this->query($query, null, $bind, md5($query));
 
         foreach($relatedData as $database => $data)
         {
             $model = Model::load($database);
-            $model->delete($key_field, $key_value);
+            $model->delete($keyField, $keyValue);
             foreach($data as $row)
             {
-                $row[$key_field] = $key_value;
+                $row[$keyField] = $keyValue;
                 $model->setData($row);
                 $model->save();
             }
         }
     }
 
-    public function delete($key_field, $key_value = null)
+    public function delete($keyField, $keyValue = null)
     {
-        $description = 'Deleted Item';
-        if($key_value == null)
+        if($keyValue == null)
         {
-            $query = "DELETE FROM {$this->database} WHERE $key_field";
+            $query = "DELETE FROM {$this->database} WHERE $keyField";
+            $this->query($query);
         }
         else
         {
-            $query = "DELETE FROM {$this->database} WHERE $key_field='$key_value'";
+            $query = "DELETE FROM {$this->database} WHERE $keyField = ?";
+            $this->query($query, null, array($keyValue));
         }
-        $this->query($query);
     }
 
     public function getDatabase()
@@ -278,9 +281,9 @@ abstract class SQLDBDataStore extends DataStore
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
         $results = false;
-        if(self::isCacheable($params))
+        if(self::isSelectCacheable($params))
         {
-            $results = self::executeCachedQuery($params, $mode);
+            $results = self::executeCachedSelectQuery($params, $mode);
         }
         
         if($results === false)
@@ -309,10 +312,9 @@ abstract class SQLDBDataStore extends DataStore
         }
     }
     
-    private static function isCacheable($params)
+    private static function isSelectCacheable($params)
     {
         return count($params) > 0 && !isset($params['conditions']);
-        //return $params['filter'] != '' || $params['cache_key'] != '' || (!$params['filter'] != '' && !$params['conditions'] != '');
     }
     
     private static function getQueryKey($params)
@@ -326,8 +328,8 @@ abstract class SQLDBDataStore extends DataStore
             return md5(serialize($params)) . "_query";
         }
     }
-    
-    private static function executeCachedQuery(&$params, $mode)
+        
+    private static function executeCachedSelectQuery(&$params, $mode)
     {
         $results = false;
         $queryKey = self::getQueryKey($params);
@@ -350,10 +352,10 @@ abstract class SQLDBDataStore extends DataStore
     public function get($params = null, $mode = Model::MODE_ASSOC, $explicit_relations = false, $resolve = true)
     {
         $results = false;
-        if(self::isCacheable($params))
+        if(self::isSelectCacheable($params))
         {
             $params['model_name_entropy'] = $this->modelName;
-            $results = self::executeCachedQuery($params, $mode);
+            $results = self::executeCachedSelectQuery($params, $mode);
         }
         
         if($results === false)
