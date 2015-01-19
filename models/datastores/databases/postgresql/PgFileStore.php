@@ -22,7 +22,7 @@ class PgFileStore extends postgresql
         $model = PgFileStore::getModel();
         $model->setData(
             array(
-                "data" => $data
+                "data" => utf8_encode($data)
             )
         );
         $id = $model->save();
