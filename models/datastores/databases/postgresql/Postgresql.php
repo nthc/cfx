@@ -198,6 +198,13 @@ class Postgresql extends SQLDBDataStore
             {
                switch($fields[$field]["type"])
                {  
+                   case "boolean":
+                       if(is_bool($value))
+                       {
+                           $value = $value ? 1 : 0;
+                       }
+                       $this->formattedData[$field] = $value;
+                       break;
                   case "datetime":
                       $this->formattedData[$field] = $value == "" ? "null" : date("Y-m-d H:i:s",$value);
                       break;
