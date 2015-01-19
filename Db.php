@@ -94,6 +94,7 @@ class Db
         }
         
         $statement->execute($bindData);
+        
         if($mode == Db::MODE_ARRAY)
         {
             return $statement->fetchAll(PDO::FETCH_NUM);

@@ -19,14 +19,12 @@ class PgFileStore extends postgresql
 
     public static function addData($data) 
     {
-        $model = PgFileStore::getModel();
-        $model->setData(
-            array(
-                "data" => utf8_encode($data)
-            )
-        );
-        $id = $model->save();
-        return $id;
+        $pdo = Db::get();
+        $statement = $pdo->prepare("INSERT INTO common.binary_objects(data) VALUES(?)");
+        $statement->bindParam(1, $data, PDO::PARAM_LOB);
+        $statement->execute();
+        $id = Db::query("SELECT LASTVAL()");
+        return $id[0]['lastval'];
     }
 
     public static function getData($oid) 
