@@ -4,6 +4,7 @@ class TableContent extends ReportContent
     protected $headers;
     protected $data;
     public $style;
+    public $tag;
     
     public $data_params = null;
     private $totals = array();
