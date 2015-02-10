@@ -41,6 +41,8 @@ abstract class Model implements ArrayAccess
     public $keyField;
     public $assumedTransactionMode;
     public $disableAuditTrails = false;
+    public $redirectedPackage;
+    public $packageSchema;
     
     /**
      *
@@ -78,6 +80,8 @@ abstract class Model implements ArrayAccess
     public static function load($model, $path=null, $cached=true)
     {	
         global $redirectedPackage;
+        global $packageSchema;
+
         $modelName = (substr($model,0,1)=="." ? $redirectedPackage:"") . $model;
         
         if(!isset(Model::$instances[$modelName]))
@@ -92,7 +96,10 @@ abstract class Model implements ArrayAccess
                 else
                 {
                     add_include_path(Cache::get("model_path_$modelName"), false);
-                    Model::$instances[$modelName] = Cache::get("model_$modelName");
+                    $modelInstance = Cache::get("model_$modelName");
+                    $redirectedPackage = $modelInstance->redirectedPackage;
+                    $packageSchema = $modelInstance->packageSchema;
+                    Model::$instances[$modelName] = $modelInstance;
                 }
             }
             else
@@ -145,6 +152,8 @@ abstract class Model implements ArrayAccess
                     $redirectedPackage = $redirectedPackage == "" ? $package_path : $redirectedPackage;
                     add_include_path($modelIncludePath, false);
                     $instance = new $modelClassName($model, $model_name);
+                    $instance->redirectedPackage = $redirectedPackage;
+                    $instance->packageSchema = $packageSchema;
                     $instance->postInitHook();
                     if(CACHE_MODELS) Cache::add("model_path_$model", $modelIncludePath);
                 }
