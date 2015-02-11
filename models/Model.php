@@ -78,7 +78,7 @@ abstract class Model implements ArrayAccess
      * @return Model
      */
     public static function load($model, $path=null, $cached=true)
-    {	
+    {
         global $redirectedPackage;
         global $packageSchema;
 
@@ -97,8 +97,11 @@ abstract class Model implements ArrayAccess
                 {
                     add_include_path(Cache::get("model_path_$modelName"), false);
                     $modelInstance = Cache::get("model_$modelName");
-                    $redirectedPackage = $modelInstance->redirectedPackage;
-                    $packageSchema = $modelInstance->packageSchema;
+                    if($redirectedPackage == '')
+                    {
+                        $redirectedPackage = $modelInstance->redirectedPackage;
+                        $packageSchema = $modelInstance->packageSchema;
+                    }
                     Model::$instances[$modelName] = $modelInstance;
                 }
             }
