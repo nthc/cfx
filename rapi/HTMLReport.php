@@ -113,11 +113,11 @@ class HTMLReport extends Report
                     print "</tr></thead><tbody>";
                     $fill = false;
                     $data = $content->getData();
-                    $keys = array_keys(reset($data));
                     
                     foreach($data as $row)
                     {
                     	print "<tr " . ($fill ? "style='background-color:rgb($bodyStripe)'" : "") . " >";
+                        $keys = array_keys($row);
                         foreach($headers as $i=>$header)
                         {
                         	$key = $keys[$i];
