@@ -147,6 +147,19 @@ if($cliMode === true)
 }
 else
 {
+    // Load the styleseets and the javascripts
+    // Bootstrap the application
+    require SOFTWARE_HOME . "app/bootstrap.php";  
+    
+    if(defined('AUTH_PACKAGE'))
+    {
+        $authPackage = AUTH_PACKAGE;
+    }
+    else
+    {
+        $authPackage = 'system';
+    }
+
     // Authentication ... check if someone is already logged in if not force 
     // a login
     if ($_SESSION["logged_in"] == false && array_search($_GET["q"], $authExcludedPaths) === false && substr($_GET["q"], 0, 10) != "system/api")
@@ -157,14 +170,14 @@ else
             if($key == "q") continue;
             $redirect .= urlencode("$key=$value");
         }
-        header("Location: ".Application::getLink("/system/login") . "?redirect=$redirect");
+        header("Location: ".Application::getLink("/{$authPackage}/login") . "?redirect=$redirect");
     }
     else if ($_SESSION["logged_in"] === true )
-    {
+    {        
         // Force a password reset if user is logging in for the first time
-        if ($_SESSION["user_mode"] == 2 && $_GET["q"] != "system/login/change_password")
+        if ($_SESSION["user_mode"] == 2 && $_GET["q"] != "{$authPackage}/login/change_password")
         {
-            header("Location: " . Application::getLink("/system/login/change_password"));
+            header("Location: " . Application::getLink("/{$authPackage}/login/change_password"));
         }
         
         Application::addJavaScript(Application::getLink(Application::getWyfHome("js/wyf.js")));
@@ -233,11 +246,7 @@ else
                 )
             );
         }
-    }
-    
-    // Load the styleseets and the javascripts
-    // Bootstrap the application
-    require SOFTWARE_HOME . "app/bootstrap.php";    
+    }  
     
     if($fapiStyleSheet === false)
     {
@@ -248,20 +257,11 @@ else
         Application::preAddStylesheet($fapiStyleSheet);
     }
     
-    
     Application::preAddStylesheet("kalendae/kalendae.css", Application::getWyfHome('js/'));
     Application::preAddStylesheet("css/main.css");
     Application::addJavaScript(Application::getLink(Application::getWyfHome("fapi/js/fapi.js")));
     Application::addJavaScript(Application::getLink(Application::getWyfHome("js/jquery.js")));
     Application::addJavaScript(Application::getLink(Application::getWyfHome("js/kalendae/kalendae.js")));
-    /*Application::preAddStylesheet("kalendae/kalendae.css", 'lib/js/');
-    Application::preAddStylesheet("css/main.css");
-    
-    Application::addJavaScript(Application::getLink("/lib/fapi/js/fapi.js"));
-    Application::addJavaScript(Application::getLink("/lib/js/jquery.js"));
-    Application::addJavaScript(Application::getLink("/lib/js/kalendae/kalendae.js"));
-    Application::addJavaScript(Application::getLink("/lib/js/json2.js"));*/
-    
     
     // Blast the HTML code to the browser!
     Application::setSiteName(Application::$config['name']);
