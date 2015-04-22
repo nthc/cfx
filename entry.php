@@ -62,9 +62,7 @@ if(Application::$config['custom_sessions'])
 
 session_start();
 
-$authExcludedPaths = array(
-    "system/login",
-);
+$authExcludedPaths = array();
 
 // Can be overridden in the app bootstrap
 $fapiStyleSheet = false;
@@ -159,6 +157,8 @@ else
     {
         $authPackage = 'system';
     }
+    
+    $authExcludedPaths[] = "{$authPackage}/login";
 
     // Authentication ... check if someone is already logged in if not force 
     // a login
