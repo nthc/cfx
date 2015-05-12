@@ -38,25 +38,35 @@ class User
      */
     public static function getPermission($permission,$role_id=null)
     {
-        $role_id = $role_id===null?$_SESSION["role_id"]:$role_id;
-        if($role_id==1)
+        //the value to return to the calling function
+        $returnValue = null;
+        
+        //check if USER_PERMISSION constant is defined, if it is call the modified permission method 
+        //else call the default method
+        if(defined('USER_PERMISSION'))
         {
-            return true;
+            //Check if the permission exists and return a value
+            if(Auth::getPermission($permission, $role_id))
+            {
+                $returnValue = true;
+            }
+            else
+            {
+                $returnValue = false;
+            }
         }
         else
         {
-            $model = model::load("system.permissions");
-            $data = $model->get(
-                array(
-                    "fields"=>array("value"),
-                    "conditions"=>"role_id = $role_id AND permission='$permission'"
-                ),
-                Model::MODE_ASSOC,
-                false,
-                false
-            );
-            return $data[0]["value"];
+            if(Auth::defaultGetPermission($permission, $role_id))
+            {
+                $returnValue = true;
+            }
+            else
+            {
+                $returnValue = false;
+            }
         }
+        return $returnValue;
     }
 
     /**
