@@ -686,7 +686,7 @@ abstract class Model implements ArrayAccess
     
     public function getWithField($field,$value)
     {
-        return $this->get(array("conditions"=>"$field='$value'"),SQLDatabaseModel::MODE_ASSOC,false,false);
+        return $this->get(array("filter"=>"$field=?", 'bind' => array($value)),SQLDatabaseModel::MODE_ASSOC,false,false);
     }
     
     public function getWithField2($field, $value)
