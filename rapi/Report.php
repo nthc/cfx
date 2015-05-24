@@ -21,7 +21,12 @@ abstract class Report
     
     public function add()
     {
-        $this->contents = array_merge($this->contents,func_get_args());
+        //$this->contents = array_merge($this->contents,func_get_args());
+        $args = func_get_args();
+        foreach($args as $arg)
+        {
+            $this->contents[] = $arg;
+        }
         return $this;
     }
 

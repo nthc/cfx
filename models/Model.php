@@ -59,6 +59,10 @@ abstract class Model implements ArrayAccess
     private $validationPassed = false;
     
     
+    /**
+     * 
+     * @return SQLDBDataStore
+     */
     public static function getDatastoreInstance()
     {
         if(count(Model::$instances) > 0)
