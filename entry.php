@@ -193,7 +193,15 @@ else
         }
         
         // Load the side menus
-        $menuFile = SOFTWARE_HOME . "app/cache/menus/side_menu_{$_SESSION["role_id"]}.html";
+        if(defined('MENU_FILE'))
+        {
+            $menuFile = MENU_FILE;
+        }
+        else
+        {
+            $menuFile = SOFTWARE_HOME . "app/cache/menus/side_menu_{$_SESSION["role_id"]}.html";
+        }
+        
         if(file_exists($menuFile))
         {
             $t->assign(

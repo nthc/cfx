@@ -48,9 +48,9 @@ class User
         }
     }
     
-    public static function defaultGetPermission($permission,$role_id)
+    public static function defaultGetPermission($permission, $role_id)
     {
-        $role_id = $role_id===null?$_SESSION["role_id"]:$role_id;
+        $role_id = $role_id === null ? $_SESSION["role_id"] : $role_id;
         
         if($role_id==1)
         {
