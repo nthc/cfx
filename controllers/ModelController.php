@@ -209,7 +209,10 @@ class ModelController extends Controller
         $this->path = $path;
         $this->urlBase = $this->urlBase == '' ? ($redirectedPackage != '' ? "$redirectedPackage" : '') . $this->modelName : $this->urlBase;
         $this->urlPath = Application::$prefix."/".str_replace(".","/",$this->urlBase);
-        $this->permissionPrefix = str_replace(".", "_", $redirectedPackage) . str_replace(".", "_", $this->modelName);
+        if($this->modelName[0] == '.') {
+            $this->permissionPrefix = str_replace(".", "_", $redirectedPackage);
+        } 
+        $this->permissionPrefix .= str_replace(".", "_", $this->modelName);
         $this->localPath = "app/modules/".str_replace(".","/",$this->urlBase);
         
         if($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' || $_REQUEST["__api_mode"] == "yes")
@@ -1091,6 +1094,7 @@ class ModelController extends Controller
      */
     public function getPermissions()
     {
+        var_dump($this->permissionPrefix);
         return array
         (
             array("label"=>"Can add",    "name"=> $this->permissionPrefix . "_can_add"),
