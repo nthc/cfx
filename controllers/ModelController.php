@@ -205,8 +205,6 @@ class ModelController extends Controller
         $this->modelName = ($this->modelName == "" ? $model : $this->modelName);
         $this->model = Model::load($this->modelName);
         $this->name = $this->model->name;
-        $this->t = $t;
-        $this->path = $path;
         $this->urlBase = $this->urlBase == '' ? ($redirectedPackage != '' ? "$redirectedPackage" : '') . $this->modelName : $this->urlBase;
         $this->urlPath = Application::$prefix."/".str_replace(".","/",$this->urlBase);
         if($this->modelName[0] == '.') {
@@ -1094,7 +1092,6 @@ class ModelController extends Controller
      */
     public function getPermissions()
     {
-        var_dump($this->permissionPrefix);
         return array
         (
             array("label"=>"Can add",    "name"=> $this->permissionPrefix . "_can_add"),
