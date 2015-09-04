@@ -37,7 +37,7 @@ class RedisCache extends Cache
     public function __construct()
     {
         $this->redis = new Redis();
-        if(!$this->redis->connect('127.0.0.1', 6379))
+        if(!$this->redis->connect(Application::$config['cache']['host'], Application::$config['cache']['port']))
         {
             throw new Exception("Could not connect to redis server");
         }
