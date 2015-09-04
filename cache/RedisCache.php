@@ -23,47 +23,39 @@
 *
 */
 
-
 /**
- * A file storing backend for the the Caching framework. 
- *  
+ * A memcache storing backend for the Caching framework. 
+ * 
  * @author ekow
  * @package wyf.caching
  */
-class FileCache extends Cache
+
+class RedisCache extends Cache
 {
-	/**
-	 * (non-PHPdoc)
-	 * @see lib/cache/Cache::addImplementation()
-	 */
+    private $redis;
+    
+    public function __construct()
+    {
+        $this->redis = new Redis();
+        if(!$this->redis->connect('127.0.0.1', 6379))
+        {
+            throw new Exception("Could not connect to redis server");
+        }
+    }
+    
     public function addImplementation($key, $object, $ttl = 0)
     {
-        file_put_contents(SOFTWARE_HOME . "app/cache/code/$key", serialize($object));
+        $this->redis->set($key, serialize($object));
         return $object;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see lib/cache/Cache::getImplementation()
-     */
     public function getImplementation($key)
     {
-        if(file_exists(SOFTWARE_HOME . "app/cache/code/$key")) {
-          $return = unserialize(file_get_contents(SOFTWARE_HOME . "app/cache/code/$key")); 
-        }
-        else
-        {
-            $return = null;
-        }
-        return $return;
+        return unserialize($this->redis->get($key));
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see lib/cache/Cache::existsImplementation()
-     */
     public function existsImplementation($key)
     {
-        return file_exists(CACHE_PREFIX ."app/cache/code/$key");
+        return $this->redis->exists($key);
     }
 }
