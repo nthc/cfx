@@ -34,6 +34,11 @@ class RedisCache extends Cache
 {
     private $redis;
     
+    private function getServerKey($key)
+    {
+        return Application::$config['cache']['server_key'] . ":$key";
+    }
+    
     public function __construct()
     {
         $this->redis = new Redis();
@@ -45,17 +50,17 @@ class RedisCache extends Cache
     
     public function addImplementation($key, $object, $ttl = 0)
     {
-        $this->redis->set($key, serialize($object));
+        $this->redis->set($this->getServerKey($key), serialize($object));
         return $object;
     }
     
     public function getImplementation($key)
     {
-        return unserialize($this->redis->get($key));
+        return unserialize($this->redis->get($this->getServerKey($key)));
     }
     
     public function existsImplementation($key)
     {
-        return $this->redis->exists($key);
+        return $this->redis->exists($this->getServerKey($key));
     }
 }
