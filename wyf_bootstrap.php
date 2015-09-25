@@ -36,28 +36,17 @@ include "coreutils.php";
 //include auth files
 $directoryPath = __DIR__."/modules/cfx_auth/";
 
-$folders = scandir($directoryPath);
+add_include_path($directoryPath."constraints",false);
+add_include_path($directoryPath."login",false);
+add_include_path($directoryPath."logout",false);
+add_include_path($directoryPath."password_history",false);
+add_include_path($directoryPath."role_validity",false);
+add_include_path($directoryPath."roles",false);
+add_include_path($directoryPath."users",false);
+add_include_path($directoryPath."users_roles",false);
 
-foreach($folders as $dir)
-{ 
-        
-    if(strpos($dir,'.') === false)
-    {
-        $folderDir = scandir($directoryPath."/".$dir);
-        
-        foreach($folderDir as $foldDir)
-        {
-            if(strpos($foldDir,"."))
-            {
-                include $directoryPath."/".$dir."/".$foldDir;
-            }
-        }
-
-    }
-    
-}
-include __DIR__."/lib/AuthMenu.php";
-include __DIR__."/lib/Auth.php";
+//Add lib for auth
+add_include_path(__DIR__."/lib",false);
 
 // Load the applications configuration file and define the home
 require "app/config.php";
