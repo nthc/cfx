@@ -32,6 +32,22 @@
 // Load the core utilities which handle auto loading of classes.
 include "coreutils.php";
 
+
+//include auth files
+$directoryPath = __DIR__."/modules/cfx_auth/";
+
+add_include_path($directoryPath."constraints",false);
+add_include_path($directoryPath."login",false);
+add_include_path($directoryPath."logout",false);
+add_include_path($directoryPath."password_history",false);
+add_include_path($directoryPath."role_validity",false);
+add_include_path($directoryPath."roles",false);
+add_include_path($directoryPath."users",false);
+add_include_path($directoryPath."users_roles",false);
+
+//Add lib for auth
+add_include_path(__DIR__."/lib",false);
+
 // Load the applications configuration file and define the home
 require "app/config.php";
 define("SOFTWARE_HOME", $config['home']);
