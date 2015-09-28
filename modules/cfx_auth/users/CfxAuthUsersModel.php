@@ -2,11 +2,11 @@
 
 class CfxAuthUsersModel extends ORMSQLDatabaseModel{
 
-    public $database = 'common.users';
+    public $database = 'auth.users';
     
     public $references = array(
         "role_id" => array(
-            "reference"         =>  ".roles.role_id",
+            "reference"         =>  "auth.roles.role_id",
             "referenceValue"    =>  "role_name"
         )
     );
