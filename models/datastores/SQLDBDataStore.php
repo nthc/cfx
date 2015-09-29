@@ -17,10 +17,7 @@ abstract class SQLDBDataStore extends DataStore
     public $database;
     public static $activeDriver;
     public static $activeDriverClass;
-    public static $logQueries = false;
-    public static $logMode = "file";
     public $modelName;
-    public static $lastQuery;
 
     public function getExpandedFieldList($fields,$references,$resolve=true,$functions=null)
     {
@@ -293,23 +290,6 @@ abstract class SQLDBDataStore extends DataStore
         }
         
         return $results;
-    }
-    
-    public static function log($query, $bind)
-    {
-        if(SQLDBDataStore::$logQueries) 
-        {
-            switch (SQLDBDataStore::$logMode)
-            {
-                case "print":
-                    print $query . "\n";
-                    break;
-                case "file":
-                    Logger::setPath("app/logs/sql.log");
-                    Logger::log($query . " BIND:" . json_encode($bind));
-                    break;
-            }
-        }
     }
     
     private static function isSelectCacheable($params)

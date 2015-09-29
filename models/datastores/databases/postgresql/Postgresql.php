@@ -154,9 +154,7 @@ class Postgresql extends SQLDBDataStore
     public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC, $bind = null, $key = false)
     {
         $rows = array();
-        SQLDBDataStore::log($query, $bind);
         $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
-        SQLDBDataStore::$lastQuery = $query;
         
         if(is_array($bind))
         {
