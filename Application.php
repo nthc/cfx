@@ -33,6 +33,10 @@
  * 
  * @author James Ekow Abaka Ainooson <jainooson@gmail.com>
  */
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 class Application
 {
     /**
@@ -176,6 +180,8 @@ class Application
      * @var boolean
      */
     private static $sideMenuHidden = false;
+    
+    public static $logger;
     
     /**
      * Adds a stylesheet to the list of stylesheets. This method adds
@@ -408,5 +414,19 @@ class Application
     public static function getWyfHome($path = '')
     {
         return substr(__DIR__, strlen(getcwd()) + 1) . "/$path";
+    }  
+    
+    private static $loggers = [];
+    
+    public static function log($channel) 
+    {
+        if(!isset(self::$loggers[$channel]))
+        {
+            self::$loggers[$channel] = new Logger($channel);
+            self::$loggers[$channel]->pushHandler(
+                new StreamHandler("logs/cfx.log", self::$config['log_level'])
+            );            
+        }
+        return self::$loggers[$channel];
     }    
 }

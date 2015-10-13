@@ -76,7 +76,6 @@ class XmlDefinedReportController extends ReportController {
      */
     public function generate($params) {
         $report = $this->getReport();
-
         $reader = new XMLReader();
         $reader->XML($this->xml->asXML());
 
@@ -364,7 +363,7 @@ class XmlDefinedReportController extends ReportController {
                     
                     foreach($dontJoins as $pair)
                     {
-                        $params['dont_join'][] = (string)$pair;
+                        $params['dont_join'][] = defined('PACKAGE_PATH') ? str_replace('PACKAGE_PATH', PACKAGE_PATH, (string)$pair) : (string)$pair;
                     }               
 
                     if ($tableConditions != "") {
@@ -676,11 +675,11 @@ class XmlDefinedReportController extends ReportController {
             $container = new FieldSet($table["name"]);
             $container->setId("{$table["name"]}_options");
             $container->add(
-                    Element::create("FieldSet", "Filters")->add($filters)->setId("table_{$table['name']}"), Element::create("FieldSet", "Sorting & Limiting")->add(
-                            $sortingField, Element::create("SelectionList", "Direction", "{$table["name"]}.sorting_direction")->addOption("Ascending", "ASC")->addOption("Descending", "DESC"), Element::create('TextField', 'Limit', "{$table['name']}.limit")->setAsNumeric()
-                    )->setId("{$table['name']}_sorting_fs"), Element::create("FieldSet", "Grouping")->
-                            setId("{$table['name']}_grouping_fs")->
-                            add($groupingTable)
+                Element::create("FieldSet", "Filters")->add($filters)->setId("table_{$table['name']}"), Element::create("FieldSet", "Sorting & Limiting")->add(
+                    $sortingField, Element::create("SelectionList", "Direction", "{$table["name"]}.sorting_direction")->addOption("Ascending", "ASC")->addOption("Descending", "DESC"), Element::create('TextField', 'Limit', "{$table['name']}.limit")->setAsNumeric()
+                )->setId("{$table['name']}_sorting_fs"), Element::create("FieldSet", "Grouping")->
+                setId("{$table['name']}_grouping_fs")->
+                add($groupingTable)
             );
             $sortingField->setName($table["name"] . "_sorting");
             $this->form->add($container);
