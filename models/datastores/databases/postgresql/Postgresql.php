@@ -155,7 +155,6 @@ class Postgresql extends SQLDBDataStore
     {
         $rows = array();
         $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
-        Application::log('postgresql')->debug("Query executed [$query]", ['bind' => $bind]);
         
         if(is_array($bind))
         {

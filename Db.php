@@ -74,6 +74,7 @@ class Db
     {
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
+        Application::log('DB')->debug("Raw Query [$query]");
         $result = $instance->query($query);
         return $result;
     }
@@ -92,7 +93,8 @@ class Db
             $statement = $instance->prepare($query);            
             Db::$statements[$key] = $statement;
         }
-        
+
+        Application::log('DB')->debug("Bound Query [$query]", ['bind' => $bindData]);
         $statement->execute($bindData);
         
         if($mode == Db::MODE_ARRAY)
@@ -110,28 +112,21 @@ class Db
         if($instance === null) $instance = Db::$lastInstance;
         $instance = Db::getCachedInstance($instance);
         try{
+            Application::log('DB')->debug("Query [$query]");           
             $result = $instance->query($query);
         }
         catch(PDOException $e)
         {
             throw new Exception("Error executing query [$query]. PDO says: {$e->getMessage()}");
         }
-        self::$lastQuery = $query;
                 
-        if($result->rowCount() > 0)
+        if($mode == Db::MODE_ARRAY)
         {
-            if($mode == Db::MODE_ARRAY)
-            {
-                return $result->fetchAll(PDO::FETCH_NUM);
-            }
-            else
-            {
-                return $result->fetchAll(PDO::FETCH_ASSOC);
-            }
+            return $result->fetchAll(PDO::FETCH_NUM);
         }
         else
         {
-            return array();
+            return $result->fetchAll(PDO::FETCH_ASSOC);
         }
     }
     

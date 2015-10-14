@@ -418,13 +418,13 @@ class Application
     
     private static $loggers = [];
     
-    public static function log($channel) 
+    public static function log($channel = 'default') 
     {
         if(!isset(self::$loggers[$channel]))
         {
             self::$loggers[$channel] = new Logger($channel);
             self::$loggers[$channel]->pushHandler(
-                new StreamHandler("logs/cfx.log", self::$config['log_level'])
+                new StreamHandler("logs/cfx.log", isset(self::$config['log_level']) ? self::$config['log_level'] : Logger::DEBUG)
             );            
         }
         return self::$loggers[$channel];
