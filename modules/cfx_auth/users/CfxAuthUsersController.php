@@ -17,6 +17,7 @@ class CfxAuthUsersController extends ModelController
         parent::__construct();
         $this->table->addOperation('roles', "Add Role(s)");
         $this->table->addOperation('reset_password', "Reset Password");
+        $this->table->addOperation('disable_user', "Disable User");
     }
 
     public function reset_password($params)
@@ -27,6 +28,16 @@ class CfxAuthUsersController extends ModelController
         $this->model->setData($user[0]);
         $this->model->update('user_id', $params[0]);
         Application::redirect($this->urlPath . "?notification=User's password reset");
+    }
+    
+    public function disable_user($params)
+    {
+        $this->model->queryResolve = false;
+        $user = $this->model->getWithField2('user_id', $params[0]);
+        $user[0]['user_status'] = '0';
+        $this->model->setData($user[0]);
+        $this->model->update('user_id', $params[0]);
+        Application::redirect($this->urlPath . "?notification=User has been disabled");
     }
 
     //Add roles to user

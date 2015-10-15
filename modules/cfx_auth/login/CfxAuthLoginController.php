@@ -228,6 +228,11 @@ class CfxAuthLoginController extends Controller
                           . "of too many login attempts. Please contact the system administrator");
                     return true;
                 }
+                else if($userData[0]["user_status"] == 0)
+                {
+                    $form->addError("Your account has been disabled. Please contact the system administrator");
+                    return true;
+                }
                 else
                 {
                     $form->addError("Please check your username or password");
