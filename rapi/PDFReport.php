@@ -139,7 +139,7 @@ class PDFReport extends Report
                 }
                 break;
             case "image":
-                $this->pdf->image($content->image, null, null, $content->width, $content->height);
+                $this->pdf->image($content->image, $content->x, $content->y, $content->width, $content->height);
                 break;  
             
             case "logo":
