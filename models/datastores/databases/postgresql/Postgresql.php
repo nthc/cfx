@@ -154,9 +154,7 @@ class Postgresql extends SQLDBDataStore
     public function query($query,$mode = SQLDatabaseModel::MODE_ASSOC, $bind = null, $key = false)
     {
         $rows = array();
-        SQLDBDataStore::log($query, $bind);
         $query = mb_convert_encoding($query, 'UTF-8', mb_detect_encoding($query));
-        SQLDBDataStore::$lastQuery = $query;
         
         if(is_array($bind))
         {
@@ -423,8 +421,11 @@ class Postgresql extends SQLDBDataStore
                 {
                     if($hasDontJoin)
                     {
-                        if(array_search("{$model->package},{$other_model->package}", $params['dont_join']) !== false) continue;
-                        if(array_search("{$model->package}.{$other_model->getKeyField()},{$other_model->package}.{$other_model->getKeyField()}", $params['dont_join']) !== false) continue;
+                        $modelPair = "{$model->package},{$other_model->package}";
+                        $fieldPair = "{$model->package}.{$other_model->getKeyField()},{$other_model->package}.{$other_model->getKeyField()}";
+                        Application::log('GET_MULTI')->debug("Trying to skip a join", ['model_pair' => $modelPair, 'field_pair' => $fieldPair, 'dont_join' => $params['dont_join']]);
+                        if(array_search($modelPair, $params['dont_join']) !== false) continue;
+                        if(array_search($fieldPair, $params['dont_join']) !== false) continue;
                     }
                     $joinConditions[] = "{$model->getDatabase()}.{$other_model->getKeyField()}={$other_model->getDatabase()}.{$other_model->getKeyField()}";
                 }
