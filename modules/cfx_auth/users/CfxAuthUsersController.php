@@ -17,7 +17,7 @@ class CfxAuthUsersController extends ModelController
         parent::__construct();
         $this->table->addOperation('roles', "Add Role(s)");
         $this->table->addOperation('reset_password', "Reset Password");
-        $this->table->addOperation('disable_user', "Disable User");
+        $this->table->addOperation('disable_user', "Disable User","javascript:wyf.confirmRedirect('Are you sure you want to disable user?','{$this->urlPath}/%path%/%key%')");
     }
 
     public function reset_password($params)
