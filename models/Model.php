@@ -57,6 +57,7 @@ abstract class Model implements ArrayAccess
     public $datastore;
     private static $instances = array();
     private $validationPassed = false;
+    private static $callbacks = [];
     
     
     /**
@@ -454,6 +455,11 @@ abstract class Model implements ArrayAccess
         $this->datastore->setData($this->datastore->data, $this->fields);
         $id = $this->saveImplementation();
         $this->postAddHook($id, $this->getData());
+        
+        if(isset(self::$callbacks[$this->package]['postAdd'])) {
+            $closure = self::$callbacks[$this->package]['postAdd'];
+            $closure($id, $this->getData());
+        }
         
         if($this->package != 'system.audit_trail' && $this->package != 'system.audit_trail_data')
         {
@@ -877,6 +883,13 @@ abstract class Model implements ArrayAccess
         
         return $compiled;
     }
+    
+    public static function injectCallback($type, $model, $callback) {
+        if(!isset(self::$callbacks[$type])) {
+            self::$callbacks[$type] = [];
+        }
+        self::$callbacks[$type][$model] = $callback;
+    }    
 }
 
 class ModelException extends Exception{
