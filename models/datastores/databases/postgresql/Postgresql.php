@@ -33,7 +33,9 @@ class Postgresql extends SQLDBDataStore
     protected function localGet($params=null,$mode=model::MODE_ASSOC, $explicit_relations=false,$resolve=true)
     {
         $fields = isset($params["fields"]) ? $params["fields"] : null;
-        $conditions = isset($params["conditions"]) ? $params["conditions"] : null;
+        if(isset($params['conditions'])) {
+            throw new Exception("Use of conditions in queries deprecated");
+        }
         $conditions = isset($params['filter']) ? $params['filter'] : $conditions;
         $bindData = $params['bind'];
         $rows = array();
@@ -126,7 +128,13 @@ class Postgresql extends SQLDBDataStore
                 foreach($rows as $i => $row)
                 {
                     $model = Model::load((string)$explicitRelation);
-                    $data = $model->get(array("conditions"=>$model->getDatabase().".".$this->getKeyField()."='".$row[$this->getKeyField()]."'"),SQLDatabaseModel::MODE_ASSOC,false,false);
+                    $data = $model->get(
+                        array(
+                            "filter"=>$model->getDatabase().".".$this->getKeyField()."= ?", 
+                            "bind" => [$row[$this->getKeyField()]]
+                        ), SQLDatabaseModel::MODE_ASSOC,
+                        false, false
+                    );
                     $rows[$i][(string)$explicitRelation] = $data;
                 }
             }
@@ -464,11 +472,11 @@ class Postgresql extends SQLDBDataStore
         if(count($joinConditions)>0)
         {
             $query .= " WHERE (" . implode(" AND ",$joinConditions) . ") ";
-            $query.=(strlen($params["conditions"])>0?" AND (".$params["conditions"].")":"");
+            $query .= (strlen($params["conditions"])>0?" AND (".$params["conditions"].")":"");
         }
         else
         {
-            $query.=(strlen($params["conditions"])>0?" WHERE ".$params["conditions"]:"");
+            $query .= (strlen($params["conditions"])>0?" WHERE ".$params["conditions"]:"");
         }
 
         if(is_array($params["sort_field"]) && $params["count"] !== true)

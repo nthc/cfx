@@ -7,7 +7,8 @@ class FilterCompiler
     private static $filter;
     private static $tokens = array(
         'equals' => '\=',
-        'bind_param' => '\?|:[a-z][a-z0-9\_]+',
+        'bind_param' => '\\?',
+        'named_bind_param' => '\:[a-z][a-z0-9\_]+',
         'number' => '[0-9]+',
         'between' => 'between\b',
         'in' => 'in\b',
@@ -154,6 +155,7 @@ class FilterCompiler
                 break;
             case 'identifier':
             case 'bind_param':
+            case 'named_bind_param':
             case 'number':
                 $return = self::$token;
                 self::getToken();
