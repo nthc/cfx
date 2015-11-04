@@ -154,8 +154,15 @@ class CfxAuthUsersController extends ModelController
         $objectFile = __DIR__ . "/cache/menus/menu_u{$userId}.object";
         
         //delete menu & object file for user
-        unlink($menuFile);
-        unlink($objectFile);
+        if(file_exists($menuFile))
+        {
+            unlink($menuFile);
+        }
+        
+        if(file_exists($objectFile))
+        {
+            unlink($objectFile);
+        }
         
         //generate menu for user
         AuthMenu::generate($userId);
