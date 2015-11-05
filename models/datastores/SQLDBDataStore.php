@@ -278,6 +278,9 @@ abstract class SQLDBDataStore extends DataStore
     public static function getMulti($params,$mode=SQLDatabaseModel::MODE_ASSOC)
     {
         $results = false;
+        if(isset($params['conditions'])) {
+            throw new Exception("Use of conditions in queries deprecated");
+        }
         if(self::isSelectCacheable($params))
         {
             $results = self::executeCachedSelectQuery($params, $mode);

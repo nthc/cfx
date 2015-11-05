@@ -25,6 +25,8 @@ class FilterCompiler
         'add' => '\+',
         'subtract' => '\-',
         'multiply' => '\*',
+        'mod' => '\%',        
+        'cast' => '::',
         'function' => '[a-zA-Z][a-zA-Z0-9\_]*\s*\(',
         'identifier' => '[a-zA-Z][a-zA-Z0-9\.\_\:]*\b',
         'obracket' => '\(',
@@ -39,7 +41,7 @@ class FilterCompiler
         array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is'),
         array('add', 'subtract'),
         array('in'),
-        array('multiply')
+        array('multiply', 'mod', 'cast')
     );
     
     public static function compile($filter)

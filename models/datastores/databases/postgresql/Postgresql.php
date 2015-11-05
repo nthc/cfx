@@ -150,8 +150,10 @@ class Postgresql extends SQLDBDataStore
 
     public function getSearch($searchValue,$field)
     {
-        return sprintf("lower(%s::varchar) LIKE '%%%s%%'", $field, strtolower($searchValue));
-        //return "position (lower('".$this->escape($searchValue)."'::varchar) in lower($field::varchar))>0";
+        return [
+            'filter' => sprintf("lower(%s::varchar) LIKE ?", $field), 
+            'bind' => strtolower("%$searchValue%")
+        ];
     }
 
     public function concatenate($fields)
