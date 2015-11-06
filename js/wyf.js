@@ -31,7 +31,8 @@ var wyf =
         }
         else
         {
-            externalConditions[table] = model + "=" + value;
+            externalConditions[table] = model + "= ?";
+            externalBoundData = [value];
         }
         window[table + 'Search']();
     },

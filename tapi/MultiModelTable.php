@@ -73,7 +73,7 @@ class MultiModelTable extends Table
                         $name = $this->fields[$i+1]["name"];
                         // veeery dirty code @todo clean this up small
                         //$this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower('\" + $('#$name').val() +\"') in lower({$this->tableData["rawFields"][$i+1]}))>0\";\n";
-                        $this->searchScript .= "if($('#$name').val()!='') conditions = (conditions==''?'':conditions+' AND ')+ \"lower({$this->tableData["rawFields"][$i+1]}::varchar) like '%\"+$('#$name').val().toLowerCase()+\"%'\";\n";
+                        $this->searchScript .= "if($('#$name').val()!='') { conditions = (conditions==''?'':conditions+' AND ')+ \"lower({$this->tableData["rawFields"][$i+1]}::varchar) like ?\"; boundData.push('%'+$('#$name').val().toLowerCase()+'%');}\n";
                         break;
 
                     /*case "reference":
@@ -192,14 +192,18 @@ class MultiModelTable extends Table
             <script type='text/javascript'>
                 wyf.tapi.addTable('$this->name',(".json_encode($this->params)."));
                 var externalConditions = [];
+                var externalBoundData = [];
                 function {$this->name}Search()
                 {
                     var conditions = '';
+                    var boundData = [];
                     {$this->searchScript}
-                    wyf.tapi.tables['$this->name'].conditions = conditions;
+                    wyf.tapi.tables['$this->name'].filter = conditions;
+                    wyf.tapi.tables['$this->name'].bind = boundData;
                     if(externalConditions['$this->name'])
                     {
-                        wyf.tapi.tables['$this->name'].conditions += ((conditions != '' ?' AND ':'') + externalConditions['$this->name']);
+                        wyf.tapi.tables['$this->name'].filter += ((conditions != '' ?' AND ':'') + externalConditions['$this->name']);
+                        wyf.tapi.tables['$this->name'].bind = boundData.concat(externalBoundData);
                     }
                     wyf.tapi.tables['$this->name'].page = 0;
                     wyf.tapi.render(wyf.tapi.tables['$this->name']);

@@ -35,13 +35,13 @@ class FilterCompiler
     );
     
     private static $operators = array(
-        array('between', 'or' /*, 'like'*/),
+        array('between', 'or'),
         array('and'),
         array('not'),
         array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is'),
         array('add', 'subtract'),
         array('in'),
-        array('multiply', 'mod', 'cast')
+        array('multiply', 'mod', 'cast', 'like')
     );
     
     public static function compile($filter)
@@ -153,7 +153,7 @@ class FilterCompiler
                 $name = self::$token;
                 self::getToken();
                 $parameters = self::parseFunctionParams();
-                $return = "$name($parameters)";
+                $return = "$name$parameters)";
                 break;
             case 'identifier':
             case 'bind_param':
