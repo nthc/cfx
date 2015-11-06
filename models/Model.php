@@ -702,7 +702,7 @@ abstract class Model implements ArrayAccess
     public function getWithField2($field, $value)
     {
         return $this->get(
-            array("conditions"=>"$field='$value'"),
+            array("filter"=>"$field=?", "bind" => [$value]),
             $this->queryMode,
             $this->queryExplicitRelations,
             $this->queryResolve
