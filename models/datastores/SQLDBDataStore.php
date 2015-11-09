@@ -289,12 +289,20 @@ abstract class SQLDBDataStore extends DataStore
         if(self::isSelectCacheable($params))
         {
             $results = self::executeCachedSelectQuery($params, $mode);
+            if($results !== false)
+            {
+                if($params["moreInfo"] === true) {
+                    $data = Cache::get("{$params['cache_key']}_meta");
+                    $data['data'] = $results;
+                    return $data;
+                }
+            }
         }
         
         if($results === false)
         {
             $method = new ReflectionMethod(SQLDBDataStore::$activeDriverClass, "getMulti");
-            $results = $method->invokeArgs(null, func_get_args());           
+            $results = $method->invokeArgs(null, [$params, $mode]);           
         }
         
         return $results;
@@ -313,7 +321,12 @@ abstract class SQLDBDataStore extends DataStore
         }
         else
         {
-            return md5(serialize($params)) . "_query";
+            unset($params['bind']);
+            $limit = isset($params['limit']);
+            $offset = isset($params['offset']);
+            unset($params['limit']);
+            unset($params['offset']);
+            return sha1(serialize([$params, $limit, $offset])) . "_query";
         }
     }
         
@@ -324,7 +337,10 @@ abstract class SQLDBDataStore extends DataStore
         if(Cache::exists($queryKey))
         {
             $query = Cache::get($queryKey);
+            if(isset($params['limit'])) $params['bind'][] = $params['limit'];
+            if(isset($params['offset'])) $params['bind'][] = $params['offset'];
             $results = Db::boundQuery($query, Db::$defaultDatabase, $params['bind'], $mode, $queryKey);
+            $params['cache_key'] = $queryKey;
         }
         else
         {
@@ -343,6 +359,7 @@ abstract class SQLDBDataStore extends DataStore
         if(self::isSelectCacheable($params))
         {
             $params['model_name_entropy'] = $this->modelName;
+            $params['__extra_entropy'] = [$mode, $explicit_relations, $resolve];
             $results = self::executeCachedSelectQuery($params, $mode);
         }
         

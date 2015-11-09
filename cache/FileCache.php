@@ -64,6 +64,6 @@ class FileCache extends Cache
      */
     public function existsImplementation($key)
     {
-        return file_exists(CACHE_PREFIX ."app/cache/code/$key");
+        return file_exists(SOFTWARE_HOME ."app/cache/code/$key");
     }
 }
