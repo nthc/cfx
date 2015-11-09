@@ -124,7 +124,7 @@ class FilterCompiler
         $size = 0;
         do{
             $size++;
-            $parameters .= self::parseExpression();
+            $parameters .= self::renderExpression(self::parseExpression());
             if(self::$lookahead == 'comma')
             {
                 self::getToken();
