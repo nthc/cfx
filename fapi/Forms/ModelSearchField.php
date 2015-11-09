@@ -16,6 +16,7 @@ class ModelSearchField extends Field
     public $boldFirst = true;
     private $storedFieldSet = false;
     private $andConditions;
+    private $andBoundData = [];
     private $onChangeAttribute;
     
     public function __construct($path=null,$value=null)
@@ -36,9 +37,10 @@ class ModelSearchField extends Field
         }
     }
     
-    public function setAndConditions($andConditions)
+    public function setAndConditions($andConditions, $bindData = [])
     {
         $this->andConditions = $andConditions;
+        $this->andBoundData = $bindData;
         return $this;
     }
     
@@ -98,6 +100,7 @@ class ModelSearchField extends Field
             "limit"=>20,
             "conditions"=>"",
             "and_conditions"=>$this->andConditions,
+            'and_bound_data' => $this->andBoundData,
             'redirected_package' => $redirectedPackage,
             'package_schema' => $packageSchema
         );
