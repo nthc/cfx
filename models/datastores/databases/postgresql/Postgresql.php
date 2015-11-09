@@ -105,12 +105,14 @@ class Postgresql extends SQLDBDataStore
         
         if(isset($params["limit"]))
         {
-            $query .= " LIMIT {$params["limit"]}";
+            $query .= " LIMIT ?";
+            $bindData[] = $params['limit'];
         }
         
         if(isset($params["offset"]))
         {
-            $query .= " OFFSET {$params["offset"]}";    
+            $query .= " OFFSET ?";    
+            $bindData[] = $params['offset'];
         }
         
         
@@ -365,6 +367,13 @@ class Postgresql extends SQLDBDataStore
             }
         }
 
+        // Replace any conditions with filters
+        if(isset($params['filter'])){
+            $params['conditions'] = $params['filter'];
+        } else {
+            $params['conditions'] = '';
+        }
+        
         if(count($fixedConditions) > 0)
         {
             $params["conditions"] = ($params["conditions"]==""?"":"(". $params["conditions"] . ") AND ")."(" . implode(" AND ", $fixedConditions). ")";
@@ -466,11 +475,6 @@ class Postgresql extends SQLDBDataStore
             $query.=($params["resolve"] === false ? implode(",",$rawFields) : implode(",",$fieldList))." FROM ".implode(",",array_unique($tableList));
         }
         
-        // Replace any conditions with filters
-        if(isset($params['filter'])){
-            $params['conditions'] = $params['filter'];
-        }
-        
         if(count($joinConditions)>0)
         {
             $query .= " WHERE (" . implode(" AND ",$joinConditions) . ") ";
@@ -510,22 +514,37 @@ class Postgresql extends SQLDBDataStore
             {
                 if($field != $params["group_field"]) $query .= ",".$field;
             }
-        };
+        }
 
         if(isset($params["limit"]))
         {
-            $query .= " LIMIT {$params["limit"]}";
-            //$query = "select * from ( select  a.*, ROWNUM autoremove_oracle_rnum from ( $query ) a where ROWNUM <= ".($params["offset"]+$params["limit"])." ) where autoremove_oracle_rnum  >= ".($params["offset"]+0);
+            $query .= " LIMIT ?";
+            $params['bind'][] = $params['limit'];
         }
         if(isset($params['offset']))
         {
-            $query .= " OFFSET {$params["offset"]}";
+            $query .= " OFFSET ?";
+            $params['bind'][] = $params['offset'];
         }
         
+        Application::log()->info($params['cache_key']);
         $data = $other_model->datastore->query($query,$mode, $params['bind'], $params['cache_key']);
+        
+        if(isset($params['cache_key'])) {
+            Cache::add($params['cache_key'], $query);
+        }
 
-        if($params["moreInfo"] === true)
-        {
+        if($params["moreInfo"] === true) {
+            if(isset($params['cache_key'])) {
+                Cache::add(
+                    "{$params['cache_key']}_meta",
+                    [
+                        'fieldInfos' => $fieldDescriptions,
+                        'headers' => $headers,
+                        'rawFields' => $rawFields
+                    ]
+                );
+            }
             return array
                 (
                     "data" => $data,
