@@ -192,8 +192,13 @@ abstract class SQLDBDataStore extends DataStore
     {
         if($keyValue == null)
         {
-            $query = "DELETE FROM {$this->database} WHERE $keyField";
-            $this->query($query);
+            if(is_array($keyField)){
+                $query = "DELETE FROM {$this->database} WHERE {$keyField['filter']}";
+                $this->query($query, SQLDatabaseModel::MODE_ASSOC, $keyField['bind']);
+            }
+            else{
+                throw new Exception("Use of conditions in queries deprecated");
+            }
         }
         else
         {

@@ -596,7 +596,12 @@ abstract class Model implements ArrayAccess
         
         if($key_value === null)
         {
-            $data = reset($this->get(array('conditions' => $key_field)));
+            if(is_array($key_field)){
+                $data = reset($this->get(array('filter' => $key_field['filter'], "bind"=>$key_field['bind'])));
+            }
+            else{
+                throw new Exception("Use of conditions in queries deprecated");
+            }
         }
         else
         {
