@@ -46,7 +46,7 @@ class CfxAuthRolesController extends ModelController{
             
             foreach($permissions as $permission => $value)
             {
-                $this->permissions->delete("role_id = '{$params[0]}' AND permission = '$permission'");
+                $this->permissions->delete(array("filter"=>"role_id = ? AND permission = ?", "bind"=>array($params[0], $permission)));
                 $this->permissions->setData(array(
                     "role_id"     => $params[0], 
                     "permission" => $permission,
