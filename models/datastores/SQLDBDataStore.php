@@ -361,6 +361,25 @@ abstract class SQLDBDataStore extends DataStore
             $params['model_name_entropy'] = $this->modelName;
             $params['__extra_entropy'] = [$mode, $explicit_relations, $resolve];
             $results = self::executeCachedSelectQuery($params, $mode);
+            
+            if($explicit_relations && $results !== false)
+            {
+                foreach($this->explicitRelations as $explicitRelation)
+                {
+                    foreach($results as $i => $row)
+                    {
+                        $model = Model::load((string)$explicitRelation);
+                        $data = $model->get(
+                            array(
+                                "filter"=>$model->getDatabase().".".$this->getKeyField()."= ?", 
+                                "bind" => [$row[$this->getKeyField()]]
+                            ), SQLDatabaseModel::MODE_ASSOC,
+                            false, false
+                        );
+                        $results[$i][(string)$explicitRelation] = $data;
+                    }
+                }
+            }            
         }
         
         if($results === false)
