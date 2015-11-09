@@ -72,7 +72,7 @@ abstract class DataStore
     
     /**
      * An array of conditions that are fixed for this instance of the datastore.
-     * @var array
+     * @var string
      */
     public $fixedConditions;
     

@@ -36,7 +36,14 @@ class Postgresql extends SQLDBDataStore
         if(isset($params['conditions'])) {
             throw new Exception("Use of conditions in queries deprecated");
         }
-        $conditions = isset($params['filter']) ? $params['filter'] : $conditions;
+        
+        $conditions = isset($params['filter']) ? $params['filter'] : null;
+
+        if($this->fixedConditions != "")
+        {
+            $conditions = "(" . ( $conditions == "" ? "":$conditions . ") AND ("). $this->fixedConditions . ")";
+        }
+        
         $bindData = $params['bind'];
         $rows = array();
         $sorting = null;

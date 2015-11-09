@@ -509,10 +509,7 @@ abstract class Model implements ArrayAccess
      */
     public function get($params=null,$mode="",$explicit_relations="",$resolve="")
     {
-        if($this->fixedConditions != "")
-        {
-            $params["conditions"] = "(" . ($params["conditions"]==""?"":$params["conditions"] . ") AND ("). $this->fixedConditions . ")";
-        }
+        $this->datastore->fixedConditions = $this->fixedConditions;
         
         if(is_string($params["fields"]))
         {
