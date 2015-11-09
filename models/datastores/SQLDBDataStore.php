@@ -354,6 +354,7 @@ abstract class SQLDBDataStore extends DataStore
         if(self::isSelectCacheable($params))
         {
             $params['model_name_entropy'] = $this->modelName;
+            $params['__extra_entropy'] = [$mode, $explicit_relations, $resolve];
             $results = self::executeCachedSelectQuery($params, $mode);
         }
         
