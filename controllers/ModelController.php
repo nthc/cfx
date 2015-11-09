@@ -644,7 +644,8 @@ class ModelController extends Controller
     {
         $data = $this->model->get(
             array(
-                "conditions"=>$this->model->getKeyField()."='$id'"
+                "filter" => $this->model->getKeyField()." = ?",
+                "bind" => [$id]
             ),
             SQLDatabaseModel::MODE_ASSOC,
             true,
@@ -691,7 +692,8 @@ class ModelController extends Controller
         $form->setShowField(false);
         $data = $this->model->get(
             array(
-                "conditions"=>$this->model->getKeyField()."='".$params[0]."'"
+                "filter"=>$this->model->getKeyField()." = ?",
+                "bind" => [$params[0]]
             ),
             SQLDatabaseModel::MODE_ASSOC,
             true,
@@ -981,7 +983,8 @@ class ModelController extends Controller
                     'system.users.last_name',
                     'system.users.other_names'
                 ),
-                'conditions' => "item_id = '{$params[0]}' AND item_type in ('$models')",
+                'filter' => "item_id = ? AND item_type in (?)",
+                'bind' => [$params[0],$models],
                 'sort_field' => 'audit_trail_id DESC'
             )
         );
@@ -1043,11 +1046,8 @@ class ModelController extends Controller
                     'system.users.first_name',
                     'system.users.last_name'
                 ),
-                'conditions' => Model::condition(array(
-                        'item_type' => $this->model->package,
-                        'item_id' => $params[0]
-                    )
-                )
+                'filter' => 'item_type = ? and item_id = ?',
+                'bind' => [$this->model->package,$params[0]]
             )
         );
         
