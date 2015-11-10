@@ -332,7 +332,12 @@ class CfxAuthRolesController extends ModelController{
                         strlen(Application::$prefix)-1) . 
                         substr("$originalPath/$entry",strlen($prefix));
                     $modulePath = substr("$originalPath/$entry", strlen($prefix));
-                    $value = $this->permissions->get(array("conditions"=>"roles.role_id='$roleId' AND module = '{$modulePath}' AND value='1'"));
+                    $value = $this->permissions->get(
+                            array(
+                                "filter"    => "roles.role_id= ? AND module = ? AND value=?",
+                                "bind"      => [$roleId,$modulePath,1]
+                                )
+                            );
                     $children = $this->generateMenus($roleId, "$originalPath/$entry");
                 }
                 else
@@ -343,7 +348,12 @@ class CfxAuthRolesController extends ModelController{
                         substr("$path/$entry",strlen($prefix));
                     $modulePath = substr("$path/$entry", strlen($prefix));
                     $this->permissions->queryResolve = true;
-                    $value = $this->permissions->get(array("conditions"=>"roles.role_id='$roleId' AND module = '{$modulePath}' AND value='1'"));
+                    $value = $this->permissions->get(
+                            array(
+                                "filter"=>"roles.role_id= ? AND module = ? AND value=?",
+                                "bind"  => [$roleId,$modulePath, 1]
+                                )
+                            );
                     $children = $this->generateMenus($roleId, "$path/$entry");
                 }
                 
