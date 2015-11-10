@@ -173,7 +173,7 @@ class XmlDefinedReportController extends ReportController {
 
                         if (isset($field["sort"])) {
                             $sortField = "{$model->database}.{$fieldInfo["name"]}";
-                            $hardCodedSorting[] = array("field" => $sortField, "type" => $field["sort"]);
+                            $hardCodedSorting[] = array("field" => $sortField, "type" => (string)$field["sort"]);
                         }
 
                         if (isset($field["labelsField"])) {
@@ -395,16 +395,16 @@ class XmlDefinedReportController extends ReportController {
                     }               
 
                     if ($tableConditions != "") {
-                        $params["conditions"] = $params['conditions'] . ($params['conditions'] != '' ? " AND " : '') . "($tableConditions)";
+                        $params["filter"] = $params['filter'] . ($params['filter'] != '' ? " AND " : '') . "($tableConditions)";
                     }
 
                     if ($_POST[$name . "_sorting"] != "") {
                         array_unshift(
                                 $hardCodedSorting, array
                             (
-                            "field" => $_POST[$name . "_sorting"],
-                            "type" => $_POST[$name . "_sorting_direction"]
-                                )
+                                "field" => $_POST[$name . "_sorting"],
+                                "type" => $_POST[$name . "_sorting_direction"]
+                            )
                         );
                     }
 
