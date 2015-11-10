@@ -95,7 +95,12 @@ class AuthMenu
                         Application::$prefix, 0, strlen(Application::$prefix) - 1) .
                         substr("$originalPath/$entry", strlen($prefix));
                     $modulePath = substr("$originalPath/$entry", strlen($prefix));
-                    $value = self::$permissionsModel->get(array("conditions" => "roles.role_id='$roleId' AND module = '{$modulePath}' AND value='1'"));
+                    $value = self::$permissionsModel->get(
+                            array(
+                                "filter"     => "roles.role_id= ? AND module = ? AND value= ?",
+                                "bind"       => [$roleId, $modulePath, 1]       
+                                )
+                            );
                     $children = self::generateMenus($roleId, "$originalPath/$entry");
                 } else {
                     $urlPath = substr(
@@ -105,8 +110,8 @@ class AuthMenu
                     self::$permissionsModel->queryResolve = true;
                     $value = self::$permissionsModel->get(
                         array(
-                            "conditions" => 
-                            "roles.role_id='$roleId' AND module = '{$modulePath}' AND value='1'"
+                            "filter" => "roles.role_id= ? AND module = ? AND value= ?",
+                            "bind"       => [$roleId, $modulePath, 1]
                         )
                     );
                     $children = self::generateMenus($roleId, "$path/$entry");
