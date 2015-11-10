@@ -56,9 +56,9 @@ class RelationshipField extends Field
     {
         parent::setValue($value);
         if($value=="") return;
-        $mainValue = $this->subModel->get(array("fields"=>array($this->mainModel->getKeyField()),"conditions"=>"{$this->subModel->getKeyField()}={$value}"),Model::MODE_ARRAY,false,false);
+        $mainValue = $this->subModel->get(array("fields"=>array($this->mainModel->getKeyField()),"filter"=>"{$this->subModel->getKeyField()}= ?","bind"=>[$value]),Model::MODE_ARRAY,false,false);
         $this->mainSelectionList->setValue($mainValue[0][0]);
-        $subValues = $this->subModel->get(array("fields"=>array($this->subModel->getKeyField(),$this->subModelPathInfo["field"]),"conditions"=>"{$this->subModel->getKeyField()}={$value}"),Model::MODE_ARRAY,false,false);
+        $subValues = $this->subModel->get(array("fields"=>array($this->subModel->getKeyField(),$this->subModelPathInfo["field"]),"filter"=>"{$this->subModel->getKeyField()}= ?","bind"=>[$value]),Model::MODE_ARRAY,false,false);
         foreach($subValues as $subValue)
         {
             $this->subSelectionList->addOption($subValue[1], $subValue[0]);
@@ -94,7 +94,8 @@ class RelationshipField extends Field
         
         $possibleSubItem = reset($this->subModel->get(
             array(
-                    'conditions' => "$mainId = $possibleMainItem[$mainId] and trim($subField) = '" . trim($this->mainModel->escape($parts[1])) . "'"
+                    'filter' => "$mainId = ? and trim($subField) = ?",
+                    'bind' => [$possibleMainItem[$mainId],trim($this->mainModel->escape($parts[1]))]
                 )
             , Model::MODE_ASSOC, false, false
         ));
@@ -113,7 +114,8 @@ class RelationshipField extends Field
                     $this->mainModelField,
                     $this->subModelField
                 ),
-                'conditions' => "{$this->name} = '{$value}'"
+                'filter' => "{$this->name} = ?",
+                'bind' => [$value]
             )
         ));
         
