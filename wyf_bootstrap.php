@@ -59,6 +59,8 @@ require "app/includes.php";
 global $redirectedPackage;
 global $packageSchema;
 
+$selected = isset($_ENV['CFX_SELECTED_DATABASE']) ? $_ENV['CFX_SELECTED_DATABASE'] : $selected;
+
 // Setup the database driver and other boilerplate stuff 
 $dbDriver = $config['db'][$selected]['driver'];
 $dbDriverClass = Application::camelize($dbDriver);

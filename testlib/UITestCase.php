@@ -17,12 +17,26 @@ abstract class UITestCase extends BaseTestCase
         );
     }
     
+    public function setBranchId()
+    {
+        
+    }
+    
     protected function login()
     {
-        $this->driver->get('http://software.local');
+        $this->driver->get($_ENV['CFX_TEST_WEB_HOST']);
         $this->driver->findElement(WebDriverBy::id('username'))->sendKeys('dev');
         $this->driver->findElement(WebDriverBy::id('password'))->sendKeys('dev');
         $this->driver->findElement(WebDriverBy::cssSelector('#fapi-submit-area > input'))->click();        
+    }
+    
+    protected function getBranchTables()
+    {
+        return [
+            'common.branches' => [
+                ['branch_id' => 1, 'branch_name' => 'Adabraka']
+            ]
+        ];
     }
 
     protected function getArrayDataSet()
@@ -43,7 +57,9 @@ abstract class UITestCase extends BaseTestCase
                     'user_status' => 1
                 ]
             ]
-        ] + $this->getUIArrayDataSet();
+        ] 
+        + $this->getBranchTables() 
+        + $this->getUIArrayDataSet();
     }
     
     abstract protected function getUIArrayDataSet();
