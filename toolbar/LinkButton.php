@@ -14,7 +14,8 @@ class LinkButton extends ToolbarButtonItem
 
     protected function _render()
     {
-        return "<div class='icon i".  strtolower($this->label)."'><a href='{$this->link}' $this->linkAttributes >{$this->label}</a></div>";
+        $tag = strtolower($this->label);
+        return "<div class='icon i$tag'><a id='$tag-tool-link' href='{$this->link}' $this->linkAttributes >{$this->label}</a></div>";
     }
 
     public function getCssClasses()

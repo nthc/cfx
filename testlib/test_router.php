@@ -1,5 +1,7 @@
 <?php
 
+require 'vendor/autoload.php';
+
 $_ENV['CFX_SELECTED_DATABASE'] = 'test';
 $_ENV['CFX_TEST'] = true;
 
@@ -13,5 +15,10 @@ if(is_file(getcwd() . $_SERVER['REQUEST_URI'])) {
         }
         $_GET['q'] = $route;
     }
+    $coverage = new PHP_CodeCoverage();
+    $id = uniqid();
+    $coverage->start($id);
     require 'index.php';
+    //$coverage->stop();
 }
+

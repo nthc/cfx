@@ -54,5 +54,15 @@ abstract class UITestCase extends BaseTestCase
         + $this->getUIArrayDataSet();
     }
     
+    protected function navigateTo($path)
+    {
+        $this->driver->navigate()->to($_ENV['CFX_TEST_WEB_HOST'] . $path);
+    }
+
+    protected function find($selector)
+    {
+        return $this->driver->findElement(WebDriverBy::cssSelector($selector));
+    }
+
     abstract protected function getUIArrayDataSet();
 }
