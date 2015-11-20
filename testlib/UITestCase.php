@@ -17,9 +17,15 @@ abstract class UITestCase extends BaseTestCase
         parent::setUp();
         $this->testId = uniqid();
         $this->driver = RemoteWebDriver::create(
-            'http://localhost:4444/wd/hub', 
-            DesiredCapabilities::firefox()
+            'http://localhost:9515', 
+            DesiredCapabilities::chrome()
         );
+    }
+    
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->driver->close();
     }
     
     protected function open()
@@ -77,14 +83,48 @@ abstract class UITestCase extends BaseTestCase
         
         parent::run($result);
         
+        $data = unserialize(file_get_contents(getenv('CFX_TEST_WEB_HOST') . "/coverage_data/{$this->testId}"));
         if($result->getCollectCodeCoverageInformation()) {
             $result->getCodeCoverage()->append(
-                unserialize(file_get_contents(getenv('CFX_TEST_WEB_HOST') . "/coverage_data/{$this->testId}")),
+                is_array($data) ? $data : [],
                 $this
             );
         }
         
         return $result;
+    }
+    
+    protected function fillForm($selector, $data)
+    {
+        foreach($data as $key => $value)
+        {
+            $element = $this->driver->findElement(
+                WebDriverBy::cssSelector("$selector *[name=$key]")
+            );
+            switch($element->getTagName())
+            {
+                case 'input': 
+                case 'textarea':
+                    if($element->getAttribute('type') === 'checkbox') {
+                        if(($value == true && !$element->isSelected() && $element->isDisplayed())) {
+                            $element->click();
+                        } else {
+                            $element->clear();
+                        }
+                    } else {
+                        $element->sendKeys($value);
+                    }
+                    break;
+                case 'select':
+                    $element->findElement(WebDriverBy::cssSelector("option[value='$value']"))->click();
+                    break;
+            }
+        }
+    }
+    
+    protected function submitForm($selector)
+    {
+        $this->driver->findElement(WebDriverBy::cssSelector("$selector"))->submit();
     }
 
     abstract protected function getUIArrayDataSet();

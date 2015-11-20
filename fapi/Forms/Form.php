@@ -198,7 +198,6 @@ class Form extends Container
     protected function renderForm()
     {
         $this->addAttribute("method",$this->getMethod());
-        $this->addAttribute("id",$this->getId());
         
         if($this->getHasFile()) $this->addAttribute("enctype","multipart/form-data");
 

@@ -509,6 +509,7 @@ class ModelController extends Controller
         {
             $form = $this->createDefaultForm();
         }
+        $form->setId('model-controller-form');
         return $form;
     }
     
