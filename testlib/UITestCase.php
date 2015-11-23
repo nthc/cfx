@@ -17,7 +17,7 @@ abstract class UITestCase extends BaseTestCase
         parent::setUp();
         $this->testId = uniqid();
         $this->driver = RemoteWebDriver::create(
-            'http://localhost:9515', 
+            getenv('CFX_WEB_DRIVER'), 
             DesiredCapabilities::chrome()
         );
     }
