@@ -20,10 +20,29 @@ abstract class BaseTestCase extends PHPUnit_Extensions_Database_TestCase
         return PHPUnit_Extensions_Database_Operation_Factory::DELETE_ALL();
     }
     
+    protected function getPDO()
+    {
+        $config = Application::$config['db'][getenv('CFX_SELECTED_DATABASE')];
+        return new PDO("pgsql:host={$config['host']};port={$config['port']};dbname={$config['name']};user={$config['user']};password={$config['password']}");
+    }
+    
+    protected function createSequence($name)
+    {
+        $pdo = $this->getPDO();
+        $pdo->query("CREATE SEQUENCE {$name}");
+        $pdo = null;
+    }
+    
+    protected function dropSequence($name)
+    {
+        $pdo = $this->getPDO();
+        $pdo->query("DROP SEQUENCE {$name}");
+        $pdo = null;
+    }
+
     protected function getConnection()
     {
-        $pdo = new PDO('pgsql:host=127.0.0.1;port=5432;dbname=nthc_test;user=postgres;password=hello');
-        return $this->createDefaultDBConnection($pdo);
+        return $this->createDefaultDBConnection($this->getPDO());
     }
 
     protected function getDataSet()
