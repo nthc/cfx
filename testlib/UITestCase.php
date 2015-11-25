@@ -50,6 +50,9 @@ abstract class UITestCase extends BaseTestCase
             'common.roles' => [
                 ['role_id' => 1, 'role_name' => 'Super User']
             ],
+            'auth.users_roles' => [
+                ['users_roles_id' => 1, 'user_id' => 1, 'role_id' => 1]
+            ],
             'common.users' => [
                 [
                     'user_id' => 1,
