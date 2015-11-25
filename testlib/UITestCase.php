@@ -82,14 +82,14 @@ abstract class UITestCase extends BaseTestCase
     public function run(PHPUnit_Framework_TestResult $result = NULL) {
         if($result === NULL) {
             $result = $this->createResult();
-        }
+        }      
         
         parent::run($result);
         
-        $data = unserialize(file_get_contents(getenv('CFX_TEST_WEB_HOST') . "/coverage_data/{$this->testId}"));
         if($result->getCollectCodeCoverageInformation()) {
+            $data = unserialize(file_get_contents(getenv('CFX_TEST_WEB_HOST') . "/vendor/nthc/cfx/testlib/coverage.php?id={$this->testId}"));
             $result->getCodeCoverage()->append(
-                is_array($data) ? $data : [],
+                $data,
                 $this
             );
         }
