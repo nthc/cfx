@@ -16,9 +16,16 @@ abstract class UITestCase extends BaseTestCase
     {
         parent::setUp();
         $this->testId = uniqid();
+        switch(getenv('CFX_WEB_BROWSER')) {
+            case 'chrome':
+                $browser = DesiredCapabilities::chrome();
+                break;
+            case 'firefox':
+                $browser = DesiredCapabilities::firefox();
+                break;
+        }
         $this->driver = RemoteWebDriver::create(
-            getenv('CFX_WEB_DRIVER'), 
-            DesiredCapabilities::chrome()
+            getenv('CFX_WEB_DRIVER'), $browser
         );
     }
     
