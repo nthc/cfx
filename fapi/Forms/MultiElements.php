@@ -148,7 +148,8 @@ class MultiElements extends Container
             $template = $this->template->render();
             $count = 0;
             
-            if(is_array($this->data)) {
+            if($this->data)
+            {
                 foreach($this->data as $index => $data)
                 {
                     foreach($data as $key => $dat)

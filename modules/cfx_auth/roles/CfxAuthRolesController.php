@@ -60,7 +60,7 @@ class CfxAuthRolesController extends ModelController{
             $menu = $this->generateMenus($params[0]);
             $flatened = $this->flatenMenu($menu);
             $sideMenu = Controller::load( array(
-                "system", "side_menu", "generate", serialize($menu)
+                "auth", "side_menu", "generate", serialize($menu)
             ));
             
             file_put_contents(
@@ -78,7 +78,7 @@ class CfxAuthRolesController extends ModelController{
 
         $path = $params;
         array_shift($path);
-        $accum = "/system/roles/permissions/{$params[0]}";
+        $accum = "/auth/roles/permissions/{$params[0]}";
         $menu = "<a href='$accum'>Permissions</a>";
         
         foreach($path as $section)
