@@ -32,7 +32,9 @@ abstract class UITestCase extends BaseTestCase
     public function tearDown()
     {
         parent::tearDown();
-        $this->driver->close();
+        if(is_object($this->driver)) {
+            $this->driver->close();
+        }
     }
     
     protected function open()
@@ -130,6 +132,13 @@ abstract class UITestCase extends BaseTestCase
                     break;
             }
         }
+    }
+    
+    protected function setModelSearchField($name, $value)
+    {
+        $this->find("#{$name}_search_entry")->sendKeys($value);
+        sleep(3);
+        $this->find("#{$name}_search_entry_{$value}")->click();
     }
     
     protected function submitForm($selector)

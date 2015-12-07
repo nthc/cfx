@@ -238,7 +238,7 @@ function fapiUpdateSearchField(name, url, fields, element, boldFirst, onChangeFu
                     data = r[i][fields[j]];
                     value += (data === null ? "" : data) + " ";
                 }
-                content += "<tr id='" + name + "_search_entry_" + i + "' onclick='fapiSetSearchValue(\"" + name + "\",\"" + r[i][fields[0]] + "\",\"" + value.replace(/^\s+|\s+$/g, "").replace(/'/, "") + "\",\"" + onChangeFunction + "\")'><td>";
+                content += "<tr id='" + name + "_search_entry_" + r[i][fields[0]] + "' onclick='fapiSetSearchValue(\"" + name + "\",\"" + r[i][fields[0]] + "\",\"" + value.replace(/^\s+|\s+$/g, "").replace(/'/, "") + "\",\"" + onChangeFunction + "\")'><td>";
                 for (j = 1; j < fields.length; j++)
                 {
                     data = r[i][fields[j]];
