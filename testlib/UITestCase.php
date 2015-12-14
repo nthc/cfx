@@ -145,6 +145,14 @@ abstract class UITestCase extends BaseTestCase
     {
         $this->driver->findElement(WebDriverBy::cssSelector("$selector"))->submit();
     }
+    
+    protected function onNotSuccessfulTest(\Exception $e)
+    {
+        if(is_object($this->driver)) {
+            $this->driver->takeScreenshot("screenshots/" . uniqid() . ".png");
+        }
+        parent::onNotSuccessfulTest($e);
+    }
 
     abstract protected function getUIArrayDataSet();
 }
