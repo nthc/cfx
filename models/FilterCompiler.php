@@ -13,6 +13,7 @@ class FilterCompiler
         'between' => 'between\b',
         'in' => 'in\b',
         'like' => 'like\b',
+        'is_not' => 'is\s+not',
         'is' => 'is\b',
         'and' => 'and\b',
         'not' => 'not\b',
@@ -38,7 +39,7 @@ class FilterCompiler
         array('between', 'or'),
         array('and'),
         array('not'),
-        array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is'),
+        array('equals', 'greater', 'less', 'greater_or_equal', 'less_or_equal', 'not_equal', 'is', 'is_not'),
         array('add', 'subtract'),
         array('in'),
         array('multiply', 'mod', 'cast', 'like')
