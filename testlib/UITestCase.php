@@ -33,7 +33,7 @@ abstract class UITestCase extends BaseTestCase
     {
         parent::tearDown();
         if(is_object($this->driver)) {
-            $this->driver->close();
+            //$this->driver->close();
         }
     }
     
@@ -139,6 +139,13 @@ abstract class UITestCase extends BaseTestCase
         $this->find("#{$name}_search_entry")->sendKeys($value);
         sleep(3);
         $this->find("#{$name}_search_entry_{$value}")->click();
+    }
+    
+    protected function setRelationshipField($name, $main, $sub)
+    {
+        $this->find("#{$name}_main")->findElement(WebDriverBy::cssSelector("option[value='$main']"))->click();
+        sleep(3);
+        $this->find("#{$name}")->findElement(WebDriverBy::cssSelector("option[value='$sub']"))->click();
     }
     
     protected function submitForm($selector)
