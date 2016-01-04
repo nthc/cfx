@@ -33,7 +33,7 @@ abstract class UITestCase extends BaseTestCase
     {
         parent::tearDown();
         if(is_object($this->driver)) {
-            //$this->driver->close();
+            $this->driver->close();
         }
     }
     
