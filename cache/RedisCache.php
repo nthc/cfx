@@ -39,28 +39,34 @@ class RedisCache extends Cache
         return Application::$config['cache']['server_key'] . ":$key";
     }
     
+    private function instance()
+    {
+        if(!$this->redis->isConnected()) {
+            if(!$this->redis->connect(Application::$config['cache']['host'], Application::$config['cache']['port'])) {
+                throw new Exception("Could not connect to redis server");
+            }   
+        }
+        return $this->redis;
+    }
+    
     public function __construct()
     {
         $this->redis = new Redis();
-        if(!$this->redis->connect(Application::$config['cache']['host'], Application::$config['cache']['port']))
-        {
-            throw new Exception("Could not connect to redis server");
-        }
     }
     
     public function addImplementation($key, $object, $ttl = 0)
     {
-        $this->redis->set($this->getServerKey($key), serialize($object));
+        $this->instance()->set($this->getServerKey($key), serialize($object));
         return $object;
     }
     
     public function getImplementation($key)
     {
-        return unserialize($this->redis->get($this->getServerKey($key)));
+        return unserialize($this->instance()->get($this->getServerKey($key)));
     }
     
     public function existsImplementation($key)
     {
-        return $this->redis->exists($this->getServerKey($key));
+        return $this->instance()->exists($this->getServerKey($key));
     }
 }
