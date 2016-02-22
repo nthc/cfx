@@ -364,6 +364,7 @@ class XmlDefinedReportController extends ReportController {
                                 }
                                 if (count($condition) > 0)
                                     $filters[] = "(" . implode(" OR ", $condition) . ")";
+                                    unset($condition);
                             }
                         }
                     }
