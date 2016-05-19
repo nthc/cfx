@@ -1,13 +1,14 @@
 <?php
 class Grid extends Field
 {
-    private $columns = array();
-    private $columnNames = array();
-    private $rawColumnNames = array();
-    private $columnIds = array();
-    private $hash;
-    private $numRows = 500;
-    private $totals;
+    protected $columns = array();
+    protected $columnNames = array();
+    protected $rawColumnNames = array();
+    protected $columnIds = array();
+    protected $hash;
+    protected $numRows = 500;
+    protected $totals;
+    protected $attributes=array();
 
     public function __construct($label, $name)
     {
@@ -24,6 +25,9 @@ class Grid extends Field
 	
     public function getData()
     {
+        if(!empty($this->data)){
+            return $this->data;
+        }
         $nameLenght = strlen($this->name);
         if($this->isFormSent())
         {
@@ -69,10 +73,18 @@ class Grid extends Field
         }
     }
 
+    public function setAttributes($attributes){
+        $this->attributes=$attributes;
+    }
+    
+    public function getAttributes(){
+        return $this->attributes;
+    }
+    
     public function render()
     {
         $data = $this->getData();
-        
+        $attributes=$this->getAttributes();
         // Header Table
         $ret = "<table id='{$this->hash}' class='fapi-grid-header-table' width='100%'>";
         $ret .= "<tr><td id='header-0'></td>";
@@ -100,6 +112,10 @@ class Grid extends Field
                 else
                 {
                     $column->setValue("");
+                }
+                
+                if(isset($attributes[$i][$column->getName()])){
+                    $column->addAttribute($attributes[$i][$column->getName()]['attribute'], $attributes[$i][$column->getName()]['value']);
                 }
                 $column->setId(str_replace("%%index%%", $i, $this->columnIds[$j]));
                 $column->setName($this->columnNames[$j] . "[]");
