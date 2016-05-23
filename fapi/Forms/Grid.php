@@ -26,7 +26,14 @@ class Grid extends Field
     public function getData()
     {
         if(!empty($this->data)){
-            return $this->data;
+            if(key_exists($this->name, $this->data))
+            {
+                return $this->data;
+            }
+            else
+            {
+                return array($this->name=>$this->data);
+            }
         }
         $nameLenght = strlen($this->name);
         if($this->isFormSent())
