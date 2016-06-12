@@ -45,7 +45,7 @@ class ModelField extends SelectionList
         
         if($this->conditions != '')
         {
-            $params['conditions'] = $this->conditions;
+            $params['filter'] = $this->conditions;
         }           
         
         $data = $this->model->get(
