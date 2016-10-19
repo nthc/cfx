@@ -1001,6 +1001,7 @@ class ModelController extends Controller
         if($params[1] == 'delete')
         {
             $model = Model::load('system.notes');
+            $noteAttachments->delete('note_id', $params[2]);
             $model->delete('note_id', $params[2]);
             Application::redirect("{$this->path}/notes/{$params[0]}");
         }
