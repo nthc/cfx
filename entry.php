@@ -60,6 +60,7 @@ if(Application::$config['custom_sessions'])
     register_shutdown_function('session_write_close');
 }
 
+ini_set('session.save_handler', 'files');
 session_start();
 
 $authExcludedPaths = array();
