@@ -499,6 +499,26 @@ abstract class ReportController extends Controller
             ->add(Element::create("DateField","","{$name}_end_date")->setId("{$name}_end_date"),$this->numFilters,3);
             $this->numFilters++;
     }
+   
+    /**
+     * Add an Amount filter to the form.
+     * @param string $label A label for the filter
+     * @param string $name  A machine readable name for the filter
+     */
+    protected function addAmountFilter($label,$name,$opt=null)
+    {
+        $this->filters
+            ->add(Element::create("Label",$label),$this->numFilters,0)
+            ->add(Element::create("SelectionList","","{$name}_option")
+                ->addOption("Less Than","LESS")
+                ->addOption("Greater Than","GREATER")
+                ->addOption("Equals","EQUALS")
+                ->addOption("Between","BETWEEN")
+                ->setValue($opt),$this->numFilters,1)
+            ->add(Element::create("TextField","","{$name}_start_amount")->setId("{$name}_start_amount"),$this->numFilters,2)
+            ->add(Element::create("TextField","","{$name}_end_amount")->setId("{$name}_end_amount"),$this->numFilters,3);
+        $this->numFilters++;
+    }
     
     protected function addFieldFilter($label, $field, $options = array())
     {
